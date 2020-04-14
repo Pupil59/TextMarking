@@ -52,7 +52,6 @@
     </a>
   </div>
   <div id="main" style="width: 100%;height:150%;"></div>
-    <script src="graph.js"></script>
 
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
@@ -73,7 +72,7 @@
             node.value = node.symbolSize;
             node.symbolSize /= 1.5;
             node.label = {
-                show: node.symbolSize > 30
+                show: true
             };
             node.category = node.attributes.modularity_class;
             node.draggable = true;
@@ -85,7 +84,17 @@
                 top: 'bottom',
                 left: 'right'
             },
-            tooltip: {},
+            tooltip: {
+              trigger: 'item',
+              formatter: function (params) {
+                if (params.data.source) {
+                  return params.data.name;
+                }
+                else {
+                  return params.name;
+                }
+              }
+            },
             legend: [{
                 // selectedMode: 'single',
                 data: categories.map(function (a) {
@@ -138,7 +147,7 @@
                 window.open(go);
             }
             if (params.dataType == 'edge') {
-            alert(params.dataType + params.dataIndex);
+            alert(params.dataType + ' ' + params.data.name);
             }
         });
         

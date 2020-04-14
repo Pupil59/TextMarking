@@ -91,16 +91,16 @@
       </node>
     </nodes>
     <edges>
-      <edge id="0" source="1" target="0">
+      <edge id="0" source="1" target="0" weight="8.0" label="这是关系1">
         <attvalues></attvalues>
       </edge>
-      <edge id="1" source="2" target="0" weight="8.0">
+      <edge id="1" source="2" target="0" weight="8.0" label="这是关系2">
         <attvalues></attvalues>
       </edge>
-      <edge id="2" source="3" target="0" weight="10.0">
+      <edge id="2" source="3" target="0" weight="10.0" label="这是关系3">
         <attvalues></attvalues>
       </edge>
-      <edge id="3" source="3" target="2" weight="6.0">
+      <edge id="3" source="3" target="2" weight="6.0" label="这是关系4">
         <attvalues></attvalues>
       </edge>
       
