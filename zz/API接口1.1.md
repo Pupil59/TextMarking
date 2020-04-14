@@ -1,0 +1,388 @@
+# API接口1.0
+
+
+
+## 实体
+
+### 列出所有实体
+
+#### 请求消息
+
+```
+GET  /api/entities?action=list_entity  HTTP/1.1
+```
+
+#### 请求参数
+
+http 请求消息 url 中 需要携带如下参数，
+
+- action
+
+  填写值为 list_entity
+
+#### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果获取信息成功，返回如下
+
+```
+{
+    "ret": 0,
+    "retlist": [
+        {"id": 1, "name": "实体1"},
+        {"id": 2, "name": "实体2"}
+    ]              
+}
+```
+
+ret 为 0 表示登录成功
+
+retlist 里面包含了所有的实体信息列表。
+
+每个实体信息以如下格式存储
+
+```
+    {"id": 2, "name": "实体2"}
+```
+
+
+
+### 添加一个实体
+
+#### 请求消息
+
+```
+POST  /api/entities  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带添加实体的信息
+
+消息体的格式是json，如下示例：
+
+```
+{
+    "action":"add_entity",
+    "data":{
+        "name": "实体1"
+    }
+}
+```
+
+其中
+
+`action` 字段固定填写 `add_entity` 表示添加一个实体
+
+`data` 字段中存储了要添加的实体的信息
+
+服务端接受到该请求后，应该在系统中增加这样的实体。
+
+#### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果添加成功，返回如下
+
+```
+{
+    "ret": 0,
+    "id" : 677
+}
+```
+
+ret 为 0 表示成功。
+
+id 为 添加实体的id号。
+
+如果添加失败，返回失败的原因，示例如下
+
+```
+{
+    "ret": 1,    
+    "msg": "实体名已经存在"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
+
+### 删除实体信息
+
+#### 请求消息
+
+```
+DELETE  /api/entities  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带要删除实体的id
+
+消息体的格式是json，如下示例：
+
+```
+{
+    "action":"del_entity",
+    "id": 6
+}
+```
+
+其中
+
+`action` 字段固定填写 `del_entity` 表示删除一个实体
+
+`id` 字段为要删除的实体的id号
+
+服务端接受到该请求后，应该在系统中尝试删除该id对应的实体。
+
+
+
+#### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果删除成功，返回如下
+
+```
+{
+    "ret": 0
+}
+```
+
+ret 为 0 表示成功。
+
+如果删除失败，返回失败的原因，示例如下
+
+```
+{
+    "ret": 1,    
+    "msg": "id为 566 的实体不存在"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
+
+
+
+## 关系
+
+### 列出所有关系
+
+#### 请求消息
+
+```
+GET  /api/relations?action=list_relation  HTTP/1.1
+```
+
+#### 请求参数
+
+http 请求消息 url 中 需要携带如下参数，
+
+- action
+
+  填写值为 list_relation
+
+#### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果获取信息成功，返回如下
+
+```
+{
+    "ret": 0,
+    "retlist": [
+        {id: 1, name: "并列", source: "实体1", destination: "实体2"},
+        {id: 2, name: "从属", source: "实体2", destination: "实体3"}
+    ]              
+}
+```
+
+ret 为 0 表示登录成功
+
+retlist 里面包含了所有的关系信息列表。
+
+每个关系信息以如下格式存储
+
+```
+    {
+        id: 2, 
+        name: "并列", 
+        source_name: "实体1", 
+        destination_name: "实体2"
+    }
+```
+
+其中 source 和 destination 表示关系的两个实体的内容。
+
+
+
+### 添加一个关系
+
+#### 请求消息
+
+```
+POST  /api/relations HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带添加关系的信息
+
+消息体的格式是json，如下示例：
+
+```
+{
+    "action":"add_relation",
+    "data":{
+        "name":"并列",
+        "sourceid":3,
+        "destinationid":1
+    }
+}
+```
+
+其中
+
+`action` 字段固定填写 `add_relation` 表示添加一个关系
+
+`data` 字段中存储了要添加的关系的信息
+
+服务端接受到该请求后，应该在系统中增加这样的关系。
+
+#### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果添加成功，返回如下
+
+```
+{
+    "ret": 0,
+    "id" : 677
+}
+```
+
+ret 为 0 表示成功。
+
+id 为 添加关系的id号。
+
+如果添加失败，返回失败的原因，示例如下
+
+```
+{
+    "ret": 1,    
+    "msg": "两者之间已经存在其他关系"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
+
+### 删除关系
+
+#### 请求消息
+
+```
+DELETE  /api/relations  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带要删除关系的id
+
+消息体的格式是json，如下示例：
+
+```
+{
+    "action":"del_relation",
+    "id": 6
+}
+```
+
+其中
+
+`action` 字段固定填写 `del_relation` 表示删除一个关系
+
+`id` 字段为要删除的关系的id号
+
+服务端接受到该请求后，应该在系统中尝试删除该id对应的关系。
+
+
+
+#### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果删除成功，返回如下
+
+```
+{
+    "ret": 0
+}
+```
+
+ret 为 0 表示成功。
+
+如果删除失败，返回失败的原因，示例如下
+
+```
+{
+    "ret": 1,    
+    "msg": "id为 566 的关系不存在"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述失败的原因
