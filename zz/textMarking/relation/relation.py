@@ -36,8 +36,8 @@ def listrelations(request):
 
     qs = Relation.objects \
         .annotate(
-        source_name=F('source__name'),
-        destination_name=F('destination__name')
+        source_name=F('entity1__name'),
+        destination_name=F('entity2__name')
     ) \
         .values(
         'id', 'name', 'source_name', 'destination_name'
@@ -56,8 +56,8 @@ def addrelation(request):
     # 并且插入到数据库中
 
     new_order = Relation.objects.create(name=info['name'],
-                                        source_id=info['sourceid'],
-                                        destination_id=info['destinationid'])
+                                        entity1_id=info['sourceid'],
+                                        entity2_id=info['destinationid'])
 
     return JsonResponse({'ret': 0, 'id': new_order.id})
 

@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path
 from entity import entity
 from relation import relation
+from graph import graph
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/entities', entity.dispatcher),
     path('api/relations', relation.dispatcher),
+    path('api/graph', graph.listgraph),
 ]
