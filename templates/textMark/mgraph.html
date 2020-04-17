@@ -57,10 +57,10 @@
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'),'dark');
         myChart.showLoading();
-        $.get('../../static/les-miserables.gexf', function (xml) {
+        $.get('/api/graph', function (xml) {
         myChart.hideLoading();
 
-        var graph = echarts.dataTool.gexf.parse(xml);
+        var graph = JSON.parse(xml);
         var categories = [];
         for (var i = 0; i < 9; i++) {
             categories[i] = {
@@ -74,7 +74,7 @@
             node.label = {
                 show: true
             };
-            node.category = node.attributes.modularity_class;
+            node.category = (node.symbolSize*0.15);
             node.draggable = true;
         });
         option = {
@@ -140,7 +140,7 @@
         };
 
         myChart.setOption(option);
-        }, 'xml');
+        }, 'text');
         myChart.on('click', function (params) {
             if (params.dataType == 'node') {
                 go = "/index";
@@ -157,7 +157,6 @@
 
   <script src='../../static/js/jquery.js'></script>
 
-  <script src="../../static/js"></script>
 
 </body>
 
