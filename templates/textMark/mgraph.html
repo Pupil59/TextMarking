@@ -74,7 +74,7 @@
             node.label = {
                 show: true
             };
-            node.category = (node.symbolSize*0.15);
+            node.category = Math.floor(node.symbolSize*0.15);
             node.draggable = true;
         });
         option = {
