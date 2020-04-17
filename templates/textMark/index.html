@@ -7,6 +7,20 @@
 
   <title>MarkTexting</title>
 
+  <style>
+  .mybutton {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+
   <link rel="stylesheet" href="../../static/css/style.css" media="screen" type="text/css" />
   <script src='../../static/js/jquery.js'></script>
 </head>
@@ -65,27 +79,29 @@
           <h3>
             在这里粘贴你想要标记的文本:
           </h3>
-          <textarea name="user_text" cols="40" rows="30"></textarea><br>
-          <input type="submit" value="上传文本" id="submitText"/>
+          <textarea name="user_text" cols="50" rows="40"></textarea><br>
+          <button type="button" onclick="sendText()" class="mybutton">上传文本(开发中)</button>
         </form>
       </span>
       <span>
           <!-- 添加实体的表单 -->
           <form action="" method="GET" style="float: right;" id="addEntity">
+            <!-- 可能出现403问题
+              {% csrf_token %} -->
             <h3>
               添加实体
             </h3>
-            <table width="400">
+            <table width="300">
             <tr>
               <td>
-                <label for="ename">填入你要添加的实体名称</label>
+                <label for="ename">实体名称：</label>
               </td>
               <td>
                 <input type="text" id="ename" name="name" placeholder="实体名称"/>
               </td>
             </tr>
           </table>
-          <input type="submit" value="添加实体" id="submitEntity"/>
+          <button type="button" onclick="sendEntity()" class="mybutton">添加实体</button>
           </form>
           
           <!-- 添加关系的表单 -->
@@ -93,10 +109,10 @@
             <h3>
               添加关系
             </h3>
-            <table width="400">
+            <table width="300">
             <tr>
               <td>
-                <label for="rname">选择你要添加的关系种类</label>
+                <label for="rname">关系种类：</label>
               </td>
               <td>
                 <select id="rname" name="name">
@@ -108,7 +124,7 @@
             </tr>
             <tr>
               <td>
-                填入该关系的两个实体名称
+                实体名称：
               </td>
               <td>
                 <input type="text" id="ename1" name="sourceid" placeholder="实体1名称"/>
@@ -121,47 +137,29 @@
               </td>
             </tr>
           </table>
-          <input type="submit" value="添加关系" id="submitRelation"/>
+          <button type="button" onclick="sendRelation()" class="mybutton">添加关系(修改中)</button>
           </form>
       </span>
     </div>
-
-    
 	<div style="text-align:center;clear:both;">
 
 </div>
 
-  <div id="myDiv"><h2>使用 AJAX 修改该文本内容</h2></div>
-  <button type="button" onclick="loadXMLDoc()">修改内容</button>
+  <!-- <div id="myDiv"><h2>使用 AJAX 修改该文本内容</h2></div>
+  <button type="button" onclick="loadXMLDoc()">修改内容</button> -->
 
   </article>
-  <!-- 调试用 -->
-  <!-- <div id="show1">
-
-  </div>
-  <div id="show2">
-
-  </div> -->
 </main>
 <script>
-
-  function loadXMLDoc()
-  {
+  function loadXMLDoc() {
     var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-      //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+    if (window.XMLHttpRequest) {
       xmlhttp=new XMLHttpRequest();
-    }
-    else
-    {
-      // IE6, IE5 浏览器执行代码
+    } else {
       xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
-    xmlhttp.onreadystatechange=function()
-    {
-      if (xmlhttp.readyState==4 && xmlhttp.status==200)
-      {
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
       }
     }
@@ -175,12 +173,41 @@
     xmlhttp.send(JSON.stringify(data));
   }
 </script>
-
   <script src="../../static/js/index.js"></script>
-
 </body>
+
 <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
 <script type="text/javascript">
+  // function sendText() {}
+
+  function sendEntity() {
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+      xmlhttp=new XMLHttpRequest();
+    } else {
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        // document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+        alert("添加实体成功");
+      }
+    }
+    xmlhttp.open("POST","http://127.0.0.1:8000/api/entities",true);
+    var addEntity =$("#addEntity");
+    var addEntityData = addEntity.serializeArray();
+    var jsonEntityData = transformToJson(addEntityData);
+    var jsonEntity = {"action":"add_entity"};
+    jsonEntity.data = jsonEntityData;
+
+
+    console.log(jsonEntity);
+    xmlhttp.send(JSON.stringify(jsonEntity));
+  }
+
+  // function sendRelation() {}
+
+/* 奇妙的ajax就先放一放，用xmlhttp
   // 添加提交事件监听器
   // getElementById的参数为form的id
   // addEventListener的参数分别为form中submit的id和监听到事件后跳转的function
@@ -203,16 +230,16 @@
     // $("#show1").html(JSON.stringify(jsonEntity));
     $.ajax({
         type:"POST",
-        url:"/api/entities",
-        contentType: "application/json", 
+        url:"http://127.0.0.1:8000/api/entities",
+        contentType: "application/json",
         dataType:"json",
         data:JSON.stringify(jsonEntity),
-        success:function (data) {
-          console.log(data.statusText);
+        success:function (jsonEntity) {
+          console.log(jsonEntity.statusText);
           alert("asd");
         },
         error:function (data) {
-          console.log(data.statusText);
+          console.log(jsonEntity.statusText);
           alert("asd");
         },
         complete: function (data) {
@@ -243,6 +270,7 @@
         }
     })
   }
+  */
 
   function transformToJson(formData){
         var obj={}
@@ -252,5 +280,6 @@
         }
         return obj;
     }
+    
 </script>
 </html>
