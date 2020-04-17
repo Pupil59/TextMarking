@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
@@ -52,36 +51,163 @@
   <article class='larg'>
     <div>
       <h3>
-        Project 1
-        <span class='entypo-down-open'></span>
+        引导
+        <span class='entypo-down-open'>v</span>
       </h3>
       <p>你可以在这里直接粘贴文本，并进行标记工作</p>
-      <p>对于比较长的文本，你也可以通过下面的"Import"功能来导入文件</p>
+      <p>对于比较长的文本，你也可以通过<a href="#">Import</a>功能来导入文本格式文件</p>
+      <!-- Import页面开发中 -->
     </div>
     <div>
-      <h3>
-        Project 2
-        <span class='entypo-down-open'></span>
-      </h3>
-      <p>test2</p>
+      <span>
+        <!-- 上传文本的表单 -->
+        <form action="" method="GET" style="float: left;" id="addText">
+          <h3>
+            在这里粘贴你想要标记的文本:
+          </h3>
+          <textarea name="user_text" cols="40" rows="30"></textarea><br>
+          <input type="submit" value="上传文本" id="submitText"/>
+        </form>
+      </span>
+      <span>
+          <!-- 添加实体的表单 -->
+          <form action="" method="GET" style="float: right;" id="addEntity">
+            <h3>
+              添加实体
+            </h3>
+            <table width="400">
+            <tr>
+              <td>
+                <label for="ename">填入你要添加的实体名称</label>
+              </td>
+              <td>
+                <input type="text" id="ename" name="name" placeholder="实体名称"/>
+              </td>
+            </tr>
+          </table>
+          <input type="submit" value="添加实体" id="submitEntity"/>
+          </form>
+          
+          <!-- 添加关系的表单 -->
+          <form action="" method="GET" style="float: right;" id="addRelation">
+            <h3>
+              添加关系
+            </h3>
+            <table width="400">
+            <tr>
+              <td>
+                <label for="rname">选择你要添加的关系种类</label>
+              </td>
+              <td>
+                <select id="rname" name="name">
+                  <option value="从属">从属</option>
+                  <option value="并列">并列</option>
+                  <option value="解释">解释</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                填入该关系的两个实体名称
+              </td>
+              <td>
+                <input type="text" id="ename1" name="sourceid" placeholder="实体1名称"/>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <input type="text" id="ename2" name="destinationid" placeholder="实体2名称"/>
+              </td>
+            </tr>
+          </table>
+          <input type="submit" value="添加关系" id="submitRelation"/>
+          </form>
+      </span>
     </div>
-    <div>
-      <h3>
-        Project 3
-        <span class='entypo-down-open'></span>
-      </h3>
-      <p>test3</p>
-    </div>
+
+    
 	<div style="text-align:center;clear:both;">
 
 </div>
   </article>
+  <!-- 调试用 -->
+  <!-- <div id="show1">
+
+  </div>
+  <div id="show2">
+
+  </div> -->
 </main>
 
   <script src='../../static/js/jquery.js'></script>
 
-  <script src="../../static/js"></script>
+  <script src="../../static/js/index.js"></script>
 
 </body>
+<script type="text/javascript" src="../../static/js/jquery.min.js"></script>
+<script type="text/javascript">
+  // 添加提交事件监听器
+  // getElementById的参数为form的id
+  // addEventListener的参数分别为form中submit的id和监听到事件后跳转的function
+  
+  // p.s.需要用户上传文档的接口...
+  // document.getElementById('addText').addEventListener('submitText', sendText);
+  document.getElementById('addEntity').addEventListener('submitEntity', sendEntity);
+  document.getElementById('addRelation').addEventListener('submitRelation', sendRelation);
 
+  //function sendText() {}
+  function sendEntity() {
+    var addEntity =$("#addEntity");
+    var addEntityData = addEntity.serializeArray();
+    var jsonEntityData = transformToJson(addEntityData);
+    var jsonEntity = {"action":"add_entity"};
+    jsonEntity.data = jsonEntityData;
+    //上述将添加实体的form信息转化为json字符串jsonEntity
+
+    // html页面内调试用
+    // $("#show1").html(JSON.stringify(jsonEntity));
+    $.ajax({
+        type:"POST",
+        url:"/api/entities",
+        contentType: "application/json", 
+        dataType:"json",
+        data:JSON.stringify(jsonEntity),
+        success:function (data) {
+          // 根据返回信息调试
+        }
+    })
+  }
+
+  function sendRelation() {
+    var addRelation =$("#addRelation");
+    var addRelationData = addRelation.serializeArray();
+    var jsonRelationData = transformToJson(addRelationData);
+    var jsonRelation = {"action":"add_relation"};
+    jsonRelation.data = jsonRelationData;
+    // 上述将添加关系的form信息转化为json字符串jsonRelation
+
+    // html页面内调试用
+    // $("#show2").html(JSON.stringify(jsonRelation));
+    $.ajax({
+        type:"POST",
+        url:"/api/relations",
+        contentType: "application/json", 
+        dataType:"json",
+        data:JSON.stringify(jsonRelation),
+        success:function (data) {
+          // 根据返回信息调试
+        }
+    })
+  }
+
+  function transformToJson(formData){
+        var obj={}
+        for (var i in formData) {
+            //下标为的i的name做为json对象的key，下标为的i的value做为json对象的value
+            obj[formData[i].name]=formData[i]['value'];
+        }
+        return obj;
+    }
+</script>
 </html>
