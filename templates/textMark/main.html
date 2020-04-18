@@ -6,8 +6,9 @@
   <meta charset="UTF-8">
 
   <title>MarkTexting</title>
-
-    <link rel="stylesheet" href="../../static/css/style.css" media="screen" type="text/css" />
+  <script src='../../static/js/jquery.js'></script>
+  <script src='../../static/js/cb_entitylist.js'></script>
+  <link rel="stylesheet" href="../../static/css/style.css" media="screen" type="text/css" />
 
 </head>
 
@@ -18,7 +19,7 @@
   <h1>
     Dashboard
   </h1>
-  <nav>
+  <nav id="mymenu">
     <ul>
       <li>
         <a target="_top" href="/index" data-title='Text'>Text</a>
@@ -29,6 +30,7 @@
       <li>
         <a data-title='Entity'>Entity</a>
       </li>
+        <ul id = "submene"></ul>
       <li>
         <a data-title='Import'>Import</a>
       </li>
@@ -62,9 +64,7 @@
   </article>
 </main>
 
-  <script src='../../static/js/jquery.js'></script>
 
-  <script src="../../static/js"></script>
 
 </body>
 
