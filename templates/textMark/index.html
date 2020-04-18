@@ -8,18 +8,18 @@
   <title>MarkTexting</title>
 
   <style>
-  .mybutton {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-  }
-</style>
+    .mybutton {
+      background-color: #4CAF50; /* Green */
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
 
   <link rel="stylesheet" href="../../static/css/style.css" media="screen" type="text/css" />
   <script src='../../static/js/jquery.js'></script>
@@ -81,182 +81,134 @@
           <h3>
             在这里粘贴你想要标记的文本:
           </h3>
-          <textarea name="user_text" cols="50" rows="40"></textarea><br>
-          <button type="button" onclick="sendText()" class="mybutton">上传文本(开发中)</button>
+          <textarea name="user_text" cols="40" rows="30"></textarea><br>
+          <button type="button" class="mybutton" value="上传文本" id="submitText">上传文本</button> 
         </form>
       </span>
       <span>
-          <!-- 添加实体的表单 -->
-          <form action="" method="GET" style="float: right;" id="addEntity">
-            <!-- 可能出现403问题
-              {% csrf_token %} -->
-            <h3>
-              添加实体
-            </h3>
-            <table width="300">
+        <!-- 添加实体的表单 -->
+        <form action="" method="GET" style="float: right;" id="addEntity">
+          <h3>
+            添加实体
+          </h3>
+          <table width="400">
             <tr>
               <td>
-                <label for="ename">实体名称：</label>
+                <label for="entity_name" >填入你要添加的实体名称</label>
               </td>
               <td>
-                <input type="text" id="ename" name="name" placeholder="实体名称"/>
+                <input type="text" id="entity_name" name="entity_name" placeholder="实体名称"/>
               </td>
             </tr>
           </table>
-          <button type="button" onclick="sendEntity()" class="mybutton">添加实体</button>
-          </form>
+          <button type="button" class="mybutton" value="添加实体" id="submitEntity" onclick="sendEntity()">添加实体</button>
+        </form>
           
-          <!-- 添加关系的表单 -->
-          <form action="" method="GET" style="float: right;" id="addRelation">
-            <h3>
-              添加关系
-            </h3>
-            <table width="300">
+        <!-- 添加关系的表单 -->
+        <form action="" method="GET" style="float: right;" id="addRelation">
+          <h3>
+            添加关系
+          </h3>
+          <table width="400">
             <tr>
               <td>
-                <label for="rname">关系种类：</label>
+                <label for="relation_names">选择你要添加的关系种类</label>
               </td>
               <td>
-                <select id="rname" name="name">
-                  <option value="从属">从属</option>
-                  <option value="并列">并列</option>
-                  <option value="解释">解释</option>
+                <select id="relation_name" name="relation_name">
+                  <option value="从属" id="1">从属</option>
+                  <option value="并列" id="2">并列</option>
+                  <option value="解释" id="3">解释</option>
                 </select>
               </td>
             </tr>
             <tr>
               <td>
-                实体名称：
+                选择该关系的两个实体名称
               </td>
               <td>
-                <input type="text" id="ename1" name="sourceid" placeholder="实体1名称"/>
+                <select id="source_id" name="source_id"></select>
               </td>
             </tr>
             <tr>
               <td></td>
               <td>
-                <input type="text" id="ename2" name="destinationid" placeholder="实体2名称"/>
+                <select id="destination_id" name="destination_id"></select>
               </td>
             </tr>
           </table>
-          <button type="button" onclick="sendRelation()" class="mybutton">添加关系(修改中)</button>
-          </form>
+          <button type="button" class="mybutton" value="添加关系" id="submitRelation" onclick="sendRelation()">添加关系</button>
+        </form>
       </span>
     </div>
-	<div style="text-align:center;clear:both;">
 
-</div>
+    
+	  <div style="text-align:center;clear:both;"></div>
 
-  <!-- <div id="myDiv"><h2>使用 AJAX 修改该文本内容</h2></div>
-  <button type="button" onclick="loadXMLDoc()">修改内容</button> -->
-
+    <!-- <div id="myDiv"><h2>使用 AJAX 修改该文本内容</h2></div>
+    <button type="button" onclick="loadXMLDoc()">修改内容</button> -->
   </article>
 </main>
-<script>
-  function loadXMLDoc() {
-    var xmlhttp;
-    if (window.XMLHttpRequest) {
-      xmlhttp=new XMLHttpRequest();
-    } else {
-      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
-      }
-    }
-    xmlhttp.open("POST","http://127.0.0.1:8000/api/entities",true);
-    var data = {
-      "action":"add_entity",
-      "data":{
-          "name": "实体1"
-      }};
-    console.log(data);
-    xmlhttp.send(JSON.stringify(data));
-  }
-</script>
-  <script src="../../static/js/index.js"></script>
-</body>
 
+  <script src="../../static/js/index.js"></script>
+
+</body>
 <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
 <script type="text/javascript">
-  // function sendText() {}
-
-  function sendEntity() {
-    var xmlhttp;
-    if (window.XMLHttpRequest) {
-      xmlhttp=new XMLHttpRequest();
-    } else {
-      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        // document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
-        alert("添加实体成功");
-      }
-    }
-    xmlhttp.open("POST","http://127.0.0.1:8000/api/entities",true);
-    var addEntity =$("#addEntity");
-    var addEntityData = addEntity.serializeArray();
-    var jsonEntityData = transformToJson(addEntityData);
-    var jsonEntity = {"action":"add_entity"};
-    jsonEntity.data = jsonEntityData;
-
-
-    console.log(jsonEntity);
-    xmlhttp.send(JSON.stringify(jsonEntity));
-  }
-
-  // function sendRelation() {}
-
-/* 奇妙的ajax就先放一放，用xmlhttp
   // 添加提交事件监听器
   // getElementById的参数为form的id
   // addEventListener的参数分别为form中submit的id和监听到事件后跳转的function
   
   // p.s.需要用户上传文档的接口...
-  // document.getElementById('addText').addEventListener('submitText', sendText);
-  document.getElementById('addEntity').addEventListener('submitEntity', sendEntity);
-  document.getElementById('addRelation').addEventListener('submitRelation', sendRelation);
 
   //function sendText() {}
   function sendEntity() {
-    var addEntity =$("#addEntity");
-    var addEntityData = addEntity.serializeArray();
-    var jsonEntityData = transformToJson(addEntityData);
-    var jsonEntity = {"action":"add_entity"};
-    jsonEntity.data = jsonEntityData;
-    //上述将添加实体的form信息转化为json字符串jsonEntity
+      var name = $("#entity_name").val();
+      $.ajax({
+          type:"POST",
+          url:"/api/entities",
+          contentType: "application/json",
+          dataType:"json",
+          data:JSON.stringify({
+              "action":"add_entity",
+              "data":{
+                  "name":name
+              }
+          }),
+          success: function (data) {
+              alert("success");
+          },
+          error: function (data) {
+              // alert("error");
+          },
+          complete: function (data) {
+              // alert("complete");
+          },
+      })
 
-    // html页面内调试用
-    // $("#show1").html(JSON.stringify(jsonEntity));
-    $.ajax({
-        type:"POST",
-        url:"http://127.0.0.1:8000/api/entities",
-        contentType: "application/json",
-        dataType:"json",
-        data:JSON.stringify(jsonEntity),
-        success:function (jsonEntity) {
-          console.log(jsonEntity.statusText);
-          alert("asd");
-        },
-        error:function (data) {
-          console.log(jsonEntity.statusText);
-          alert("asd");
-        },
-        complete: function (data) {
-          console.log("data.statusText");
-          alert("asd");
-        },
-    })
+
+      //更新添加关系的两个实体下拉栏
+      $.ajax({
+        type:"GET",
+        url:"/api/entities?action=list_entity",
+        success: function (data) {
+          console.log(data);
+          var srcEntity = document.getElementById("source_id");
+          var dstEntity = document.getElementById("destination_id");
+          for (var i = 0; i <= data.retlist.length - 1; i ++) {
+            var opt1 = new Option(data.retlist[i].name, data.retlist[i].id);
+            var opt2 = new Option(data.retlist[i].name, data.retlist[i].id);
+            srcEntity.add(opt1);
+            dstEntity.add(opt2);
+          }
+        }
+      })
   }
 
   function sendRelation() {
-    var addRelation =$("#addRelation");
-    var addRelationData = addRelation.serializeArray();
-    var jsonRelationData = transformToJson(addRelationData);
-    var jsonRelation = {"action":"add_relation"};
-    jsonRelation.data = jsonRelationData;
+    var source_id = $("#source_id").val();
+    var destination_id = $("#destination_id").val();
+    var relation_name = $("#relation_name option:selected").attr("id");
     // 上述将添加关系的form信息转化为json字符串jsonRelation
 
     // html页面内调试用
@@ -264,15 +216,21 @@
     $.ajax({
         type:"POST",
         url:"/api/relations",
-        contentType: "application/json", 
+        contentType: "application/json",
         dataType:"json",
-        data:JSON.stringify(jsonRelation),
+        data:JSON.stringify({
+            "action":"add_relation",
+            "data":{
+                "name":relation_name,
+                "sourceid":source_id,
+                "destinationid":destination_id
+            }
+        }),
         success:function (data) {
-          // 根据返回信息调试
-        }
+          alert("success");
+        },
     })
   }
-  */
 
   function transformToJson(formData){
         var obj={}
@@ -282,6 +240,5 @@
         }
         return obj;
     }
-    
 </script>
 </html>
