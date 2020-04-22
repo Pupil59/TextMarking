@@ -6,33 +6,32 @@ from common.models import Relation, Entity
 
 
 def dispatcher(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
+
+        if request.method == 'GET':
+            request.params = request.GET
+
+        # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
+        elif request.method in ['POST', 'DELETE']:
+            request.params = json.loads(request.body)
+
+        # 根据不同的action分派给不同的函数进行处理
+        action = request.params['action']
+
+        if action == 'list_relation':
+            return listrelations(request)
+        elif action == 'add_relation':
+            return addrelation(request)
+        elif action == 'del_relation':
+            return delrelation(request)
+
+        else:
+            return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
+    else:
         return JsonResponse({
             'ret': 302,
             'msg': '未登录'},
             status=302)
-    # 将请求参数统一放入request 的 params 属性中，方便后续处理
-
-    # GET请求 参数在url中，同过request 对象的 GET属性获取
-    if request.method == 'GET':
-        request.params = request.GET
-
-    # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
-    elif request.method in ['POST', 'DELETE']:
-        # 根据接口，POST/PUT/DELETE 请求的消息体都是 json格式
-        request.params = json.loads(request.body)
-
-    # 根据不同的action分派给不同的函数进行处理
-    action = request.params['action']
-    if action == 'list_relation':
-        return listrelations(request)
-    elif action == 'add_relation':
-        return addrelation(request)
-    elif action == 'del_relation':
-        return delrelation(request)
-
-    else:
-        return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
 
 
 def listrelations(request):
