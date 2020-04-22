@@ -59,7 +59,7 @@
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'),'dark');
         myChart.showLoading();
-        $.get('/api/graph', function (xml) {
+        $.get('/api/project/graph', function (xml) {
         myChart.hideLoading();
 
         var graph = JSON.parse(xml);

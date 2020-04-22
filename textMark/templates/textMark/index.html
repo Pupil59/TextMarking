@@ -170,7 +170,7 @@
       var name = $("#entity_name").val();
       $.ajax({
           type:"POST",
-          url:"/api/entities",
+          url:"/api/project/entities",
           contentType: "application/json",
           dataType:"json",
           data:JSON.stringify({
@@ -190,7 +190,7 @@
       //更新添加关系的两个实体下拉栏
       $.ajax({
         type:"GET",
-        url:"/api/entities?action=list_entity",
+        url:"/api/project/entities?action=list_entity",
         success: function (data) {
           console.log(data);
           var srcEntity = document.getElementById("source_id");
@@ -233,7 +233,7 @@
     // $("#show2").html(JSON.stringify(jsonRelation));
     $.ajax({
         type:"POST",
-        url:"/api/relations",
+        url:"/api/project/relations",
         contentType: "application/json",
         dataType:"json",
         data:JSON.stringify({

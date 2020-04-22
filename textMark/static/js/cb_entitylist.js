@@ -3,7 +3,7 @@ $(document).ready(function()
   var name = $("#entity_name").val();
   $.ajax({
     type:"GET",
-    url:"/api/entities?action=list_entity",
+    url:"/api/project/entities?action=list_entity",
     success:function (data) {
         console.log((data));
         for (var i = data.retlist.length - 1; i >= 0; i--) {
@@ -35,7 +35,7 @@ $(document).on("click","#submene li",function(){
   console.log($(this)[0].id);
   $.ajax({
   type:"DELETE",
-  url:"/api/entities",
+  url:"/api/project/entities",
   contentType: "application/json",
   dataType:"json",
   data:JSON.stringify({
