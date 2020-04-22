@@ -5,7 +5,7 @@ $(document).ready(function()
     type:"GET",
     url:"/api/entities?action=list_entity",
     success:function (data) {
-        //console.log((data));
+        console.log((data));
         for (var i = data.retlist.length - 1; i >= 0; i--) {
           $("#submene").append($("<li id = \"en" + data.retlist[i].id + "\">" + (data.retlist[i].name) + "</li>"));
         }
@@ -32,7 +32,7 @@ $(document).ready(function()
 $(document).on("click","#submene li",function(){
   var status = confirm("del?");
   if (!status) {return false;}
-  console.log($(this).context.id);
+  console.log($(this)[0].id);
   $.ajax({
   type:"DELETE",
   url:"/api/entities",
@@ -40,7 +40,7 @@ $(document).on("click","#submene li",function(){
   dataType:"json",
   data:JSON.stringify({
     "action":"del_entity",
-    "id": $(this).context.id.slice(2)
+    "id": $(this)[0].id.slice(2)
   }),
   success:function (data) {
       console.log((data));

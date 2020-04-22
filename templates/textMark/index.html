@@ -101,7 +101,7 @@
               </td>
             </tr>
           </table>
-          <button type="button" class="mybutton" value="添加实体" id="submitEntity" onclick="sendEntity()">添加实体</button>
+          <button type="button" class="mybutton" value="添加实体" id="submitEntity" onclick="entitySubmit()">添加实体</button>
         </form>
           
         <!-- 添加关系的表单 -->
@@ -127,13 +127,13 @@
                 选择该关系的两个实体名称
               </td>
               <td>
-                <select id="source_id" name="source_id"></select>
+                <select id="source_id" name="source_name"></select>
               </td>
             </tr>
             <tr>
               <td></td>
               <td>
-                <select id="destination_id" name="destination_id"></select>
+                <select id="destination_id" name="destination_name"></select>
               </td>
             </tr>
           </table>
@@ -143,7 +143,7 @@
     </div>
 
     
-	  <div style="text-align:center;clear:both;"></div>
+    <div style="text-align:center;clear:both;"></div>
 
     <!-- <div id="myDiv"><h2>使用 AJAX 修改该文本内容</h2></div>
     <button type="button" onclick="loadXMLDoc()">修改内容</button> -->
@@ -155,13 +155,17 @@
 </body>
 <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
 <script type="text/javascript">
-  // 添加提交事件监听器
-  // getElementById的参数为form的id
-  // addEventListener的参数分别为form中submit的id和监听到事件后跳转的function
+  window.onload = function() {
+    getEntities();
+  }
   
   // p.s.需要用户上传文档的接口...
-
   //function sendText() {}
+  function entitySubmit() {
+    sendEntity();
+    getEntities();
+  }
+
   function sendEntity() {
       var name = $("#entity_name").val();
       $.ajax({
@@ -175,18 +179,14 @@
                   "name":name
               }
           }),
-          success: function (data) {
-              alert("success");
-          },
-          error: function (data) {
-              // alert("error");
-          },
-          complete: function (data) {
-              // alert("complete");
-          },
+          success:function (data) {
+          alert("返回值：" + data.ret +  "\n关系id：" + data.id);
+        },
       })
+      getEntities();
+  }
 
-
+  function getEntities() {
       //更新添加关系的两个实体下拉栏
       $.ajax({
         type:"GET",
@@ -198,17 +198,35 @@
           for (var i = 0; i <= data.retlist.length - 1; i ++) {
             var opt1 = new Option(data.retlist[i].name, data.retlist[i].id);
             var opt2 = new Option(data.retlist[i].name, data.retlist[i].id);
-            srcEntity.add(opt1);
-            dstEntity.add(opt2);
+            if (!isItemExist(srcEntity, opt1)) {
+              srcEntity.add(opt1);
+            }
+            if (!isItemExist(dstEntity, opt2)) {
+              dstEntity.add(opt2);
+            }
           }
         }
       })
   }
 
+  function isItemExist(objSelect,objItemValue)
+{
+     var isExit = false;
+     for(var i=0;i<objSelect.length;i++)
+     {
+         if ((objSelect.options[i].text == objItemValue.text) && (objSelect.options[i].value == objItemValue.value))
+         {
+             isExit = true;
+             break;
+         }
+     }     
+     return isExit;
+}
+
   function sendRelation() {
     var source_id = $("#source_id").val();
     var destination_id = $("#destination_id").val();
-    var relation_name = $("#relation_name option:selected").attr("id");
+    var relation_name = $("#relation_name").val();
     // 上述将添加关系的form信息转化为json字符串jsonRelation
 
     // html页面内调试用
@@ -227,7 +245,7 @@
             }
         }),
         success:function (data) {
-          alert("success");
+          alert("返回值：" + data.ret +  "\n关系id：" + data.id);
         },
     })
   }
