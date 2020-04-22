@@ -9,5 +9,5 @@ urlpatterns = [
     path('sigin/', sign_in),
     path('change_password/', modify_name),
     path('other/', dispatch),
-    path('projects', project.dispatcher),
+    # path('projects', project.dispatcher),
 ]

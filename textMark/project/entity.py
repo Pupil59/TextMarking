@@ -10,12 +10,6 @@ def dispatcher(request):
             'ret': 302,
             'msg': '未登录'},
             status=302)
-
-    if 'project_id' not in request.session:
-        return JsonResponse({
-            'ret': 302,
-            'msg': '未进入项目'},
-            status=302)
     # 将请求参数统一放入request 的 params 属性中，方便后续处理
 
     # GET请求 参数在url中，同过request 对象的 GET属性获取
@@ -43,8 +37,8 @@ def dispatcher(request):
 def listentities(request):
     # 返回一个 QuerySet 对象 ，包含所有的表记录
 
-    pid = request.session['project_id']
-    qs = Entity.objects.filter(project_id=pid).values('id', 'name')
+    uid = request.user.id
+    qs = Entity.objects.filter(user_id=uid).values('id', 'name')
 
     # 将 QuerySet 对象 转化为 list 类型
     retlist = list(qs)
@@ -56,7 +50,7 @@ def addentity(request):
     info = request.params['data']
 
     record = Entity.objects.create(name=info['name'],
-                                   project_id=request.session['project_id'])
+                                   user_id=request.user.id)
 
     return JsonResponse({'ret': 0, 'id': record.id})
 

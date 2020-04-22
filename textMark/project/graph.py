@@ -11,16 +11,10 @@ def listgraph(request):
             'msg': '未登录'},
             status=302)
 
-    if 'project_id' not in request.session:
-        return JsonResponse({
-            'ret': 302,
-            'msg': '未进入项目'},
-            status=302)
+    uid = request.user.id;
+    qs_entity = Entity.objects.filter(user_id=uid).values()
 
-    pid = request.session['project_id']
-    qs_entity = Entity.objects.filter(project_id=pid).values()
-
-    qs_relation = Relation.objects.filter(project_id=pid) \
+    qs_relation = Relation.objects.filter(user_id=uid) \
         .annotate(
         source=F('entity1__id'),
         target=F('entity2__id')

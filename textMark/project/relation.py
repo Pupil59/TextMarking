@@ -11,12 +11,6 @@ def dispatcher(request):
             'ret': 302,
             'msg': '未登录'},
             status=302)
-
-    if 'project_id' not in request.session:
-        return JsonResponse({
-            'ret': 302,
-            'msg': '未进入项目'},
-            status=302)
     # 将请求参数统一放入request 的 params 属性中，方便后续处理
 
     # GET请求 参数在url中，同过request 对象的 GET属性获取
@@ -44,9 +38,9 @@ def dispatcher(request):
 def listrelations(request):
     # 返回一个 QuerySet 对象 ，包含所有的表记录
     # qs = Relation.objects.values()
-    pid = request.session['project_id']
+    uid = request.user.id
 
-    qs = Relation.objects.filter(project_id=pid) \
+    qs = Relation.objects.filter(user_id=uid) \
         .annotate(
         source_name=F('entity1__name'),
         destination_name=F('entity2__name')
@@ -64,35 +58,35 @@ def listrelations(request):
 def addrelation(request):
     info = request.params['data']
 
-    pid = request.session['project_id']
-    sname = info['source_name']
-    dname = info['destination_name']
+    uid = request.user.id
+    sid = info['source_id']
+    tid = info['target_id']
 
     try:
-        source = Entity.objects.get(project_id=pid, name=sname)
+        source = Entity.objects.get(id=sid)
 
     except Entity.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'实体`{sname}`不存在'
+            'msg': f'id为`{sid}的实体`不存在'
         }
 
     try:
-        destination = Entity.objects.get(project_id=pid, name=dname)
+        Entity.objects.get(id=tid)
 
     except Entity.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'实体`{dname}`不存在'
+            'msg': f'id为`{tid}的实体`不存在'
         }
 
     source.symbolSize += 5
     source.save()
 
     new_relation = Relation.objects.create(name=info['name'],
-                                           entity1_id=source.id,
-                                           entity2_id=destination.id,
-                                           project_id=pid)
+                                           entity1_id=sid,
+                                           entity2_id=tid,
+                                           user_id=uid)
 
     return JsonResponse({'ret': 0, 'id': new_relation.id})
 
