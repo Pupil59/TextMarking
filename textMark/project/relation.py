@@ -30,7 +30,8 @@ def dispatcher(request):
     else:
         return JsonResponse({
             'ret': 302,
-            'msg': '未登录'},
+            'msg': '未登录',
+            'redirect': '/user/index/'},
             status=302)
 
 
