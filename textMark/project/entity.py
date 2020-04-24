@@ -46,7 +46,7 @@ def listentities(request):
 
 
 def addentity(request):
-    info = request.params['data']
+   info = request.params['data']
 
     record = Entity.objects.create(name=info['name'],
                                    user_id=request.user.id)

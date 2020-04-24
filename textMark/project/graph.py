@@ -6,7 +6,7 @@ from common.models import Entity, Relation
 
 def listgraph(request):
     if request.user.is_authenticated:
-        uid = request.user.id;
+        uid = request.user.id
         qs_entity = Entity.objects.filter(user_id=uid).values()
 
         qs_relation = Relation.objects.filter(user_id=uid) \

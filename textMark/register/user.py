@@ -18,15 +18,15 @@ def dispatch(request):
 
 
 def modify_name(request):
-    user_id = request.big_user.id
+    user = request.user
     try:
-        user = big_user.objects.get(id=user_id)
+        user = big_user.objects.get(username=user.username)
         user.name = request.params["user_name"]
         return JsonResponse({
             "ret": 0,
             "msg": "修改成功"
         })
-    except big_user.DoesNotExist:
+    except user.DoesNotExist:
         return JsonResponse({
             "ret": -1,
             "msg": "用户ID不存在"
@@ -43,7 +43,7 @@ def sign_out(request):
 
 def new_user(request):
     new_id = request.POST.get('user_id')
-    count = big_user.objects.filter(id=new_id).count()
+    count = big_user.objects.filter(username=new_id).count()
     if count > 0:
         return JsonResponse({
             "ret": -1,
@@ -90,8 +90,7 @@ def sign_in(request):
 def modify_password(request):
     new_password = request.POST.get('new_password')
     cur_password = request.POST.get('cur_password')
-    user_id = request.big_user.id
-    user = authenticate(id=user_id, password=cur_password)
+    user = request.user
     if user is not None:
         if cur_password == new_password:
             return JsonResponse({
