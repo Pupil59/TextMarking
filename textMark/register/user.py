@@ -9,7 +9,7 @@ from django.contrib.auth.hashers import check_password
 
 def dispatch(request):
     if request.method in ['POST', 'PUT']:
-        request.params = json.load(request.body)
+        request.params = json.loads(request.body)
         action = request.params['action']
         if action == 'logout':
             return sign_out(request)
@@ -56,7 +56,7 @@ def new_user(request):
         user.name = user_name
         user.save()
         login(request, user)
-        logout(request)
+        # logout(request)
         return JsonResponse({
             "ret": 0,
             "msg": "创建成功"
@@ -78,7 +78,7 @@ def sign_in(request):
         login(request, user)
         return JsonResponse({
             "ret": 0,
-            "msg": "登陆成功"
+            "msg": "登录成功"
         })
     else:
         return JsonResponse({
@@ -91,7 +91,7 @@ def modify_password(request):
     new_password = request.POST.get('new_password')
     cur_password = request.POST.get('cur_password')
     user = request.user
-    if user is not None:
+    if check_password(cur_password, user.password):
         if cur_password == new_password:
             return JsonResponse({
                 "ret": -2,

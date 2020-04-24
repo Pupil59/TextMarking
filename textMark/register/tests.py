@@ -51,7 +51,7 @@ class registerTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         response_content = json.loads(response.content)
-        self.assertEqual(response_content['msg'], '登录成功')
+        self.assertEqual(response_content['msg'], '用户已登录')
 
     def test_sign_in_success(self):
         # 注册
@@ -68,21 +68,21 @@ class registerTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(big_user.objects.count(), 1)
         
-        # 成功登录
+        # 密码错误--已登录
         response = self.client.post(
             path= '/user/sigin/',
             data=
             {
                 'user_id': '3146',
-                'password': '123456'
+                'password': '04115456'
             }
         )
 
         self.assertEqual(response.status_code, 200)
         response_content = json.loads(response.content)
-        self.assertEqual(response_content['msg'], '登录成功')
+        self.assertEqual(response_content['msg'], '用户已登录')
 
-        # 用户已登录
+        # 密码正确--已登录
         response = self.client.post(
             path= '/user/sigin/',
             data=
@@ -111,6 +111,20 @@ class registerTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(big_user.objects.count(), 1)
         
+        data = {
+            'action': 'logout'
+        }
+
+        # 登出
+        response = self.client.post(
+            path= '/user/other/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '登出成功')
+
         # 密码错误
         response = self.client.post(
             path= '/user/sigin/',
@@ -154,7 +168,34 @@ class registerTests(TestCase):
         response_content = json.loads(response.content)
         self.assertEqual(response_content['msg'], '创建成功')
 
-        # 登录
+        # 已登录
+        response = self.client.post(
+            path= '/user/sigin/',
+            data=
+            {
+                'user_id': '3146',
+                'password': '123456'
+            }
+        )
+
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '用户已登录')
+
+        data= {
+            'action': 'logout'
+        }
+
+        # 登出
+        response = self.client.post(
+            path= '/user/other/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '登出成功')
+
+        # 成功登录
         response = self.client.post(
             path= '/user/sigin/',
             data=
@@ -166,17 +207,6 @@ class registerTests(TestCase):
 
         response_content = json.loads(response.content)
         self.assertEqual(response_content['msg'], '登录成功')
-
-        # 登出
-        response = self.client.post(
-            path= '/user/other/',
-            data= {
-                'action': 'logout'
-            }
-        )
-
-        response_content = json.loads(response.content)
-        self.assertEqual(response_content['msg'], '登出成功')
 
     def test_modify_name(self):
         # 注册
@@ -193,16 +223,72 @@ class registerTests(TestCase):
         response_content = json.loads(response.content)
         self.assertEqual(response_content['msg'], '创建成功')
 
+        data= {
+            'user_id': '3146',
+            'action': 'modify_name',
+            'user_name': 'crapobago'
+        }
+
         # 更改用户名
         response = self.client.post(
             path= '/user/other/',
-            data=
-            {
-                'user_id': '3146',
-                'action': 'modify_name',
-                'user_name': 'crapobago'
-            }
+            data= json.dumps(data),
+            content_type= 'application/json'
         )
 
         response_content = json.loads(response.content)
         self.assertEqual(response_content['msg'], '修改成功')
+
+    def test_modify_password(self):
+        # 注册
+        response = self.client.post(
+            path= '/user/register/',
+            data=
+            {
+                'user_id': '3146',
+                'password': '123456',
+                'user_name': 'crapbag'
+            }
+        )
+
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '创建成功')
+
+        # 密码错误
+        response = self.client.post(
+            path= '/user/change_password/',
+            data=
+            {
+                'new_password': 'new_123456',
+                'cur_password': 'wrong'
+            }
+        )
+
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '当前密码错误')
+
+        # 密码重复
+        response = self.client.post(
+            path= '/user/change_password/',
+            data=
+            {
+                'new_password': '123456',
+                'cur_password': '123456'
+            }
+        )
+
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '新密码重复')
+
+        # 修改成功
+        response = self.client.post(
+            path= '/user/change_password/',
+            data=
+            {
+                'new_password': 'new_123456',
+                'cur_password': '123456'
+            }
+        )
+
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '密码修改成功')
