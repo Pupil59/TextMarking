@@ -56,7 +56,7 @@ def listrelations(request):
 
 
 def addrelation(request):
-    info = request.params['data']
+    info = request.params
 
     uid = request.user.id
     sid = info['source_id']
