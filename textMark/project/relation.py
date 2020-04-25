@@ -62,6 +62,12 @@ def addrelation(request):
     sid = info['source_id']
     tid = info['target_id']
 
+    if (sid == tid):
+        return JsonResponse({
+            'ret': 1,
+            'msg': '实体与自身之间不应存在关系'
+        })
+
     try:
         source = Entity.objects.get(id=sid)
 

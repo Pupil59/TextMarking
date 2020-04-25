@@ -127,6 +127,56 @@ class relationTests(APITestCase):
         response_content = json.loads(response.content)
         self.assertEqual(len(response_content['retlist']), 2)
 
+    def test_add_relation_duplicate(self):
+        self.assertEqual(Relation.objects.count(), 0)
+        # 添加关系1
+        data = {
+            'action': 'add_relation',
+            'data': {
+                'source_id': self.entity_id_1,
+                'target_id': self.entity_id_2,
+                'name': '属于'
+            }
+        }
+        response = self.client.post(
+            path= '/api/project/relations',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        self.assertEqual(Relation.objects.count(), 1)
+
+        # 添加关系1---两者已存在其他关系
+        data = {
+            'action': 'add_relation',
+            'data': {
+                'source_id': self.entity_id_1,
+                'target_id': self.entity_id_2,
+                'name': '并列'
+            }
+        }
+        response = self.client.post(
+            path= '/api/project/relations',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        self.assertEqual(Relation.objects.count(), 1)
+
+        # 添加关系2---实体与自身之间不应存在关系
+        data = {
+            'action': 'add_relation',
+            'data': {
+                'source_id': self.entity_id_3,
+                'target_id': self.entity_id_3,
+                'name': '解释'
+            }
+        }
+        response = self.client.post(
+            path= '/api/project/relations',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        self.assertEqual(Relation.objects.count(), 1)
+
     # 删除实体时实体相关的关系也会被删除
     def test_del_relation(self):
         self.assertEqual(Relation.objects.count(), 0)
