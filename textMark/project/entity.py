@@ -47,7 +47,17 @@ def listentities(request):
 
 
 def addentity(request):
-   info = request.params['data']
+    info = request.params['data']
+
+    qs = Entity.objects.get(user_id=request.user.id)
+    entities = list(qs)
+
+    for entity in entities:
+        if entity['name'] == info['name']:
+            return JsonResponse({
+                'ret': 1,
+                'msg': '实体名在项目中已经存在'
+            })
 
     record = Entity.objects.create(name=info['name'],
                                    user_id=request.user.id)
