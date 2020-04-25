@@ -85,17 +85,21 @@
   </article>
 </main>
 
-  <script src='js/jquery.js'></script>
-  <script src="js/index.js"></script>
+  <script src='../../static/js/jquery.js'></script>
+  <script src="../../static/js/index.js"></script>
   <script type="text/javascript">
   	function sendLogout() {
     $.ajax({
         type: "PUT",
-        url: "/user/?action=logout",
+        url: "/user/",
+        contentType: "application/json",
+        dataType: "json",
+        data:JSON.stringify({
+          "action":"logout",
+        }),
         success: function (data) {
-            console.log(data);
             if(data.ret == 0) {
-                alert("登陆成功");
+                alert("注销成功");
                 window.location.href() = "/index";
             } else {
                 alert(data.msg);
@@ -115,7 +119,7 @@
         url: "/user/change_pasword",
         contentType: "application/json",
         dataType: "json",
-        data:JSON.sformingify({
+        data:JSON.stringify({
               "action":"change_name",
               "user_name":newID,
           }),
