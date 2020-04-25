@@ -80,7 +80,7 @@ def addrelation(request):
             'msg': f'id为`{tid}的实体`不存在'
         }
 
-    qs = Relation.objects.get(user_id=uid)
+    qs = Relation.objects.filter(user_id=uid).values()
     relations = list(qs)
 
     for r in relations:

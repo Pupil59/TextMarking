@@ -26,7 +26,9 @@ class relationTests(APITestCase):
         self.assertEqual(Entity.objects.count(), 0)
         data= {
             'action':'add_entity',
-            'name':'entity1'
+            'data': {
+                'name':'entity1'
+            }
         }
         response = self.client.post(
             path='/api/project/entities',
@@ -39,7 +41,9 @@ class relationTests(APITestCase):
         # 添加实体2
         data= {
             'action':'add_entity',
-            'name':'entity2'
+            'data': {
+                'name':'entity2'
+            }
         }
         response = self.client.post(
             path='/api/project/entities',
@@ -52,7 +56,9 @@ class relationTests(APITestCase):
         # 添加实体3
         data= {
             'action':'add_entity',
-            'name':'entity3'
+            'data': {
+                'name':'entity3'
+            }
         }
         response = self.client.post(
             path='/api/project/entities',
@@ -65,7 +71,9 @@ class relationTests(APITestCase):
         # 添加实体4
         data= {
             'action':'add_entity',
-            'name':'entity4'
+            'data': {
+                'name':'entity4'
+            }
         }
         response = self.client.post(
             path='/api/project/entities',
@@ -80,9 +88,11 @@ class relationTests(APITestCase):
         # 添加关系1
         data = {
             'action': 'add_relation',
-            'source_id': self.entity_id_1,
-            'target_id': self.entity_id_2,
-            'name': '属于'
+            'data': {
+                'source_id': self.entity_id_1,
+                'target_id': self.entity_id_2,
+                'name': '属于'
+            }
         }
         response = self.client.post(
             path= '/api/project/relations',
@@ -94,9 +104,11 @@ class relationTests(APITestCase):
         # 添加关系2
         data = {
             'action': 'add_relation',
-            'source_id': self.entity_id_1,
-            'target_id': self.entity_id_3,
-            'name': '并列'
+            'data': {
+                'source_id': self.entity_id_1,
+                'target_id': self.entity_id_3,
+                'name': '并列'
+            }
         }
         response = self.client.post(
             path= '/api/project/relations',
@@ -106,13 +118,11 @@ class relationTests(APITestCase):
         self.assertEqual(Relation.objects.count(), 2)
 
         # 请求关系列表
-        data = {
-            'action': 'list_relation'
-        }
-        response = self.client.post(
+        response = self.client.get(
             path= '/api/project/relations',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            data= {
+                'action': 'list_relation'
+            }
         )
         response_content = json.loads(response.content)
         self.assertEqual(len(response_content['retlist']), 2)
@@ -123,9 +133,11 @@ class relationTests(APITestCase):
         # 添加关系1
         data = {
             'action': 'add_relation',
-            'source_id': self.entity_id_1,
-            'target_id': self.entity_id_2,
-            'name': '属于'
+            'data': {
+                'source_id': self.entity_id_1,
+                'target_id': self.entity_id_2,
+                'name': '属于'
+            }
         }
         response = self.client.post(
             path= '/api/project/relations',
@@ -139,9 +151,11 @@ class relationTests(APITestCase):
         # 添加关系2
         data = {
             'action': 'add_relation',
-            'source_id': self.entity_id_1,
-            'target_id': self.entity_id_3,
-            'name': '并列'
+            'data': {
+                'source_id': self.entity_id_1,
+                'target_id': self.entity_id_3,
+                'name': '并列'
+            }
         }
         response = self.client.post(
             path= '/api/project/relations',
@@ -155,9 +169,11 @@ class relationTests(APITestCase):
         # 添加关系3
         data = {
             'action': 'add_relation',
-            'source_id': self.entity_id_3,
-            'target_id': self.entity_id_4,
-            'name': '递进'
+            'data': {
+                'source_id': self.entity_id_3,
+                'target_id': self.entity_id_4,
+                'name': '递进'
+            }
         }
         response = self.client.post(
             path= '/api/project/relations',

@@ -30,7 +30,9 @@ class entityTests(APITestCase):
         self.assertEqual(Entity.objects.count(), 0)
         data= {
             'action':'add_entity',
-            'name':'entity1'
+            'data': {
+                'name':'entity1'
+            }
         }
         response = self.client.post(
             path='/api/project/entities',
@@ -42,7 +44,9 @@ class entityTests(APITestCase):
         # 添加实体2
         data= {
             'action':'add_entity',
-            'name':'entity2'
+            'data': {
+                'name':'entity2'
+            }
         }
         response = self.client.post(
             path='/api/project/entities',
@@ -66,7 +70,9 @@ class entityTests(APITestCase):
         # 添加实体--重名
         data= {
             'action':'add_entity',
-            'name':'entity2'
+            'data': {
+                'name':'entity2'
+            }
         }
         response = self.client.post(
             path='/api/project/entities',
@@ -80,7 +86,9 @@ class entityTests(APITestCase):
         self.assertEqual(Entity.objects.count(), 0)
         data= {
             'action':'add_entity',
-            'name':'entity1'
+            'data': {
+                'name':'entity1'
+            }
         }
         response = self.client.post(
             path='/api/project/entities',
@@ -93,7 +101,9 @@ class entityTests(APITestCase):
         # 添加实体2
         data= {
             'action':'add_entity',
-            'name':'entity2'
+            'data': {
+                'name':'entity2'
+            }
         }
         response = self.client.post(
             path='/api/project/entities',

@@ -49,8 +49,9 @@ def listentities(request):
 def addentity(request):
     info = request.params['data']
 
-    qs = Entity.objects.get(user_id=request.user.id)
+    qs = Entity.objects.filter(user_id=request.user.id).values('id', 'name')
     entities = list(qs)
+    
 
     for entity in entities:
         if entity['name'] == info['name']:
