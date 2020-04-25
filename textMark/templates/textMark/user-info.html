@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>MarkTexting</title>
+
+  <style>
+    .larg a {
+      color: #000000;
+      width: fit-content;
+      height: fit-content;
+      margin: 10px 80px;
+      display: inline;
+      line-height: fit-content;
+      text-decoration: none;
+      formansition: all .5s;}
+  </style>
+  <link rel="stylesheet" href="../../static/css/style.css" media="screen" type="text/css" />
+
+</head>
+
+<body>
+
+  <span class='bckg'></span>
+<header>
+  <h1>
+    Dashboard
+  </h1>
+  <nav>
+    <ul>
+      <li>
+        <a target="_top" href="index.html" data-title='Projects'>Projects</a>
+      </li>
+      <li>
+        <a target="_top" href="mgraph.html" data-title='Team'>Graph</a>
+      </li>
+      <li>
+        <a data-title='Diary'>Diary</a>
+      </li>
+      <li>
+        <a data-title='Timeline'>Timeline</a>
+      </li>
+      <li>
+        <a data-title='Settings'>Settings</a>
+      </li>
+      <li>
+        <a data-title='Search'>Search</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <div class='title'>
+    <h2>Projects</h2>
+    <a href='#' title='Profil'>
+      Hello Bob !
+    </a>
+  </div>
+  <article class='larg'>
+    
+      <h2 class="avatarname">
+        Welcome !
+      </h2>
+    
+    <div>
+    	<button class="button2 disabled" onclick="">
+    		上传头像
+    	</button>
+    	<button class="button2 disabled" onclick="sendChangepasword()">
+    		修改密码
+    	</button>
+    	<button class="button2 disabled" onclick="sendChangename()">
+    		修改昵称
+    	</button>
+    </div></br>
+
+    <button class="button1" onclick="sendLogout()">登出</button>
+   
+  <div style="text-align:center;clear:both;">
+
+  </div>
+  </article>
+</main>
+
+  <script src='js/jquery.js'></script>
+  <script src="js/index.js"></script>
+  <script type="text/javascript">
+  	function sendLogout() {
+    $.ajax({
+        type: "PUT",
+        url: "/user/?action=logout",
+        success: function (data) {
+            console.log(data);
+            if(data.ret == 0) {
+                alert("登陆成功");
+                window.location.href() = "/index";
+            } else {
+                alert(data.msg);
+            }
+        },
+        error : function() {
+            alert("异常！");
+        }
+    });
+	}
+	function sendChangename() {
+		alert("这个功能还没完成！");
+
+    var newID = $("#?").val();
+    $.ajax({
+        type: "POST",
+        url: "/user/change_pasword",
+        contentType: "application/json",
+        dataType: "json",
+        data:JSON.sformingify({
+              "action":"change_name",
+              "user_name":newID,
+          }),
+        success: function (data) {
+            console.log(data);
+            if(data.ret == 0) {
+                alert("修改成功");
+            } else {
+                alert(data.msg);
+            }
+        },
+        error : function() {
+            alert("异常！");
+        }
+    })
+  }
+  function sendChangepasword() {
+		alert("这个功能还没完成！");
+		
+    var newPassword = $("#?").val();
+    $.ajax({
+        type: "POST",
+        url: "/user",
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        data: "new_password="+newPassword,
+        success: function (data) {
+            console.log(data);
+            if(data.ret == 0) {
+                alert("修改成功");
+            } else {
+                alert(data.msg);
+            }
+        },
+        error : function() {
+            alert("异常！");
+        }
+    })
+  }
+  </script>
+
+  <style type="text/css">
+	.h1{
+		width: 100%;
+	}
+	.button1 {
+    background-color: #555555; color: black;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 100%;
+	}
+	.button1:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+	}
+	.button2 {
+    background-color: #555555; color: black;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 32%;
+    border-radius: 12px;
+	}
+	.button2 {
+    float: left;
+	}
+	.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+	}
+	.button2:hover {
+    background-color: #3e8e41;
+  }
+  .h4
+	{
+    clear:both;
+	}
+  </style>
+</body>
+
+</html>

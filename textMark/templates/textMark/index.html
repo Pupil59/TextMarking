@@ -184,6 +184,7 @@
         },
       })
       getEntities();
+      location.reload();
   }
 
   function getEntities() {
@@ -240,8 +241,8 @@
             "action":"add_relation",
             "data":{
                 "name":relation_name,
-                "sourceid":source_id,
-                "destinationid":destination_id
+                "source_id":source_id,
+                "target_id":destination_id
             }
         }),
         success:function (data) {
