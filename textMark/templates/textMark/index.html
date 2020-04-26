@@ -60,15 +60,13 @@
 <main>
   <div class='title'>
     <h2>Text</h2>
-    <a href='#' title='Profil'>
-      Hello Bob !
-    </a>
+    <a href='/user/info' title='UserCenter' id='mytitle'></a>
   </div>
   <article class='larg'>
     <div>
       <h3>
         引导
-        <span class='entypo-down-open'>v</span>
+        <span class='entypo-down-open'>👇</span>
       </h3>
       <p>你可以在这里直接粘贴文本，并进行标记工作</p>
       <p>对于比较长的文本，你也可以通过<a href="#">Import</a>功能来导入文本格式文件</p>
@@ -81,7 +79,7 @@
           <h3>
             在这里粘贴你想要标记的文本:
           </h3>
-          <textarea name="user_text" cols="40" rows="30"></textarea><br>
+          <textarea name="user_text" cols="40" rows="60"></textarea><br>
           <button type="button" class="mybutton" value="上传文本" id="submitText">上传文本</button> 
         </form>
       </span>
@@ -157,6 +155,7 @@
 <script type="text/javascript">
   window.onload = function() {
     getEntities();
+    getUserInfo();
   }
   
   // p.s.需要用户上传文档的接口...
@@ -180,7 +179,9 @@
               }
           }),
           success:function (data) {
-          alert("返回值：" + data.ret +  "\n关系id：" + data.id);
+            if (data.ret != 0) {
+              alert("提示：" + data.msg);
+            }
         },
       })
       getEntities();
@@ -193,7 +194,6 @@
         type:"GET",
         url:"/api/project/entities?action=list_entity",
         success: function (data) {
-          console.log(data);
           var srcEntity = document.getElementById("source_id");
           var dstEntity = document.getElementById("destination_id");
           for (var i = 0; i <= data.retlist.length - 1; i ++) {
@@ -206,23 +206,30 @@
               dstEntity.add(opt2);
             }
           }
+        },
+        //由于该函数是在页面加载时就被调用，所以用来判断是否登录，如果未登录，把用户送走
+        error: function(data) {
+          var json = JSON.parse(data.responseText);
+          alert(json.msg);
+          if (json.ret == 302) {
+            window.location.href = json.redirect;
+          }
         }
       })
   }
 
-  function isItemExist(objSelect,objItemValue)
-{
-     var isExit = false;
-     for(var i=0;i<objSelect.length;i++)
-     {
-         if ((objSelect.options[i].text == objItemValue.text) && (objSelect.options[i].value == objItemValue.value))
-         {
-             isExit = true;
-             break;
-         }
-     }     
-     return isExit;
-}
+  function isItemExist(objSelect,objItemValue) {
+    var isExit = false;
+    for(var i=0;i<objSelect.length;i++)
+    {
+      if ((objSelect.options[i].text == objItemValue.text) && (objSelect.options[i].value == objItemValue.value))
+      {
+        isExit = true;
+          break;
+      }
+    }     
+    return isExit;
+  }
 
   function sendRelation() {
     var source_id = $("#source_id").val();
@@ -246,18 +253,32 @@
             }
         }),
         success:function (data) {
-          alert("返回值：" + data.ret +  "\n关系id：" + data.id);
+          console.log(data);
+          if (data.ret != 0) {
+              alert("提示：" + data.msg);
+          }
         },
+        error:function (data) {
+          console.log(data);
+        }
     })
+    location.reload();
   }
 
-  function transformToJson(formData){
-        var obj={}
-        for (var i in formData) {
-            //下标为的i的name做为json对象的key，下标为的i的value做为json对象的value
-            obj[formData[i].name]=formData[i]['value'];
+  function getUserInfo() {
+    $.ajax({
+      type:"GET",
+      url:"/user/other",
+      contentType: "application/json",
+      success: function (data) {
+        if (data.ret == 0) {
+          console.log(data);
+          $('#mytitle').html(data.user_name);
+        } else {
+          console.log(data);
         }
-        return obj;
-    }
+      },
+    })
+  }
 </script>
 </html>

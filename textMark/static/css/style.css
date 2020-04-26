@@ -50,6 +50,7 @@ h1 {
   background-color: #34363A;
   border-bottom: 1px solid rgba(101, 116, 134, 0.57);
 }
+
 h2 {
   font-size: 20px;
   text-transform: uppercase;
@@ -120,6 +121,7 @@ header nav ul li a:before {
   position: absolute;
   left: -32px;
 }
+
 header nav ul li:first-child a:before {
   content: "\1F4D6";
 }
@@ -133,10 +135,10 @@ header nav ul li:nth-child(4) a:before {
   content: "\21D2";
 }
 header nav ul li:nth-child(5) a:before {
-  content: "\21D0";
+  content: "\21D2";
 }
 header nav ul li:nth-child(6) a:before {
-  content: "\1F465";
+  content: "\21D0";
 }
 main {
   flex: 1;
