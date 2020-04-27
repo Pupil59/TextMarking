@@ -42,7 +42,7 @@
         <a target="_top" href="/mgraph" data-title='Graph'>Graph</a>
       </li>
       <li>
-        <a data-title='Entity'>Entity</a>
+        <a data-title='Entity' id="entity">Entity</a>
       </li>
         <ul id = "submene"></ul>
       <li>
@@ -162,7 +162,8 @@
   //function sendText() {}
   function entitySubmit() {
     sendEntity();
-    getEntities();
+    location.reload();
+    //getEntities();
   }
 
   function sendEntity() {
@@ -171,6 +172,7 @@
           type:"POST",
           url:"/api/project/entities",
           contentType: "application/json",
+          async:false,
           dataType:"json",
           data:JSON.stringify({
               "action":"add_entity",
@@ -184,8 +186,6 @@
             }
         },
       })
-      getEntities();
-      location.reload();
   }
 
   function getEntities() {
@@ -193,6 +193,7 @@
       $.ajax({
         type:"GET",
         url:"/api/project/entities?action=list_entity",
+        async:false,
         success: function (data) {
           var srcEntity = document.getElementById("source_id");
           var dstEntity = document.getElementById("destination_id");
@@ -230,7 +231,6 @@
     }     
     return isExit;
   }
-
   function sendRelation() {
     var source_id = $("#source_id").val();
     var destination_id = $("#destination_id").val();
@@ -244,6 +244,7 @@
         url:"/api/project/relations",
         contentType: "application/json",
         dataType:"json",
+        async:false,
         data:JSON.stringify({
             "action":"add_relation",
             "data":{
@@ -270,6 +271,7 @@
       type:"GET",
       url:"/user/other",
       contentType: "application/json",
+      async:false,
       success: function (data) {
         if (data.ret == 0) {
           console.log(data);

@@ -1,6 +1,7 @@
 $(document).ready(function()
 {
   var name = $("#entity_name").val();
+  //location.reload();
   $.ajax({
     type:"GET",
     url:"/api/project/entities?action=list_entity",
@@ -38,6 +39,7 @@ $(document).on("click","#submene li",function(){
   url:"/api/project/entities",
   contentType: "application/json",
   dataType:"json",
+  async:false,
   data:JSON.stringify({
     "action":"del_entity",
     "id": $(this)[0].id.slice(2)
