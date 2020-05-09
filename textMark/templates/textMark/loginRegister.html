@@ -120,25 +120,30 @@
                 var pwd1 = $("#passwordsignup").val();
                 var pwd2 = $("#passwordsignup_confirm").val();
                 var info = "user_id="+userid+"&"+"user_name="+username+"&"+"password="+pwd1;
-                $.ajax({
-                    type:"POST",
-                    url:"/user/register/",
-                    contentType:"application/x-www-form-urlencoded",
-                    dataType:"json",
-                    data: info,
-                    success: function (result) {
-                        console.log(result);
-                        if(result.ret == 0) {
-                            alert("登陆成功");
-                            window.location.href = "/index";
-                        } else {
-                            alert(result.msg);
+                if (pwd1 == pwd2) {
+                    $.ajax({
+                        type:"POST",
+                        url:"/user/register/",
+                        contentType:"application/x-www-form-urlencoded",
+                        dataType:"json",
+                        data: info,
+                        success: function (result) {
+                            console.log(result);
+                            if(result.ret == 0) {
+                                alert("登陆成功");
+                                window.location.href = "/index";
+                            } else {
+                                alert(result.msg);
+                            }
+                        },
+                        error : function() {
+                            alert("异常！");
                         }
-                    },
-                    error : function() {
-                        alert("异常！");
-                    }
-                })
+                    })
+                }
+                else {
+                    alert("两次输入密码不一致");
+                }
             }
         </script> 
 	</body>
