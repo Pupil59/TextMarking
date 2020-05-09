@@ -122,6 +122,6 @@ def get_user_info(request):
     else:
         return JsonResponse({
             "ret":0,
-            "user_name": user.username,
-            "user_id": user.id
+            "user_name": user.name,
+            "user_id": user.username
         })
