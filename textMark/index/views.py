@@ -16,3 +16,7 @@ def showGraph(request):
 
 def showReg(request):
     return render(request, template_name='textMark/loginRegister.html')
+
+
+def showUserInfo(request):
+    return render(request, template_name='textMark/user-info.html')

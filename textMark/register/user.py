@@ -15,6 +15,8 @@ def dispatch(request):
             return sign_out(request)
         else:
             return modify_name(request)
+    elif request.method == 'GET':
+        return get_user_info(request)
 
 
 def modify_name(request):
@@ -107,4 +109,19 @@ def modify_password(request):
         return JsonResponse({
             "ret": -1,
             "msg": "当前密码错误"
+        })
+
+
+def get_user_info(request):
+    user = request.user
+    if user is None:
+        return JsonResponse({
+            "ret": -1,
+            "msg": "用户未登录"
+        })
+    else:
+        return JsonResponse({
+            "ret":0,
+            "user_name": user.name,
+            "user_id": user.username
         })

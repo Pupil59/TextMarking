@@ -51,7 +51,9 @@ def addentity(request):
     info = request.params['data']
 
     qs = Entity.objects.filter(project_id=request.session['project_id']).values()
+    qs = Entity.objects.filter(user_id=request.user.id).values('id', 'name')
     entities = list(qs)
+    
 
     for entity in entities:
         if entity['name'] == info['name']:

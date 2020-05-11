@@ -49,118 +49,232 @@
 <main>
   <div class='title'>
     <h2>Graph</h2>
-    <a href='#' title='Profil'>
-      Hello Bob !
-    </a>
+    <a href='/user/info' title='UserCenter' id='mytitle'></a>
   </div>
   <div id="main" style="width: 100%;height:150%;"></div>
+  <script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'),'dark');
+    myChart.showLoading();
+    $.get('/api/project/graph', function (xml) {
+      myChart.hideLoading();
 
-    <script type="text/javascript">
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('main'),'dark');
-        myChart.showLoading();
-        $.get('/api/project/graph', function (xml) {
-        myChart.hideLoading();
-
-        var graph = JSON.parse(xml);
-        var categories = [];
-        for (var i = 0; i < 9; i++) {
-            categories[i] = {
-                name: 'Class ' + i
-            };
-        }
-        graph.nodes.forEach(function (node) {
-            node.itemStyle = null;
-            node.value = node.symbolSize;
-            node.symbolSize /= 1.5;
-            node.label = {
-                show: true
-            };
-            node.category = Math.floor(node.symbolSize*0.15);
-            node.draggable = true;
-        });
-        option = {
-            title: {
-                text: 'Go',
-                subtext: 'Default layout',
-                top: 'bottom',
-                left: 'right'
-            },
-            tooltip: {
-              trigger: 'item',
-              formatter: function (params) {
-                if (params.data.source) {
-                  return params.data.name;
-                }
-                else {
-                  return params.name;
-                }
+      var graph = JSON.parse(xml);
+      var categories = [];
+      for (var i = 0; i < 9; i++) {
+          categories[i] = {
+              name: 'Class ' + i
+          };
+      }
+      graph.nodes.forEach(function (node) {
+          node.itemStyle = null;
+          node.value = node.symbolSize;
+          node.symbolSize /= 1.5;
+          node.label = {
+              show: true
+          };
+          node.category = Math.floor(node.symbolSize*0.15);
+          node.draggable = true;
+      });
+      option = {
+          title: {
+              text: 'Go',
+              subtext: 'Default layout',
+              top: 'bottom',
+              left: 'right'
+          },
+          tooltip: {
+            trigger: 'item',
+            formatter: function (params) {
+              if (params.data.source) {
+                return params.data.name;
               }
-            },
-            legend: [{
-                // selectedMode: 'single',
-                data: categories.map(function (a) {
-                    return a.name;
-                })
-            }],
-            animationDuration: 1500,
-            animationEasingUpdate: 'quinticInOut',
-            series : [
-                {
-                    //name: 'aName',
-                    type: 'graph',
-                    layout: 'force',
-                    data: graph.nodes,
-                    links: graph.links,
-                    categories: categories,
-                    roam: true,
-                    focusNodeAdjacency: true,
-                    itemStyle: {
-                        borderColor: '#fff',
-                        borderWidth: 1,
-                        shadowBlur: 10,
-                        shadowColor: 'rgba(0, 0, 0, 0.3)'
-                    },
-                    label: {
-                        position: 'right',
-                        formatter: '{b}'
-                    },
-                    lineStyle: {
-                        color: 'source',
-                        curveness: 0.3,
-                        width:5
-                    },
-                    emphasis: {
-                        lineStyle: {
-                            width: 10
-                        }
-                    },
-                    force: {
-                    repulsion: 100
-                    }
+              else {
+                return params.data.name;
+              }
+            }
+          },
+          legend: [{
+              // selectedMode: 'single',
+              data: categories.map(function (a) {
+                  return a.name;
+              })
+          }],
+          animationDuration: 1500,
+          animationEasingUpdate: 'quinticInOut',
+          series : [
+              {
+                  //name: 'aName',
+                  type: 'graph',
+                  layout: 'force',
+                  data: graph.nodes,
+                  links: graph.links,
+                  categories: categories,
+                  roam: true,
+                  focusNodeAdjacency: true,
+                  itemStyle: {
+                      borderColor: '#fff',
+                      borderWidth: 1,
+                      shadowBlur: 10,
+                      shadowColor: 'rgba(0, 0, 0, 0.3)'
+                  },
+                  label: {
+                      position: 'right',
+                      formatter: '{b}'
+                  },
+                  lineStyle: {
+                      color: 'source',
+                      curveness: 0.3,
+                      width:5
+                  },
+                  emphasis: {
+                      lineStyle: {
+                          width: 10
+                      }
+                  },
+                  force: {
+                  repulsion: 100
+                  }
+              }
+          ]
+      };
+      myChart.setOption(option);
+    }, 'text');
+    myChart.on('click', function (params) {
+        if (params.dataType == 'node') {
+            
+            console.log(JSON.stringify(params.data));
+        }
+        if (params.dataType == 'edge') {
+        alert(params.dataType + ' ' + params.data.name);
+        console.log(JSON.stringify(params.data));
+        }
+    });
+    myChart.on('contextmenu', function (params) {
+      showMenu(params,[
+        {
+            "name": "删除",
+            "fn": function() {
+                var status = confirm("del?");
+                if (!status) {return false;}
+                console.log($(this)[0].id);
+                $.ajax({
+                type:"DELETE",
+                url:"/api/project/entities",
+                contentType: "application/json",
+                dataType:"json",
+                async:false,
+                data:JSON.stringify({
+                  "action":"del_entity",
+                  "id": params.data.id
+                }),
+                success:function (data) {
+                    console.log("del"+(data.id));
+                },
+                error:function (data) {
+                    console.log("error");
+                },
+                complete: function (data) {
+                    console.log("complete");
+                },
+                });
+                //location.reload();
+            }
+        }, {
+            "name": "修改",
+            "fn": function() {
+                console.log((params));
+                var newname=prompt("请输入新的名称",params.data.name);
+                if (newname!=null && newname!=""){
+                    console.log(newname);
                 }
-            ]
-        };
+            }
+        }
+        ]);
+    });
 
-        myChart.setOption(option);
-        }, 'text');
-        myChart.on('click', function (params) {
-            if (params.dataType == 'node') {
-                go = "/index";
-                window.open(go);
-            }
-            if (params.dataType == 'edge') {
-            alert(params.dataType + ' ' + params.data.name);
-            }
+    var style_ul = "padding:0px;margin:0px;border: 1px solid #ccc;background-color: #fff;position: absolute;left: 0px;top: 0px;z-index: 2;display: none;";
+    var style_li = "list-style:none;padding: 5px; cursor: pointer; padding: 5px 20px;margin:0px;";
+    var style_li_hover = style_li + "background-color: #00A0E9; color: #fff;";
+
+    //右键菜单容器
+    var menubox = $("<div class='echartboxMenu' style='" + style_ul + "'><div style='text-align:center;background:#ccc'></div><ul style='margin:0px;padding:0px;'></ul></div>")
+        .appendTo($(document.body));
+
+    //移除浏览器右键菜单
+    myChart.getDom().oncontextmenu = menubox[0].oncontextmenu = function(){
+      return false;
+    }
+
+    //点击其他位置隐藏菜单
+    $(document).click(function() {
+        menubox.hide()
+    });
+
+    //显示菜单
+    var showMenu = function(e,menus){
+        $("div", menubox).text(e.data.name);
+        var menulistbox = $("ul", menubox).empty();
+        $(menus).each(function(i, item) {
+            var li = $("<li style='" + style_li + "'>" + item.name + "</li>")
+                .mouseenter(function() {
+                    $(this).attr("style", style_li_hover);
+                })
+                .mouseleave(function() {
+                    $(this).attr("style", style_li);
+                })
+                .click(function() {
+                    item["fn"].call(this);
+                    menubox.hide();
+                });
+            menulistbox.append(li);
         });
-        
+        menubox.css({
+            "left": event.x,
+            "top": event.y
+        }).show();
+    }
 
-    </script>
+  </script>
 </main>
 
   <script src='../../static/js/jquery.js'></script>
 
-
 </body>
-
+<script type="text/javascript" src="../../static/js/jquery.min.js"></script>
+<script type="text/javascript">
+  window.onload = function() {
+    Reload();
+    getUserInfo();
+  }
+  function Reload() {
+    $.ajax({
+        type:"GET",
+        url:"/api/project/graph",
+        success: function (data) {},
+        error: function(data) {
+          var json = JSON.parse(data.responseText);
+          alert(json.msg);
+          if (json.ret == 302) {
+            window.location.href = json.redirect;
+          }
+        }
+      })
+  }
+  function getUserInfo() {
+    $.ajax({
+      type:"GET",
+      url:"/user/other",
+      contentType: "application/json",
+      success: function (data) {
+        if (data.ret == 0) {
+          console.log(data);
+          $('#mytitle').html(data.user_name);
+        } else {
+          console.log(data);
+        }
+      },
+    })
+  }
+</script>
 </html>
