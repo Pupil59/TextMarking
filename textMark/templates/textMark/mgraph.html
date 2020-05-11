@@ -142,13 +142,99 @@
     }, 'text');
     myChart.on('click', function (params) {
         if (params.dataType == 'node') {
-            go = "/index";
-            window.open(go);
+            
+            console.log(JSON.stringify(params.data));
         }
         if (params.dataType == 'edge') {
         alert(params.dataType + ' ' + params.data.name);
+        console.log(JSON.stringify(params.data));
         }
     });
+    myChart.on('contextmenu', function (params) {
+      showMenu(params,[
+        {
+            "name": "删除",
+            "fn": function() {
+                var status = confirm("del?");
+                if (!status) {return false;}
+                console.log($(this)[0].id);
+                $.ajax({
+                type:"DELETE",
+                url:"/api/project/entities",
+                contentType: "application/json",
+                dataType:"json",
+                async:false,
+                data:JSON.stringify({
+                  "action":"del_entity",
+                  "id": params.data.id
+                }),
+                success:function (data) {
+                    console.log("del"+(data.id));
+                },
+                error:function (data) {
+                    console.log("error");
+                },
+                complete: function (data) {
+                    console.log("complete");
+                },
+                });
+                //location.reload();
+            }
+        }, {
+            "name": "修改",
+            "fn": function() {
+                console.log((params));
+                var newname=prompt("请输入新的名称",params.data.name);
+                if (newname!=null && newname!=""){
+                    console.log(newname);
+                }
+            }
+        }
+        ]);
+    });
+
+    var style_ul = "padding:0px;margin:0px;border: 1px solid #ccc;background-color: #fff;position: absolute;left: 0px;top: 0px;z-index: 2;display: none;";
+    var style_li = "list-style:none;padding: 5px; cursor: pointer; padding: 5px 20px;margin:0px;";
+    var style_li_hover = style_li + "background-color: #00A0E9; color: #fff;";
+
+    //右键菜单容器
+    var menubox = $("<div class='echartboxMenu' style='" + style_ul + "'><div style='text-align:center;background:#ccc'></div><ul style='margin:0px;padding:0px;'></ul></div>")
+        .appendTo($(document.body));
+
+    //移除浏览器右键菜单
+    myChart.getDom().oncontextmenu = menubox[0].oncontextmenu = function(){
+      return false;
+    }
+
+    //点击其他位置隐藏菜单
+    $(document).click(function() {
+        menubox.hide()
+    });
+
+    //显示菜单
+    var showMenu = function(e,menus){
+        $("div", menubox).text(e.data.name);
+        var menulistbox = $("ul", menubox).empty();
+        $(menus).each(function(i, item) {
+            var li = $("<li style='" + style_li + "'>" + item.name + "</li>")
+                .mouseenter(function() {
+                    $(this).attr("style", style_li_hover);
+                })
+                .mouseleave(function() {
+                    $(this).attr("style", style_li);
+                })
+                .click(function() {
+                    item["fn"].call(this);
+                    menubox.hide();
+                });
+            menulistbox.append(li);
+        });
+        menubox.css({
+            "left": event.x,
+            "top": event.y
+        }).show();
+    }
+
   </script>
 </main>
 
