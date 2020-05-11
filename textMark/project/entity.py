@@ -37,8 +37,9 @@ def dispatcher(request):
 def listentities(request):
     # 返回一个 QuerySet 对象 ，包含所有的表记录
 
-    uid = request.user.id
-    qs = Entity.objects.filter(user_id=uid).values('id', 'name')
+    # uid = request.user.id
+    pid = request.session['project_id']
+    qs = Entity.objects.filter(project_id=pid).values('id', 'name')
 
     # 将 QuerySet 对象 转化为 list 类型
     retlist = list(qs)
@@ -49,7 +50,7 @@ def listentities(request):
 def addentity(request):
     info = request.params['data']
 
-    qs = Entity.objects.get(user_id=request.user.id)
+    qs = Entity.objects.filter(project_id=request.session['project_id']).values()
     entities = list(qs)
 
     for entity in entities:
@@ -60,7 +61,7 @@ def addentity(request):
             })
 
     record = Entity.objects.create(name=info['name'],
-                                   user_id=request.user.id)
+                                   project_id=request.session['project_id'])
 
     return JsonResponse({'ret': 0, 'id': record.id})
 

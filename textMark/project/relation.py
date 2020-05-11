@@ -38,9 +38,10 @@ def dispatcher(request):
 def listrelations(request):
     # 返回一个 QuerySet 对象 ，包含所有的表记录
     # qs = Relation.objects.values()
-    uid = request.user.id
+    # uid = request.user.id
+    pid = request.session['project_id']
 
-    qs = Relation.objects.filter(user_id=uid) \
+    qs = Relation.objects.filter(project_id=pid) \
         .annotate(
         source_name=F('entity1__name'),
         destination_name=F('entity2__name')
@@ -58,7 +59,8 @@ def listrelations(request):
 def addrelation(request):
     info = request.params['data']
 
-    uid = request.user.id
+    # uid = request.user.id
+    pid = request.session['project_id']
     sid = info['source_id']
     tid = info['target_id']
 
@@ -80,7 +82,7 @@ def addrelation(request):
             'msg': f'id为`{tid}的实体`不存在'
         }
 
-    qs = Relation.objects.get(user_id=uid)
+    qs = Relation.objects.filter(project_id=pid).values()
     relations = list(qs)
 
     for r in relations:
@@ -96,7 +98,7 @@ def addrelation(request):
     new_relation = Relation.objects.create(name=info['name'],
                                            entity1_id=sid,
                                            entity2_id=tid,
-                                           user_id=uid)
+                                           project_id=pid)
 
     return JsonResponse({'ret': 0, 'id': new_relation.id})
 

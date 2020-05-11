@@ -24,7 +24,6 @@ def listgraph(request):
         count = 0
         for node in nodes:
             temp = node['id']
-            node['id'] = count
 
             for link in links:
                 if link['source'] == temp:

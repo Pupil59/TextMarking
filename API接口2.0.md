@@ -1,12 +1,278 @@
-# api/project接口1.4
+# api/project接口2.0
 
 
 
 ## 修改内容
 
-- 删除了project
-- 修改添加关系的参数为实体的id
-- 修改了登录成功后无法正常使用的bug
+- 增加了project
+- 修改了graph中实体id的呈现
+
+
+
+## 项目
+
+### 列出所有项目
+
+#### 请求消息
+
+```py
+GET  /api/user/projects?list_project  HTTP/1.1
+```
+
+#### 请求参数
+
+http 请求消息 url 中 需要携带如下参数，
+
+- action
+
+  填写值为 list_project
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果获取信息成功，返回如下
+
+```json
+{
+    "ret": 0,
+    "retlist": [
+        {
+            "id": 1,
+            "name": "项目1"
+        },
+        
+        {
+            "id": 4,
+            "name": "project4"
+        }
+    ]              
+}
+```
+
+ret 为 0 表示登录成功
+
+retlist 里面包含了所有的项目信息列表。
+
+每个项目信息以如下格式存储
+
+```json
+{
+   "id": 1,
+   "name": "项目1"
+}
+```
+
+
+
+### 添加一个
+
+#### 请求消息
+
+```py
+POST  /api/user/projects  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带添加项目的信息
+
+消息体的格式是json，如下示例：
+
+```json
+{
+    "action":"add_customer",
+    "data":{
+        "name":"项目1"
+    }
+}
+```
+
+其中
+
+`action` 字段固定填写 `add_project` 表示添加一个项目
+
+`data` 字段中存储了要添加的项目的信息
+
+服务端接受到该请求后，应该在系统中增加一个这样的项目。
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果添加成功，返回如下
+
+```json
+{
+    "ret": 0,
+    "id" : 677
+}
+```
+
+ret 为 0 表示成功。
+
+id 为 添加项目的id号。
+
+如果添加失败，返回失败的原因，示例如下
+
+```json
+{
+    "ret": 1,    
+    "msg": "项目名已经存在"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
+
+### 修改项目信息
+
+#### 请求消息
+
+```py
+PUT  /api/user/projects  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带修改项目的信息
+
+消息体的格式是json，如下示例：
+
+```json
+{
+    "action":"modify_customer",
+    "id": 6,
+    "newdata":{
+        "name":"武汉市桥北医院"
+    }
+}
+```
+
+其中
+
+`action` 字段固定填写 `modify_project` 表示修改一个项目的信息
+
+`id` 字段为要修改的项目的id号
+
+`newdata` 字段中存储了修改后的项目的信息
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果修改成功，返回如下
+
+```json
+{
+    "ret": 0
+}
+```
+
+ret 为 0 表示成功。
+
+如果修改失败，返回失败的原因，示例如下
+
+```json
+{
+    "ret": 1,    
+    "msg": "项目名已经存在"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
+
+### 删除项目信息
+
+#### 请求消息
+
+```py
+DELETE  /api/user/projects  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带要删除项目的id
+
+消息体的格式是json，如下示例：
+
+```json
+{
+    "action":"del_customer",
+    "id": 6
+}
+```
+
+其中
+
+`action` 字段固定填写 `del_customer` 表示删除一个项目
+
+`id` 字段为要删除的项目的id号
+
+服务端接受到该请求后，应该在系统中尝试删除该id对应的项目。
+
+
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果删除成功，返回如下
+
+```json
+{
+    "ret": 0
+}
+```
+
+ret 为 0 表示成功。
+
+如果删除失败，返回失败的原因，示例如下
+
+```json
+{
+    "ret": 1,    
+    "msg": "id为 566 的项目不存在"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
 
 
 

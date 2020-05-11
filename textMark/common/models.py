@@ -2,12 +2,12 @@ from django.db import models
 from register.models import big_user
 
 
-# class Project(models.Model):
-#     # 项目名称
-#     name = models.CharField(max_length=200)
-#
-#     # 所属用户
-#     user = models.ForeignKey(big_user, on_delete=models.CASCADE)
+class Project(models.Model):
+    # 项目名称
+    name = models.CharField(max_length=200)
+
+    # 所属用户
+    user = models.ForeignKey(big_user, on_delete=models.CASCADE)
 
 
 class Entity(models.Model):
@@ -18,7 +18,7 @@ class Entity(models.Model):
     symbolSize = models.FloatField(default=30)
 
     # 所属项目
-    user = models.ForeignKey(big_user, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     # 和其他实体的关系，是多对多的关系
     # relations = models.ManyToManyField('self', through='Relation')
@@ -35,7 +35,7 @@ class Relation(models.Model):
     entity2 = models.ForeignKey(Entity, related_name='to_entity', on_delete=models.CASCADE)
 
     # 所属项目
-    user = models.ForeignKey(big_user, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 # class Text(models.Model):
 #     # 文档名称
