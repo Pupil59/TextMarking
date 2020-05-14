@@ -4,7 +4,8 @@
 
 ## 修改内容
 
-- 增加了实体和关系的修改功能
+- 增加了实体根据名称查找的功能
+- 修改了list_entity的接口
 
 
 
@@ -282,12 +283,29 @@ ret 不为 0 表示失败， msg字段描述添加失败的原因
 #### 请求消息
 
 ```
-GET  /api/project/entities?action=list_entity  HTTP/1.1
+GET  /api/project/entities  HTTP/1.1
 ```
 
 #### 请求参数
 
-`action` 字段固定填写 `list_entity` 表示列出关系
+http 请求消息 body 携带添加实体的信息
+
+消息体的格式是json，如下示例：
+
+```
+{
+    "action":"list_entity",
+    "name":"实体1"
+}
+```
+
+其中
+
+`action` 字段固定填写 `list_entity` 表示列出实体
+
+`name`字段为要查找的实体的名称 ，为**可选**信息。
+
+服务端接受到该请求后，应该返回实体的信息。
 
 #### 响应消息
 

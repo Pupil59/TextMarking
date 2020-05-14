@@ -7,12 +7,12 @@ from common.models import Entity
 def dispatcher(request):
     if request.user.is_authenticated:
 
-        if request.method == 'GET':
-            request.params = request.GET
-
-        # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
-        elif request.method in ['POST', 'PUT', 'DELETE']:
-            request.params = json.loads(request.body)
+        # if request.method == 'GET':
+        #     request.params = request.GET
+        #
+        # # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
+        # elif request.method in ['POST', 'PUT', 'DELETE']:
+        request.params = json.loads(request.body)
 
         # 根据不同的action分派给不同的函数进行处理
         action = request.params['action']
@@ -42,6 +42,8 @@ def listentities(request):
     # uid = request.user.id
     pid = request.session['project_id']
     qs = Entity.objects.filter(project_id=pid).values('id', 'name')
+    if 'name' in request.params:
+        qs = qs.filter(name=request.params['name'])
 
     # 将 QuerySet 对象 转化为 list 类型
     retlist = list(qs)
@@ -53,7 +55,7 @@ def addentity(request):
     info = request.params['data']
 
     qs = Entity.objects.filter(project_id=request.session['project_id']).values()
-    qs = Entity.objects.filter(user_id=request.user.id).values('id', 'name')
+    # qs = Entity.objects.filter(user_id=request.user.id).values('id', 'name')
     entities = list(qs)
 
     for entity in entities:
