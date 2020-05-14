@@ -55,7 +55,7 @@ def addproject(request):
     # 并且插入到数据库中
     # 返回值 就是对应插入记录的对象
     record = Project.objects.create(name=info['name'],
-                                    user_id=info['user_id'])
+                                    user_id=request.user.id)
 
     return JsonResponse({'ret': 0, 'id': record.id})
 

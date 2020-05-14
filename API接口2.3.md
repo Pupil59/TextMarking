@@ -1,4 +1,4 @@
-# api/project接口2.0
+# api/project接口2.3
 
 
 
@@ -6,6 +6,7 @@
 
 - 增加了实体根据名称查找的功能
 - 修改了list_entity的接口
+- 增加了在session中添加项目id的接口
 
 
 
@@ -270,9 +271,50 @@ ret 为 0 表示成功。
 }
 ```
 
+ret 不为 0 表示失败， msg字段描述删除失败的原因
+
+
+
+### 在session中添加项目id
+
+#### 请求消息
+
+```py
+DELETE  /api/project/pro_session  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果添加成功，返回如下
+
+```json
+{
+    "ret": 0
+}
+```
+
+ret 为 0 表示成功。
+
+如果添加失败，返回失败的原因，示例如下
+
+```json
+{
+    "ret": 1,    
+    "msg": "id为 566 的项目不存在"
+}
+```
+
 ret 不为 0 表示失败， msg字段描述添加失败的原因
-
-
 
 
 
