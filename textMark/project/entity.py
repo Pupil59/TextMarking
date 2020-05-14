@@ -5,35 +5,41 @@ from common.models import Entity
 
 
 def dispatcher(request):
-    if request.user.is_authenticated:
-
-        # if request.method == 'GET':
-        #     request.params = request.GET
-        #
-        # # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
-        # elif request.method in ['POST', 'PUT', 'DELETE']:
-        request.params = json.loads(request.body)
-
-        # 根据不同的action分派给不同的函数进行处理
-        action = request.params['action']
-
-        if action == 'list_entity':
-            return listentities(request)
-        elif action == 'add_entity':
-            return addentity(request)
-        elif action == 'del_entity':
-            return delentity(request)
-        elif action == 'modify_entity':
-            return modifyentity(request)
-
-        else:
-            return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
-    else:
+    if not request.user.is_authenticated:
         return JsonResponse({
             'ret': 302,
             'msg': '未登录',
             'redirect': '/user/index/'},
             status=302)
+
+    if 'project_id' not in request.session:
+        return JsonResponse({
+            'ret': 1,
+            'msg': '未进入项目',
+            'redirect': '/user/info'},
+            status=1)
+
+    # if request.method == 'GET':
+    #     request.params = request.GET
+    #
+    # # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
+    # elif request.method in ['POST', 'PUT', 'DELETE']:
+    request.params = json.loads(request.body)
+
+    # 根据不同的action分派给不同的函数进行处理
+    action = request.params['action']
+
+    if action == 'list_entity':
+        return listentities(request)
+    elif action == 'add_entity':
+        return addentity(request)
+    elif action == 'del_entity':
+        return delentity(request)
+    elif action == 'modify_entity':
+        return modifyentity(request)
+
+    else:
+        return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
 
 
 def listentities(request):

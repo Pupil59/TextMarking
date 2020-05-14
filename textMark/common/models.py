@@ -20,6 +20,9 @@ class Entity(models.Model):
     # 所属项目
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
+    # 创建者
+    # user = models.ForeignKey(big_user, on_delete=models.CASCADE)
+
     # 和其他实体的关系，是多对多的关系
     # relations = models.ManyToManyField('self', through='Relation')
 
@@ -36,6 +39,9 @@ class Relation(models.Model):
 
     # 所属项目
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    # 创建者
+    # user = models.ForeignKey(big_user, on_delete=models.CASCADE)
 
 # class Text(models.Model):
 #     # 文档名称

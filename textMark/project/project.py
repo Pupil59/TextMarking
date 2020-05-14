@@ -8,9 +8,9 @@ def dispatcher(request):
     # 认证
     if not request.user.is_authenticated():
         return JsonResponse({
-                'ret': 302,
-                'msg': '未登录'},
-                status=302)
+            'ret': 302,
+            'msg': '未登录'},
+            status=302)
 
     # GET请求 参数在url中，同过request 对象的 GET属性获取
     if request.method == 'GET':
@@ -101,6 +101,14 @@ def delproject(request):
 
 def add_pro_session(request):
     pid = request.params['project_id']
+
+    try:
+        Project.objects.get(id=pid)
+    except Project.DoesNotExist:
+        return {
+            'ret': 1,
+            'msg': f'id为{pid}的项目不存在'
+        }
 
     request.session['project_id'] = pid
 

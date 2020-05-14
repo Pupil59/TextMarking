@@ -280,9 +280,27 @@ ret 不为 0 表示失败， msg字段描述删除失败的原因
 #### 请求消息
 
 ```py
-DELETE  /api/project/pro_session  HTTP/1.1
+POST  /api/project/pro_session  HTTP/1.1
 Content-Type:   application/json
 ```
+
+#### 请求参数
+
+http 请求消息 body 携带要添加到session的项目的id
+
+消息体的格式是json，如下示例：
+
+```json
+{
+    "project_id": 6
+}
+```
+
+其中
+
+`project_id` 字段为要添加到session的项目的id号
+
+服务端接受到该请求后，应该尝试将该id对应的项目添加到session中。
 
 #### 响应消息
 
