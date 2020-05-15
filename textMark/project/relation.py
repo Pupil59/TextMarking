@@ -73,7 +73,7 @@ def addrelation(request):
     sid = info['source_id']
     tid = info['target_id']
 
-    if (sid == tid):
+    if sid == tid:
         return JsonResponse({
             'ret': 1,
             'msg': '实体与自身之间不应存在关系'
@@ -85,7 +85,7 @@ def addrelation(request):
     except Entity.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'id为`{sid}的实体`不存在'
+            'msg': f'id为{sid}的关系不存在'
         }
 
     try:
@@ -94,7 +94,7 @@ def addrelation(request):
     except Entity.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'id为`{tid}的实体`不存在'
+            'msg': f'id为{tid}的关系不存在'
         }
 
     qs = Relation.objects.filter(project_id=pid).values()
@@ -129,7 +129,7 @@ def modifyrelation(request):
     except Entity.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'id 为`{rid}`的项目不存在'
+            'msg': f'id 为`{rid}`的关系不存在'
         }
 
     if 'name' in newdata:
@@ -159,7 +159,7 @@ def delrelation(request):
     except Entity.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'id 为`{relation.entity1_id}`的实体不存在'
+            'msg': f'id 为`{relation.entity1_id}`的关系不存在'
         }
 
     # delete 方法就将该记录从数据库中删除了

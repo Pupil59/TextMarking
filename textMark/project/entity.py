@@ -4,6 +4,7 @@ from django.db.models import F
 import json
 
 from common.models import Entity, Project
+from register.models import big_user
 
 
 def dispatcher(request):
@@ -74,12 +75,12 @@ def addentity(request):
     qs = Entity.objects.filter(project_id=request.session['project_id']).values()
     # qs = Entity.objects.filter(user_id=request.user.id).values('id', 'name')
     entities = list(qs)
-
     for entity in entities:
         if entity['name'] == info['name']:
+            username = big_user.objects.get(id=request.user.id)
             return JsonResponse({
                 'ret': 1,
-                'msg': '实体名在项目中已经存在'
+                'msg': f'实体名在项目中已经存在，添加者为{username}'
             })
 
     record = Entity.objects.create(name=info['name'],
@@ -98,10 +99,19 @@ def modifyentity(request):
     except Entity.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'id 为`{eid}`的项目不存在'
+            'msg': f'id 为`{eid}`的实体不存在'
         }
 
     if 'name' in newdata:
+        qs = Entity.objects.filter(project_id=request.session['project_id']).values()
+        entities = list(qs)
+        for entity in entities:
+            if entity['name'] == newdata['name']:
+                username = big_user.objects.get(id=request.user.id)
+                return JsonResponse({
+                    'ret': 1,
+                    'msg': f'实体名在项目中已经存在，添加者为{username}'
+                })
         entity.name = newdata['name']
 
     # 注意，一定要执行save才能将修改信息保存到数据库
