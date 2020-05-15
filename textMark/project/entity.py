@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.http import FileResponse
+from django.db.models import F
 import json
 
 from common.models import Entity, Project
@@ -48,7 +49,16 @@ def listentities(request):
 
     # uid = request.user.id
     pid = request.session['project_id']
-    qs = Entity.objects.filter(project_id=pid).values('id', 'name')
+    qs = Entity.objects.filter(project_id=pid) \
+        .annotate(
+        user_name=F('user__name')
+    ) \
+        .values(
+        'id', 'name', 'user_name'
+    )
+
+    if 'id' in request.params:
+        qs = qs.filter(id=request.params['id'])
     if 'name' in request.params:
         qs = qs.filter(name=request.params['name'])
 
@@ -73,7 +83,8 @@ def addentity(request):
             })
 
     record = Entity.objects.create(name=info['name'],
-                                   project_id=request.session['project_id'])
+                                   project_id=request.session['project_id'],
+                                   user_id=request.user.id)
 
     return JsonResponse({'ret': 0, 'id': record.id})
 

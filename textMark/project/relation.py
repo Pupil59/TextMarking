@@ -52,10 +52,11 @@ def listrelations(request):
     qs = Relation.objects.filter(project_id=pid) \
         .annotate(
         source_name=F('entity1__name'),
-        destination_name=F('entity2__name')
+        destination_name=F('entity2__name'),
+        user_name=F('user__name')
     ) \
         .values(
-        'id', 'name', 'source_name', 'destination_name'
+        'id', 'name', 'source_name', 'destination_name', 'user_name'
     )
 
     # 将 QuerySet 对象 转化为 list 类型
@@ -113,7 +114,8 @@ def addrelation(request):
     new_relation = Relation.objects.create(name=info['name'],
                                            entity1_id=sid,
                                            entity2_id=tid,
-                                           project_id=pid)
+                                           project_id=pid,
+                                           user_id=request.user.id)
 
     return JsonResponse({'ret': 0, 'id': new_relation.id})
 
