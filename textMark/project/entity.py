@@ -1,7 +1,8 @@
 from django.http import JsonResponse
+from django.http import FileResponse
 import json
 
-from common.models import Entity
+from common.models import Entity, Project
 
 
 def dispatcher(request):
@@ -114,3 +115,24 @@ def delentity(request):
     entity.delete()
 
     return JsonResponse({'ret': 0})
+
+
+def export_entities(request):
+    pid = request.session['project_id']
+    qs = Entity.objects.filter(project_id=pid).values('id', 'name')
+
+    en_list = list(qs)
+
+    js = json.dumps(en_list, sort_keys=False, indent=4, separators=(',', ': '))
+
+    name = Project.objects.get(id=pid)
+
+    name += '_entities.json'
+    file = open(name, 'w')
+
+    file.write(js)
+
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename=' + name
+    return response

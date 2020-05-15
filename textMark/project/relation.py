@@ -1,8 +1,9 @@
 from django.http import JsonResponse
+from django.http import FileResponse
 from django.db.models import F
 import json
 
-from common.models import Relation, Entity
+from common.models import Relation, Entity, Project
 
 
 def dispatcher(request):
@@ -24,7 +25,7 @@ def dispatcher(request):
         request.params = request.GET
 
         # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
-    elif request.method in ['POST','PUT', 'DELETE']:
+    elif request.method in ['POST', 'PUT', 'DELETE']:
         request.params = json.loads(request.body)
 
         # 根据不同的action分派给不同的函数进行处理
@@ -166,3 +167,54 @@ def delrelation(request):
     source.save()
 
     return JsonResponse({'ret': 0})
+
+
+def export_triads(request):
+    pid = request.session['project_id']
+
+    qs = Relation.objects.filter(project_id=pid) \
+        .annotate(
+        source_name=F('entity1__name'),
+        destination_name=F('entity2__name'),
+        source_id=F('entity1__id'),
+        target_id=F('entity2__id')
+    ) \
+        .values(
+        'id', 'name', 'source_id', 'source_name', 'target_id', 'destination_name'
+    )
+    en_list = list(qs)
+
+    js = json.dumps(en_list, sort_keys=False, indent=4, separators=(',', ': '))
+
+    name = Project.objects.get(id=pid)
+
+    name += '_triads.json'
+    file = open(name, 'w')
+
+    file.write(js)
+
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename=' + name
+    return response
+
+
+def export_relations(request):
+    pid = request.session['project_id']
+    qs = Relation.objects.filter(project_id=pid).values('id', 'name')
+
+    en_list = list(qs)
+
+    js = json.dumps(en_list, sort_keys=False, indent=4, separators=(',', ': '))
+
+    name = Project.objects.get(id=pid)
+
+    name += '_relations.json'
+    file = open(name, 'w')
+
+    file.write(js)
+
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename=' + name
+    return response
