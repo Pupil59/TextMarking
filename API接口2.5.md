@@ -1,4 +1,4 @@
-# api/project接口2.4
+# api/project接口2.5
 
 
 
@@ -7,6 +7,7 @@
 - 增加了实体根据名称查找的功能
 - 修改了list_entity的接口
 - 增加了在session中添加项目id的接口
+- 在实体和用户中添加了添加者的信息，返回信息有变动
 
 
 
@@ -384,8 +385,8 @@ http 响应消息 body 中， 数据以json格式存储，
 {
     "ret": 0,
     "retlist": [
-        {"id": 1, "name": "实体1"},
-        {"id": 2, "name": "实体2"}
+        {"id": 1, "name": "实体1", "user_name": "用户1"},
+        {"id": 2, "name": "实体2", "user_name": "用户2"}
     ]              
 }
 ```
@@ -397,7 +398,7 @@ retlist 里面包含了所有的实体信息列表。
 每个实体信息以如下格式存储
 
 ```
-    {"id": 2, "name": "实体2"}
+    {"id": 2, "name": "实体2", "user_name": "用户1"}
 ```
 
 
@@ -637,8 +638,8 @@ http 响应消息 body 中， 数据以json格式存储，
 {
     "ret": 0,
     "retlist": [
-        {id: 1, name: "并列", source: "实体1", destination: "实体2"},
-        {id: 2, name: "从属", source: "实体2", destination: "实体3"}
+        {id: 1, name: "并列", source_name: "实体1", destination_name: "实体2", user_name: "用户1"},
+        {id: 2, name: "从属", source_name: "实体2", destination_name: "实体3", user_name: "用户2"}
     ]              
 }
 ```
@@ -654,11 +655,12 @@ retlist 里面包含了所有的关系信息列表。
         id: 2, 
         name: "并列", 
         source_name: "实体1", 
-        destination_name: "实体2"
+        destination_name: "实体2",
+        user_name: "用户2"
     }
 ```
 
-其中 source 和 destination 表示关系的两个实体的内容。
+其中 `source_name` 和 `destination_name` 表示关系的两个实体的名称。
 
 
 
