@@ -100,8 +100,7 @@ def delproject(request):
 
 
 def add_pro_session(request):
+    request.params = json.loads(request.body)
     pid = request.params['project_id']
-
     request.session['project_id'] = pid
-
     return JsonResponse({'ret': 0})
