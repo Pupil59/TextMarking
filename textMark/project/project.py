@@ -6,7 +6,7 @@ from common.models import Project
 
 def dispatcher(request):
     # 认证
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return JsonResponse({
                 'ret': 302,
                 'msg': '未登录'},
@@ -100,8 +100,7 @@ def delproject(request):
 
 
 def add_pro_session(request):
+    request.params = json.loads(request.body)
     pid = request.params['project_id']
-
     request.session['project_id'] = pid
-
     return JsonResponse({'ret': 0})

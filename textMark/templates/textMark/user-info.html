@@ -210,7 +210,7 @@
     })
   }
   $(document).on("click",".button1",function(){
-    var status = confirm("del?");
+    var status = confirm("打开项目?");
     if (!status) {return false;}
     console.log($(this)[0].id);
     $.ajax({
@@ -272,11 +272,11 @@
       var name = $("#entity_name").val();
       $.ajax({
         type:"GET",
-        url:"/user/projects?list_project",
+        url:"/user/projects?action=list_project",
         success:function (data) {
             console.log((data));
             for (var i = data.retlist.length - 1; i >= 0; i--) {
-              $("#submene").append($("<button class=\"button1\" id = \"" + data.retlist[i].id + "\">" + (data.retlist[i].name) + "</button>"));
+              $("#pros").append($("<button class=\"button1\" id = \"" + data.retlist[i].id + "\">" + (data.retlist[i].name) + "</button>"));
             }
         },
         error:function (data) {

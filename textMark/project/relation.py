@@ -16,10 +16,10 @@ def dispatcher(request):
 
     if 'project_id' not in request.session:
         return JsonResponse({
-            'ret': 1,
+            'ret': 302,
             'msg': '未进入项目',
             'redirect': '/user/info/'},
-            status=1)
+            status=302)
 
     if request.method == 'GET':
         request.params = request.GET

@@ -51,7 +51,40 @@
     <h2>Graph</h2>
     <a href='/user/info' title='UserCenter' id='mytitle'></a>
   </div>
+  <div>
+    <label>请输入需要查找的实体名称：</label>
+    <input id="entityName" type="" name=""></input>
+    <input type="button" value="查找" onclick="search()"/>
+  </div>
   <div id="main" style="width: 100%;height:150%;"></div>
+  <script type="text/javascript">
+    function search() {
+      var entityName = $("#entityName").val();
+      $.get('les-miserables2.json', function (xml) {
+      var graph = xml;
+      graph.nodes.forEach(function (node) {
+          node.itemStyle = null;
+          node.value = node.symbolSize;
+          node.symbolSize /= 1.5;
+          node.label = {
+              show: node.symbolSize > 30
+          };
+          node.category = (node.symbolSize*0.15);
+          node.draggable = true;
+          node.itemStyle = {color: getcolor(node)};
+      });
+      option = {
+          series : [
+              {
+                  data: graph.nodes,
+                  links: graph.links,
+              }
+          ]
+      };
+      myChart.setOption(option);
+      })
+    }
+    </script>
   <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'),'dark');
@@ -75,6 +108,7 @@
           };
           node.category = Math.floor(node.symbolSize*0.15);
           node.draggable = true;
+          node.itemStyle = {color: getcolor(node)};
       });
       option = {
           title: {
@@ -234,7 +268,24 @@
             "top": event.y
         }).show();
     }
-
+    function getcolor(anode) {
+        colors = [
+            "#dd6b66",
+            "#759aa0",
+            "#e69d87",
+            "#8dc1a9",
+            "#ea7e53",
+            "#eedd78",
+            "#73a373",
+            "#73b9bc",
+            "#7289ab",
+            "#91ca8c",
+            "#f49f42"
+        ];
+        if (anode.selected==true) {return '#66ccff';}
+        if (anode.selected==false) {return '#ccc';}
+        return colors[anode.category];
+    };
   </script>
 </main>
 
