@@ -9,10 +9,7 @@ urlpatterns = [
     path('sigin/', sign_in),
     path('change_password/', modify_password),
     path('other/', dispatch),
-<<<<<<< HEAD
-    path('projects', project.dispatcher),
-=======
+    path('projects/', project.dispatcher),
     path('info/', showUserInfo),
     # path('projects', project.dispatcher),
->>>>>>> 65c53cb4f2ae3a8669bb41c8f74e8b671abaeec1
 ]

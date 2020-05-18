@@ -5,6 +5,9 @@ from django.contrib.auth.models import User, AbstractUser
 
 class big_user(AbstractUser):
     name = models.CharField(max_length=40)
+    friends = []
+    friend_apply = []
+    project_invite = []
 
 
 

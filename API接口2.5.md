@@ -1,11 +1,13 @@
-# api/project接口2.0
+# api/project接口2.5
 
 
 
 ## 修改内容
 
-- 增加了project
-- 修改了graph中实体id的呈现
+- 增加了实体根据名称查找的功能
+- 修改了list_entity的接口
+- 增加了在session中添加项目id的接口
+- 在实体和用户中添加了添加者的信息，返回信息有变动
 
 
 
@@ -16,7 +18,7 @@
 #### 请求消息
 
 ```py
-GET  /api/user/projects?list_project  HTTP/1.1
+GET  /user/projects?list_project  HTTP/1.1
 ```
 
 #### 请求参数
@@ -72,12 +74,12 @@ retlist 里面包含了所有的项目信息列表。
 
 
 
-### 添加一个
+### 添加一个项目
 
 #### 请求消息
 
 ```py
-POST  /api/user/projects  HTTP/1.1
+POST  /user/projects  HTTP/1.1
 Content-Type:   application/json
 ```
 
@@ -89,7 +91,7 @@ http 请求消息 body 携带添加项目的信息
 
 ```json
 {
-    "action":"add_customer",
+    "action":"add_project",
     "data":{
         "name":"项目1"
     }
@@ -146,7 +148,7 @@ ret 不为 0 表示失败， msg字段描述添加失败的原因
 #### 请求消息
 
 ```py
-PUT  /api/user/projects  HTTP/1.1
+PUT  /user/projects  HTTP/1.1
 Content-Type:   application/json
 ```
 
@@ -158,10 +160,10 @@ http 请求消息 body 携带修改项目的信息
 
 ```json
 {
-    "action":"modify_customer",
+    "action":"modify_project",
     "id": 6,
     "newdata":{
-        "name":"武汉市桥北医院"
+        "name":"项目1"
     }
 }
 ```
@@ -213,7 +215,7 @@ ret 不为 0 表示失败， msg字段描述添加失败的原因
 #### 请求消息
 
 ```py
-DELETE  /api/user/projects  HTTP/1.1
+DELETE  /user/projects  HTTP/1.1
 Content-Type:   application/json
 ```
 
@@ -225,14 +227,14 @@ http 请求消息 body 携带要删除项目的id
 
 ```json
 {
-    "action":"del_customer",
+    "action":"del_project",
     "id": 6
 }
 ```
 
 其中
 
-`action` 字段固定填写 `del_customer` 表示删除一个项目
+`action` 字段固定填写 `del_project` 表示删除一个项目
 
 `id` 字段为要删除的项目的id号
 
@@ -270,9 +272,68 @@ ret 为 0 表示成功。
 }
 ```
 
+ret 不为 0 表示失败， msg字段描述删除失败的原因
+
+
+
+### 在session中添加项目id
+
+#### 请求消息
+
+```py
+POST  /api/project/pro_session  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带要添加到session的项目的id
+
+消息体的格式是json，如下示例：
+
+```json
+{
+    "project_id": 6
+}
+```
+
+其中
+
+`project_id` 字段为要添加到session的项目的id号
+
+服务端接受到该请求后，应该尝试将该id对应的项目添加到session中。
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果添加成功，返回如下
+
+```json
+{
+    "ret": 0
+}
+```
+
+ret 为 0 表示成功。
+
+如果添加失败，返回失败的原因，示例如下
+
+```json
+{
+    "ret": 1,    
+    "msg": "id为 566 的项目不存在"
+}
+```
+
 ret 不为 0 表示失败， msg字段描述添加失败的原因
-
-
 
 
 
@@ -283,12 +344,29 @@ ret 不为 0 表示失败， msg字段描述添加失败的原因
 #### 请求消息
 
 ```
-GET  /api/project/entities?action=list_entity  HTTP/1.1
+GET  /api/project/entities  HTTP/1.1
 ```
 
 #### 请求参数
 
-`action` 字段固定填写 `list_entity` 表示列出关系
+http 请求消息 body 携带添加实体的信息
+
+消息体的格式是json，如下示例：
+
+```
+{
+    "action":"list_entity",
+    "name":"实体1"
+}
+```
+
+其中
+
+`action` 字段固定填写 `list_entity` 表示列出实体
+
+`name`字段为要查找的实体的名称 ，为**可选**信息。
+
+服务端接受到该请求后，应该返回实体的信息。
 
 #### 响应消息
 
@@ -307,8 +385,8 @@ http 响应消息 body 中， 数据以json格式存储，
 {
     "ret": 0,
     "retlist": [
-        {"id": 1, "name": "实体1"},
-        {"id": 2, "name": "实体2"}
+        {"id": 1, "name": "实体1", "user_name": "用户1"},
+        {"id": 2, "name": "实体2", "user_name": "用户2"}
     ]              
 }
 ```
@@ -320,7 +398,7 @@ retlist 里面包含了所有的实体信息列表。
 每个实体信息以如下格式存储
 
 ```
-    {"id": 2, "name": "实体2"}
+    {"id": 2, "name": "实体2", "user_name": "用户1"}
 ```
 
 
@@ -387,6 +465,73 @@ id 为 添加实体的id号。
 {
     "ret": 1,    
     "msg": "实体名在此项目中已经存在"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
+
+### 修改实体信息
+
+#### 请求消息
+
+```py
+PUT  /api/project/entities  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带修改实体的信息
+
+消息体的格式是json，如下示例：
+
+```json
+{
+    "action":"modify_entity",
+    "id": 6,
+    "newdata":{
+        "name":"实体1"
+    }
+}
+```
+
+其中
+
+`action` 字段固定填写 `modify_entity` 表示修改一个实体的信息
+
+`id` 字段为要修改的实体的id号
+
+`newdata` 字段中存储了修改后的实体的信息
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果修改成功，返回如下
+
+```json
+{
+    "ret": 0
+}
+```
+
+ret 为 0 表示成功。
+
+如果修改失败，返回失败的原因，示例如下
+
+```json
+{
+    "ret": 1,    
+    "msg": "实体名已经存在"
 }
 ```
 
@@ -493,8 +638,8 @@ http 响应消息 body 中， 数据以json格式存储，
 {
     "ret": 0,
     "retlist": [
-        {id: 1, name: "并列", source: "实体1", destination: "实体2"},
-        {id: 2, name: "从属", source: "实体2", destination: "实体3"}
+        {id: 1, name: "并列", source_name: "实体1", destination_name: "实体2", user_name: "用户1"},
+        {id: 2, name: "从属", source_name: "实体2", destination_name: "实体3", user_name: "用户2"}
     ]              
 }
 ```
@@ -510,11 +655,12 @@ retlist 里面包含了所有的关系信息列表。
         id: 2, 
         name: "并列", 
         source_name: "实体1", 
-        destination_name: "实体2"
+        destination_name: "实体2",
+        user_name: "用户2"
     }
 ```
 
-其中 source 和 destination 表示关系的两个实体的内容。
+其中 `source_name` 和 `destination_name` 表示关系的两个实体的名称。
 
 
 
@@ -582,6 +728,73 @@ id 为 添加关系的id号。
 {
     "ret": 1,    
     "msg": "两者之间已经存在其他关系"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
+
+### 修改关系信息
+
+#### 请求消息
+
+```py
+PUT  /api/project/relations  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带修改关系的信息
+
+消息体的格式是json，如下示例：
+
+```json
+{
+    "action":"modify_relation",
+    "id": 6,
+    "newdata":{
+        "name":"从属"
+    }
+}
+```
+
+其中
+
+`action` 字段固定填写 `modify_relation` 表示修改一个关系的信息
+
+`id` 字段为要修改的关系的id号
+
+`newdata` 字段中存储了修改后的关系的信息
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果修改成功，返回如下
+
+```json
+{
+    "ret": 0
+}
+```
+
+ret 为 0 表示成功。
+
+如果修改失败，返回失败的原因，示例如下
+
+```json
+{
+    "ret": 1,    
+    "msg": "两者之间已存在此关系"
 }
 ```
 

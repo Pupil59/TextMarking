@@ -7,33 +7,40 @@ from common.models import Relation, Entity, Project
 
 
 def dispatcher(request):
-    if request.user.is_authenticated:
-
-        if request.method == 'GET':
-            request.params = request.GET
-
-        # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
-        elif request.method in ['POST', 'DELETE']:
-            request.params = json.loads(request.body)
-
-        # 根据不同的action分派给不同的函数进行处理
-        action = request.params['action']
-
-        if action == 'list_relation':
-            return listrelations(request)
-        elif action == 'add_relation':
-            return addrelation(request)
-        elif action == 'del_relation':
-            return delrelation(request)
-
-        else:
-            return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
-    else:
+    if not request.user.is_authenticated:
         return JsonResponse({
             'ret': 302,
             'msg': '未登录',
             'redirect': '/user/index/'},
             status=302)
+
+    if 'project_id' not in request.session:
+        return JsonResponse({
+            'ret': 302,
+            'msg': '未进入项目',
+            'redirect': '/user/info/'},
+            status=1)
+
+    if request.method == 'GET':
+        request.params = request.GET
+
+        # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
+    elif request.method in ['POST', 'PUT', 'DELETE']:
+        request.params = json.loads(request.body)
+
+        # 根据不同的action分派给不同的函数进行处理
+    action = request.params['action']
+
+    if action == 'list_relation':
+        return listrelations(request)
+    elif action == 'add_relation':
+        return addrelation(request)
+    elif action == 'del_relation':
+        return delrelation(request)
+    elif action == 'modify_relation':
+        return modifyrelation(request)
+    else:
+        return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
 
 
 def listrelations(request):
@@ -45,10 +52,11 @@ def listrelations(request):
     qs = Relation.objects.filter(project_id=pid) \
         .annotate(
         source_name=F('entity1__name'),
-        destination_name=F('entity2__name')
+        destination_name=F('entity2__name'),
+        user_name=F('user__name')
     ) \
         .values(
-        'id', 'name', 'source_name', 'destination_name'
+        'id', 'name', 'source_name', 'destination_name', 'user_name'
     )
 
     # 将 QuerySet 对象 转化为 list 类型
@@ -65,7 +73,7 @@ def addrelation(request):
     sid = info['source_id']
     tid = info['target_id']
 
-    if (sid == tid):
+    if sid == tid:
         return JsonResponse({
             'ret': 1,
             'msg': '实体与自身之间不应存在关系'
@@ -77,7 +85,7 @@ def addrelation(request):
     except Entity.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'id为`{sid}的实体`不存在'
+            'msg': f'id为{sid}的关系不存在'
         }
 
     try:
@@ -86,11 +94,11 @@ def addrelation(request):
     except Entity.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'id为`{tid}的实体`不存在'
+            'msg': f'id为{tid}的关系不存在'
         }
 
     qs = Relation.objects.filter(project_id=pid).values()
-    qs = Relation.objects.filter(user_id=uid).values()
+    # qs = Relation.objects.filter(user_id=uid).values()
     relations = list(qs)
 
     for r in relations:
@@ -106,9 +114,31 @@ def addrelation(request):
     new_relation = Relation.objects.create(name=info['name'],
                                            entity1_id=sid,
                                            entity2_id=tid,
-                                           project_id=pid)
+                                           project_id=pid,
+                                           user_id=request.user.id)
 
     return JsonResponse({'ret': 0, 'id': new_relation.id})
+
+
+def modifyrelation(request):
+    rid = request.params['id']
+    newdata = request.params['newdata']
+
+    try:
+        relation = Entity.objects.get(id=rid)
+    except Entity.DoesNotExist:
+        return {
+            'ret': 1,
+            'msg': f'id 为`{rid}`的关系不存在'
+        }
+
+    if 'name' in newdata:
+        relation.name = newdata['name']
+
+    # 注意，一定要执行save才能将修改信息保存到数据库
+    relation.save()
+
+    return JsonResponse({'ret': 0})
 
 
 def delrelation(request):
@@ -129,7 +159,7 @@ def delrelation(request):
     except Entity.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'id 为`{relation.entity1_id}`的实体不存在'
+            'msg': f'id 为`{relation.entity1_id}`的关系不存在'
         }
 
     # delete 方法就将该记录从数据库中删除了

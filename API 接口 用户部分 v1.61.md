@@ -2,6 +2,8 @@
 
 修改：
 
+​	V 1.61 修改了拉取好友的组织方式
+
 ​	V 1.6 增加用户好友系统及邀请部分的API，以及导出实体、关系、三元组的api
 
 ​	V 1.5
@@ -442,8 +444,10 @@ http 响应消息 body 中， 数据以json格式存储，
 ```
 {
 	'sum':1,
-    "user_name": "法外狂徒张三",
-    "user_id": "zhangsan"
+    {
+    	"user_name": "法外狂徒张三",
+    	"user_id": "zhangsan"
+    	}
 }
 ```
 
@@ -593,15 +597,17 @@ http 响应消息 body 中， 数据以json格式存储，
 
 ```
 {
-	'sum':1,
-    {
-    	"user_name": "法外狂徒张三",
-    	"user_id": "zhangsan"
-    }
+	'sum':2,
+    friends [
+    	"zhangsan",
+    	"法外狂徒张三",
+    	"zhaosi",
+    	"尼古拉斯赵四"
+    ]
 }
 ```
 
-其中sum为好友人数，user_name为申请者的昵称，user_id为申请者的id
+其中sum为好友人数，friends为数组，第一个为好友的昵称，第二个为好友的id，两个一组
 
 ## 邀请好友标注项目
 
