@@ -19,7 +19,7 @@ def dispatcher(request):
             'ret': 302,
             'msg': '未进入项目',
             'redirect': '/user/info/'},
-            status=1)
+            status=302)
 
     if request.method == 'GET':
         request.params = request.GET
@@ -28,7 +28,7 @@ def dispatcher(request):
     elif request.method in ['POST', 'PUT', 'DELETE']:
         request.params = json.loads(request.body)
 
-        # 根据不同的action分派给不同的函数进行处理
+    # 根据不同的action分派给不同的函数进行处理
     action = request.params['action']
 
     if action == 'list_relation':

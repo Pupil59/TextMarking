@@ -18,7 +18,7 @@ def listgraph(request):
             'ret': 302,
             'msg': '未进入项目',
             'redirect': '/user/info/'},
-            status=1)
+            status=302)
 
     pid = request.session['project_id']
     qs_entity = Entity.objects.filter(project_id=pid).values()
@@ -40,7 +40,7 @@ def listgraph(request):
         temp = node['id']
         node['selected'] = False
 
-        request.params = json.loads(request.body)
+        request.params = request.GET
         if 'name' in request.params:
             ename = request.params['name']
             if node['name'] == ename:

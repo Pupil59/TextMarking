@@ -20,14 +20,14 @@ def dispatcher(request):
             'ret': 302,
             'msg': '未进入项目',
             'redirect': '/user/info'},
-            status=1)
+            status=302)
 
-    # if request.method == 'GET':
-    #     request.params = request.GET
-    #
-    # # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
-    # elif request.method in ['POST', 'PUT', 'DELETE']:
-    request.params = json.loads(request.body)
+    if request.method == 'GET':
+        request.params = request.GET
+
+    # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
+    elif request.method in ['POST', 'PUT', 'DELETE']:
+        request.params = json.loads(request.body)
 
     # 根据不同的action分派给不同的函数进行处理
     action = request.params['action']
