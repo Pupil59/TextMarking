@@ -902,8 +902,8 @@ http 响应消息 body 中， 数据以json格式存储，
 {
 	'links': [{'id': 1, 'name': '从属', 'source': 2, 'target': 1}],
  	'nodes': [
- 				{'id': 1, 'name': '树', 'symbolSize': 40.0},
- 				{'id': 2, 'name': '二叉树', 'symbolSize': 40.0}
+ 				{'id': 1, 'name': '树', 'symbolSize': 40.0, 'selected': False},
+ 				{'id': 2, 'name': '二叉树', 'symbolSize': 40.0, 'selected': True}
  			],
  	'ret': 0
 }
@@ -921,7 +921,8 @@ links 里面包含了所有节点间联系的信息列表。
     {
         id: 2, 
         name: "并列", 
-        symbolSize: 40.0
+        symbolSize: 40.0,
+        selected: False
     }
 ```
 
