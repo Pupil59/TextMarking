@@ -3,8 +3,8 @@ from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 import json
-from django.contrib.sessions.models import Session
 from django.contrib.auth.hashers import check_password
+from common.models import Project
 
 
 def dispatch(request):
@@ -21,14 +21,13 @@ def dispatch(request):
 
 def modify_name(request):
     user = request.user
-    try:
-        user = big_user.objects.get(username=user.username)
+    if user is not None:
         user.name = request.params["user_name"]
         return JsonResponse({
             "ret": 0,
             "msg": "修改成功"
         })
-    except user.DoesNotExist:
+    else:
         return JsonResponse({
             "ret": -1,
             "msg": "用户ID不存在"
@@ -121,7 +120,83 @@ def get_user_info(request):
         })
     else:
         return JsonResponse({
-            "ret":0,
+            "ret": 0,
             "user_name": user.name,
             "user_id": user.username
         })
+
+
+def get_friends(request):
+    user = request.user
+    js = {
+        'sum': len(user.friends),
+        'friend': []
+    }
+    for friend in user.friends:
+        js['friend'].append(friend.username)
+        js['friend'].append(friend.name)
+    return JsonResponse(json.dumps(js))
+
+
+def apply_friends(request):
+    to_id = request.POST.get('user_id')
+    from_user = request.user
+    try:
+        to_user = big_user.objects.get(username=to_id)
+        if from_user in to_user.friends:
+            return JsonResponse({
+                'ret': -2,
+                'msg': "已与该用户成为好友"
+            })
+        else:
+            to_user.friend_apply.append(from_user)
+            return JsonResponse({
+                "ret": 0,
+                "msg": "邀请已发送"
+            })
+    except big_user.DoesNotExist:
+        return JsonResponse({
+            "ret": -1,
+            "msg": "用户ID不存在"
+        })
+
+
+def friend_confirm(request):
+    action = request.POST.get('action')
+    if action == 'friend_apply_accept':
+        user = request.user
+        fri_id = request.POST.get('id')
+        fri = big_user.objects.get(username=fri_id)
+        user.friends.add(fri)
+        user.friend_apply.remove(fri)
+
+
+def get_fri_appli(request):
+    user = request.user
+    js = {
+        'sum': len(user.friends),
+        'friend': []
+    }
+    for app_user in user.friends:
+        js['friend'].append(app_user.username)
+        js['friend'].append(app_user.name)
+    return JsonResponse(json.dumps(js))
+
+
+def invite(request):
+    user = request.user
+    to_id = request.POST.get('friend_id')
+    to_user = big_user.objects.get(username=to_id)
+    project_id = request.POST.get('friend_id')
+    inv_prject = Project.objects.get(id=project_id)
+    if to_id not in user.friends:
+        return JsonResponse({
+            "ret": -1,
+            "msg": "未与该用户成为好友"
+        })
+    to_user.project_invite.add((user, inv_prject))
+    return JsonResponse({
+        "ret": 0,
+        "msg": "邀请已发送"
+    })
+

@@ -1,5 +1,5 @@
 from rest_framework.test import APIClient, APITestCase 
-from common.models import Entity, Relation
+from common.models import Entity, Relation, Project
 from register.models import big_user
 from django.db.models import Count
 import json
@@ -14,14 +14,40 @@ class relationTests(APITestCase):
             path= '/user/register/',
             data=
             {
-                'user_id': '3146',
+                'user_id': '3100',
                 'password': '123456',
-                'user_name': 'crapbag'
+                'user_name': 'dz'
             }
         )
         response_content = json.loads(response.content)
         self.assertEqual(response_content['msg'], '创建成功')
-
+        
+        data= {
+            'action':'add_project',
+            'data': {
+                'name':'project1'
+            }
+        }
+        
+        response = self.client.post(
+            path='/user/projects',
+            data=json.dumps(data),
+            content_type= 'application/json'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Project.objects.count(), 1)
+        project_id = (json.loads(response.content))['id']
+        
+        
+        data={
+            'project_id': project_id
+        }
+        response = self.client.post(
+            path= '/api/project/pro_session',
+            data=json.dumps(data),
+            content_type= 'application/json'
+        )
+        
         # 添加实体1
         self.assertEqual(Entity.objects.count(), 0)
         data= {

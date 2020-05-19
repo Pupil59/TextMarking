@@ -60,18 +60,18 @@
   <script type="text/javascript">
     function search() {
       var entityName = $("#entityName").val();
-      $.get('les-miserables2.json', function (xml) {
+      $.get('/api/project/graph',{"name":entityName}, function (xml) {
       var graph = xml;
       graph.nodes.forEach(function (node) {
           node.itemStyle = null;
           node.value = node.symbolSize;
           node.symbolSize /= 1.5;
           node.label = {
-              show: node.symbolSize > 30
+              show: true
           };
           node.category = (node.symbolSize*0.15);
           node.draggable = true;
-          node.itemStyle = {color: getcolor(node)};
+          node.itemStyle = {color: getcolor(node, false)};
       });
       option = {
           series : [
@@ -108,7 +108,7 @@
           };
           node.category = Math.floor(node.symbolSize*0.15);
           node.draggable = true;
-          node.itemStyle = {color: getcolor(node)};
+          node.itemStyle = {color: getcolor(node, true)};
       });
       option = {
           title: {
@@ -212,7 +212,7 @@
                     console.log("complete");
                 },
                 });
-                //location.reload();
+                location.reload();
             }
         }, {
             "name": "修改",
@@ -221,6 +221,30 @@
                 var newname=prompt("请输入新的名称",params.data.name);
                 if (newname!=null && newname!=""){
                     console.log(newname);
+                    $.ajax({
+                    type:"PUT",
+                    url:"/api/project/entities",
+                    contentType: "application/json",
+                    dataType:"json",
+                    async:false,
+                    data:JSON.stringify({
+                      "action":"modify_entity",
+                      "id": params.data.id,
+                      "newdata":{
+                          "name":newname
+                      }
+                    }),
+                    success:function (data) {
+                        console.log("name:"+(data.id));
+                    },
+                    error:function (data) {
+                        console.log("error");
+                    },
+                    complete: function (data) {
+                        console.log("complete");
+                    },
+                    });
+                    location.reload();
                 }
             }
         }
@@ -268,7 +292,7 @@
             "top": event.y
         }).show();
     }
-    function getcolor(anode) {
+    function getcolor(anode, type) {
         colors = [
             "#dd6b66",
             "#759aa0",
@@ -282,9 +306,10 @@
             "#91ca8c",
             "#f49f42"
         ];
+        if (type) {return colors[anode.category];}
         if (anode.selected==true) {return '#66ccff';}
         if (anode.selected==false) {return '#ccc';}
-        return colors[anode.category];
+        
     };
   </script>
 </main>

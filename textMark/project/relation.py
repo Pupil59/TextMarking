@@ -3,7 +3,8 @@ from django.http import FileResponse
 from django.db.models import F
 import json
 
-from common.models import Relation, Entity, Project
+from common.models import Relation, Entity, Project, RelType
+from register.models import big_user
 
 
 def dispatcher(request):
@@ -28,7 +29,7 @@ def dispatcher(request):
     elif request.method in ['POST', 'PUT', 'DELETE']:
         request.params = json.loads(request.body)
 
-        # 根据不同的action分派给不同的函数进行处理
+    # 根据不同的action分派给不同的函数进行处理
     action = request.params['action']
 
     if action == 'list_relation':
@@ -39,6 +40,12 @@ def dispatcher(request):
         return delrelation(request)
     elif action == 'modify_relation':
         return modifyrelation(request)
+    elif action == 'list_type':
+        return listtype(request)
+    elif action == 'add_type':
+        return addtype(request)
+    elif action == 'del_type':
+        return deltype(request)
     else:
         return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
 
@@ -125,7 +132,7 @@ def modifyrelation(request):
     newdata = request.params['newdata']
 
     try:
-        relation = Entity.objects.get(id=rid)
+        relation = Relation.objects.get(id=rid)
     except Entity.DoesNotExist:
         return {
             'ret': 1,
@@ -167,6 +174,69 @@ def delrelation(request):
 
     source.symbolSize -= 5
     source.save()
+
+    return JsonResponse({'ret': 0})
+
+
+def listtype(request):
+    pid = request.session['project_id']
+    qs = RelType.objects.filter(project_id=pid) \
+        .annotate(
+        user_name=F('user__name')
+    ) \
+        .values(
+        'id', 'name', 'user_name'
+    )
+
+    retlist = list(qs)
+
+    return JsonResponse({'ret': 0, 'retlist': retlist})
+
+
+def addtype(request):
+    pid = request.session['project_id']
+    uid = request.user.id
+    info = request.params['data']
+
+    qs = RelType.objects.filter(project_id=pid).values()
+    types = list(qs)
+
+    if info['name'] == '从属' or info['name'] == '并列' or info['name'] == '解释':
+        return JsonResponse({
+            'ret': 1,
+            'msg': '关系名在项目中已经存在'
+        })
+
+    for reltype in types:
+
+        if info['name'] == reltype.name:
+            username = big_user.objects.get(id=uid)
+            return JsonResponse({
+                'ret': 1,
+                'msg': f'关系名在项目中已经存在，添加者为{username}'
+            })
+
+    record = Entity.objects.create(name=info['name'],
+                                   project_id=pid,
+                                   user_id=uid)
+
+    return JsonResponse({'ret': 0, 'id': record.id})
+
+
+def deltype(request):
+    tid = request.params['id']
+
+    try:
+        # 根据 id 从数据库中找到相应的实体记录
+        reltype = RelType.objects.get(id=tid)
+    except RelType.DoesNotExist:
+        return {
+            'ret': 1,
+            'msg': f'id 为`{tid}`的关系不存在'
+        }
+
+    # delete 方法就将该记录从数据库中删除了
+    reltype.delete()
 
     return JsonResponse({'ret': 0})
 

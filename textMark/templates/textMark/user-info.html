@@ -179,7 +179,7 @@
             console.log(data);
             if(data.ret == 0) {
                 alert("项目创建成功");
-                //window.location.href = "/index";
+                location.reload();
             } else {
                 alert(data.msg);
             }
