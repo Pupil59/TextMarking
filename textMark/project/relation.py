@@ -132,7 +132,7 @@ def modifyrelation(request):
     newdata = request.params['newdata']
 
     try:
-        relation = Entity.objects.get(id=rid)
+        relation = Relation.objects.get(id=rid)
     except Entity.DoesNotExist:
         return {
             'ret': 1,

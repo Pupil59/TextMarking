@@ -77,7 +77,7 @@ def addentity(request):
     entities = list(qs)
     for entity in entities:
         if entity['name'] == info['name']:
-            username = big_user.objects.get(id=request.user.id)
+            username = big_user.objects.get(id=request.user.id).name
             return JsonResponse({
                 'ret': 1,
                 'msg': f'实体名在项目中已经存在，添加者为{username}'
@@ -105,13 +105,14 @@ def modifyentity(request):
     if 'name' in newdata:
         qs = Entity.objects.filter(project_id=request.session['project_id']).values()
         entities = list(qs)
-        for entity in entities:
-            if entity['name'] == newdata['name']:
-                username = big_user.objects.get(id=request.user.id)
+        for ent in entities:
+            if ent['name'] == newdata['name']:
+                username = big_user.objects.get(id=request.user.id).name
                 return JsonResponse({
                     'ret': 1,
                     'msg': f'实体名在项目中已经存在，添加者为{username}'
                 })
+
         entity.name = newdata['name']
 
     # 注意，一定要执行save才能将修改信息保存到数据库
