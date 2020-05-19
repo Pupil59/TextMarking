@@ -2,7 +2,9 @@
 
 修改：
 
-​	V 1.61 修改了拉取好友的组织方式
+​	V1.62 修改拉取好友，拉取好友请求的返回信息的组织方式,修改邀请好友接口，现在前端需要发送被邀请的用户的id。修改拉取项目邀请的返回内容
+
+​	V 1.61 修改了拉取好友和拉取好友的组织方式
 
 ​	V 1.6 增加用户好友系统及邀请部分的API，以及导出实体、关系、三元组的api
 
@@ -443,15 +445,17 @@ http 响应消息 body 中， 数据以json格式存储，
 
 ```
 {
-	'sum':1,
-    {
-    	"user_name": "法外狂徒张三",
-    	"user_id": "zhangsan"
-    	}
+	'sum':2,
+    'friends': [
+    	"zhangsan",
+    	"法外狂徒张三",
+    	"zhaosi",
+    	"尼古拉斯赵四"
+    ]
 }
 ```
 
-其中sum为好友人数，user_name为好友昵称，user_id为好友id
+其中sum为好友人数，friends为数组，第一个为好友的id，第二个为好友的昵称，两个一组
 
 
 
@@ -509,8 +513,15 @@ http 响应消息 body 中， 数据以json格式存储，
 
 ```
 {
-	'ret':0,
+	'ret':-1,
     "msg": "id不存在"
+}
+```
+
+```
+{
+	'ret':-2,
+    "msg": "已与该用户成为好友"
 }
 ```
 
@@ -598,16 +609,20 @@ http 响应消息 body 中， 数据以json格式存储，
 ```
 {
 	'sum':2,
-    friends [
-    	"zhangsan",
-    	"法外狂徒张三",
-    	"zhaosi",
-    	"尼古拉斯赵四"
+    'friends': [
+    	{
+    	"user_i": "zhangsan",
+    	"user_name": "法外狂徒张三",
+    	},
+    	{
+    	"user_i": "zhaosi",
+    	"user_name": "尼古拉斯赵四"
+		}
     ]
 }
 ```
 
-其中sum为好友人数，friends为数组，第一个为好友的昵称，第二个为好友的id，两个一组
+其中sum为好友人数，friends为数组，第一个为申请者的id，第二个为申请者的昵称，两个一组
 
 ## 邀请好友标注项目
 
@@ -627,6 +642,7 @@ Content-Type: application/json
 ```
 {
 	"action":"project_invite",
+	"friend_id": "zhangsan"
 	"project_id":"1234"
 }
 ```
@@ -663,14 +679,16 @@ http 响应消息 body 中， 数据以json格式存储，
 
 ```
 {
-	'ret':0,
-    "msg": "id不存在"
+	'ret':-1,
+    "msg": "未与该用户成为好友"
 }
 ```
 
 
 
-其中ret=1表示发送的id存在，已向张三发送邀请，ret = -1表示发送的id不存在
+
+
+其中ret=1表示发送的id存在，已向张三发送邀请，ret = -1表示发送的id与发送者不是好友，也可能id不存在
 
 
 
@@ -752,11 +770,13 @@ http 响应消息 body 中， 数据以json格式存储，
 ```
 {
 	'sum':1,
+    'invites': [
     {
     	"user_name": "法外狂徒张三",
     	"user_id": "zhangsan"，
     	"project_id":"1234"
     	}
+    	]
 }
 ```
 
@@ -887,3 +907,63 @@ Content-Disposition: attachment;filename= + file_name
 数据以json文件存储，
 
 其中包括关系的id 和name，以及关系所连接的实体的id和name
+
+### 列出所有参与的好友项目
+
+#### 请求消息
+
+```py
+GET  /user/other?list_fri_pro  HTTP/1.1
+```
+
+#### 请求参数
+
+http 请求消息 url 中 需要携带如下参数，
+
+- action
+
+  填写值为 list_fri_pro
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果获取信息成功，返回如下
+
+```json
+{
+    "sum": 2,
+    "retlist": [
+        {
+            "id": 1,
+            "name": "项目1"
+        },
+        
+        {
+            "id": 4,
+            "name": "project4"
+        }
+    ]              
+}
+```
+
+ret 为 0 表示登录成功
+
+retlist 里面包含了所有的项目信息列表。
+
+每个项目信息以如下格式存储
+
+```json
+{
+   "id": 1,
+   "name": "项目1"
+}
+```
+

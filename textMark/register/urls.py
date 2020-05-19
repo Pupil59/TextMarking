@@ -9,7 +9,7 @@ urlpatterns = [
     path('sigin/', sign_in),
     path('change_password/', modify_password),
     path('other/', dispatch),
-    path('projects', project.dispatcher),
+    path('projects/', project.dispatcher),
     path('info/', showUserInfo),
     # path('projects', project.dispatcher),
 ]
