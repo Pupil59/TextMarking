@@ -100,6 +100,12 @@ def delproject(request):
 
 
 def add_pro_session(request):
+    if not request.user.is_authenticated():
+        return JsonResponse({
+                'ret': 302,
+                'msg': '未登录'},
+                status=302)
+
     request.params = json.loads(request.body)
     pid = request.params['project_id']
     request.session['project_id'] = pid

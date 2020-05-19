@@ -1,10 +1,10 @@
-# api/project接口2.7
+# api/project接口2.8
 
 
 
 ## 修改内容
 
-- 修改了列出实体和列出图谱的接口
+- 增加了自定义关系的增删查
 
 
 
@@ -856,6 +856,192 @@ ret 不为 0 表示失败， msg字段描述失败的原因
 
 
 
+### 列出关系种类
+
+#### 请求消息
+
+```
+GET  /api/project/relations?action=list_type  HTTP/1.1
+```
+
+#### 请求参数
+
+http请求消息URL中需要携带如下参数
+
+- action
+
+  固定字段，填写值为list_type
+
+#### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果获取信息成功，返回如下
+
+```
+{
+    "ret": 0,
+    "retlist": [
+        {"id": 1, "name": "关系1", "user_name": "用户1"},
+        {"id": 2, "name": "关系2", "user_name": "用户2"}
+    ]              
+}
+```
+
+ret 为 0 表示获取成功
+
+retlist 里面包含了所有的关系种类信息列表。
+
+每个关系种类信息以如下格式存储
+
+```
+    {"id": 2, "name": "关系2", "user_name": "用户1"}
+```
+
+
+
+### 添加一个关系种类
+
+#### 请求消息
+
+```
+POST  /api/project/relations  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带添加实体的信息
+
+消息体的格式是json，如下示例：
+
+```
+{
+    "action":"add_type",
+    "data":{
+        "name": "关系1"
+    }
+}
+```
+
+其中
+
+`action` 字段固定填写 `add_type` 表示添加一个关系类型
+
+`data` 字段中存储了要添加的关系类型的信息
+
+服务端接受到该请求后，应该在系统中增加这样的关系类型。
+
+#### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果添加成功，返回如下
+
+```
+{
+    "ret": 0,
+    "id" : 677
+}
+```
+
+ret 为 0 表示成功。
+
+id 为 添加关系类型的id号。
+
+如果添加失败，返回失败的原因，示例如下
+
+```
+{
+    "ret": 1,    
+    "msg": "关系名在此项目中已经存在"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
+
+### 删除关系类型信息
+
+#### 请求消息
+
+```
+DELETE  /api/project/relations  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带要删除关系类型的id
+
+消息体的格式是json，如下示例：
+
+```
+{
+    "action":"del_type",
+    "id": 6
+}
+```
+
+其中
+
+`action` 字段固定填写 `del_type` 表示删除一个关系类型
+
+`id` 字段为要删除的关系类型的id号
+
+服务端接受到该请求后，应该在系统中尝试删除该id对应的关系类型。
+
+#### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果删除成功，返回如下
+
+```
+{
+    "ret": 0
+}
+```
+
+ret 为 0 表示成功。
+
+如果删除失败，返回失败的原因，示例如下
+
+```
+{
+    "ret": 1,    
+    "msg": "id为 566 的关系类型不存在"
+}
+```
+
+ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
+
+
+
 ## 图谱
 
 ### 列出图谱的信息
@@ -868,7 +1054,7 @@ GET  /api/project/graph  HTTP/1.1
 
 #### 请求参数
 
-http 请求消息url 中需要携带如下参数，
+http 请求消息**url 中**需要携带如下参数，
 
 - name
 
@@ -891,7 +1077,7 @@ http 响应消息 body 中， 数据以json格式存储，
 {
 	'links': [{'id': 1, 'name': '从属', 'source': 2, 'target': 1}],
  	'nodes': [
- 				{'id': 1, 'name': '树', 'symbolSize': 40.0, 'selected': False},
+ 				{'id': 1, 'name': '树', 'symbolSize': 40.0, 'selected': Flase},
  				{'id': 2, 'name': '二叉树', 'symbolSize': 40.0, 'selected': True}
  			],
  	'ret': 0
