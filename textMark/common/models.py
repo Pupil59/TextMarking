@@ -43,6 +43,17 @@ class Relation(models.Model):
     # 创建者
     user = models.ForeignKey(big_user, on_delete=models.CASCADE)
 
+
+class RelType(models.Model):
+    # 关系类型名称
+    name = models.CharField(max_length=200)
+
+    # 所属项目
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    # 创建者
+    user = models.ForeignKey(big_user, on_delete=models.CASCADE)
+
 # class Text(models.Model):
 #     # 文档名称
 #     name = models.CharField(max_length=200)

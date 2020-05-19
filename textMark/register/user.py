@@ -121,7 +121,19 @@ def get_user_info(request):
         })
     else:
         return JsonResponse({
-            "ret":0,
+            "ret": 0,
             "user_name": user.name,
             "user_id": user.username
         })
+
+
+def get_friends(request):
+    user = request.user
+    js = {
+        'sum': len(user.friends),
+        'friend':[]
+    }
+    for friend_id in user.friends:
+        js['friend'].append(friend_id)
+        js['friend'].append(big_user.objects.get(first_name=friend_id).name)
+    return JsonResponse(json.dumps(js))

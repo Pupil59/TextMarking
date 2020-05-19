@@ -1,6 +1,5 @@
 from django.http import JsonResponse
 from django.db.models import F
-import json
 
 from common.models import Entity, Relation
 
