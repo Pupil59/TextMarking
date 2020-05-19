@@ -169,12 +169,23 @@
     <div id="div2">E1</div>
     <div id="div3">实体2：</div>
     <div id="div4">E2</div>
+    <div>关系类型：</div>
+    <div id="div8">
+      <select id="relation_type" name="relation_type"></select>
+    </div>
     <div id="div5">
-      <button type="button" onclick="">添加关系</button>
+      <button type="button" onclick="sendRelationBeta()">添加关系</button>
     </div>
     
     <div id="div6">添加的实体：（已经添加进去了）</div>
     <div id="div7">E</div>
+
+    <div id="div9">
+      <input type="text" id="new_relation_type" name="new_relation_type">
+    </div>
+    <div id="div10">
+      <button type="button" onclick="sendNewRelationBeta()">添加自定义关系类型</button>
+    </div>
 
     <!-- <div id="myDiv"><h2>使用 AJAX 修改该文本内容</h2></div>
     <button type="button" onclick="loadXMLDoc()">修改内容</button> -->
@@ -186,140 +197,141 @@
 </body>
 
 <script type="text/javascript">
-//   window.onload = function() {
-//     getEntities();
-//     getUserInfo();
-//   }
-//   // p.s.需要用户上传文档的接口...
-//   //function sendText() {}
-//   function entitySubmit() {
-//     sendEntity();
-//     location.reload();
-//     //getEntities();
-//   }
-//   function sendEntity() {
-//       var name = $("#entity_name").val();
-//       $.ajax({
-//           type:"POST",
-//           url:"/api/project/entities",
-//           contentType: "application/json",
-//           async:false,
-//           dataType:"json",
-//           data:JSON.stringify({
-//               "action":"add_entity",
-//               "data":{
-//                   "name":name
-//               }
-//           }),
-//           success:function (data) {
-//             if (data.ret != 0) {
-//               alert("提示：" + data.msg);
-//             }
-//         },
-//       })
-//   }
-//   function getEntities() {
-//       //更新添加关系的两个实体下拉栏
-//       $.ajax({
-//         type:"GET",
-//         url:"/api/project/entities",
-//         async:false,
-//         dataType:"json",
-//         data:JSON.stringify({
-//           "action":"list_entity"
-//         }),
-//         success: function (data) {
-//           var srcEntity = document.getElementById("source_id");
-//           var dstEntity = document.getElementById("destination_id");
-//           for (var i = 0; i <= data.retlist.length - 1; i ++) {
-//             var opt1 = new Option(data.retlist[i].name, data.retlist[i].id);
-//             var opt2 = new Option(data.retlist[i].name, data.retlist[i].id);
-//             if (!isItemExist(srcEntity, opt1)) {
-//               srcEntity.add(opt1);
-//             }
-//             if (!isItemExist(dstEntity, opt2)) {
-//               dstEntity.add(opt2);
-//             }
-//           }
-//         },
-//         //由于该函数是在页面加载时就被调用，所以用来判断是否登录，如果未登录，把用户送走
-//         error: function(data) {
-//           var json = JSON.parse(data.responseText);
-//           alert(json.msg);
-//           if (json.ret == 302) {
-//             window.location.href = json.redirect;
-//           }
-//         }
-//       })
-//   }
-//   function isItemExist(objSelect,objItemValue) {
-//     var isExit = false;
-//     for(var i=0;i<objSelect.length;i++)
-//     {
-//       if ((objSelect.options[i].text == objItemValue.text) && (objSelect.options[i].value == objItemValue.value))
-//       {
-//         isExit = true;
-//           break;
-//       }
-//     }     
-//     return isExit;
-//   }
-//   function sendRelation() {
-//     var source_id = $("#source_id").val();
-//     var destination_id = $("#destination_id").val();
-//     var relation_name = $("#relation_name").val();
-//     // 上述将添加关系的form信息转化为json字符串jsonRelation
+  window.onload = function() {
+    getEntities();
+    getRelationsBeta();
+    getUserInfo();
+  }
+  // p.s.需要用户上传文档的接口...
+  //function sendText() {}
+  function entitySubmit() {
+    sendEntity();
+    location.reload();
+    //getEntities();
+  }
+  function sendEntity() {
+      var name = $("#entity_name").val();
+      $.ajax({
+          type:"POST",
+          url:"/api/project/entities",
+          contentType: "application/json",
+          async:false,
+          dataType:"json",
+          data:JSON.stringify({
+              "action":"add_entity",
+              "data":{
+                  "name":name
+              }
+          }),
+          success:function (data) {
+            if (data.ret != 0) {
+              alert("提示：" + data.msg);
+            }
+        },
+      })
+  }
+  function getEntities() {
+      //更新添加关系的两个实体下拉栏
+      $.ajax({
+        type:"GET",
+        url:"/api/project/entities",
+        async:false,
+        dataType:"json",
+        data:JSON.stringify({
+          "action":"list_entity"
+        }),
+        success: function (data) {
+          var srcEntity = document.getElementById("source_id");
+          var dstEntity = document.getElementById("destination_id");
+          for (var i = 0; i <= data.retlist.length - 1; i ++) {
+            var opt1 = new Option(data.retlist[i].name, data.retlist[i].id);
+            var opt2 = new Option(data.retlist[i].name, data.retlist[i].id);
+            if (!isItemExist(srcEntity, opt1)) {
+              srcEntity.add(opt1);
+            }
+            if (!isItemExist(dstEntity, opt2)) {
+              dstEntity.add(opt2);
+            }
+          }
+        },
+        //由于该函数是在页面加载时就被调用，所以用来判断是否登录，如果未登录，把用户送走
+        error: function(data) {
+          var json = JSON.parse(data.responseText);
+          alert(json.msg);
+          if (json.ret == 302) {
+            window.location.href = json.redirect;
+          }
+        }
+      })
+  }
+  function isItemExist(objSelect,objItemValue) {
+    var isExit = false;
+    for(var i=0;i<objSelect.length;i++)
+    {
+      if ((objSelect.options[i].text == objItemValue.text) && (objSelect.options[i].value == objItemValue.value))
+      {
+        isExit = true;
+          break;
+      }
+    }     
+    return isExit;
+  }
+  function sendRelation() {
+    var source_id = $("#source_id").val();
+    var destination_id = $("#destination_id").val();
+    var relation_name = $("#relation_name").val();
+    // 上述将添加关系的form信息转化为json字符串jsonRelation
 
-//     // html页面内调试用
-//     // $("#show2").html(JSON.stringify(jsonRelation));
-//     $.ajax({
-//         type:"POST",
-//         url:"/api/project/relations",
-//         contentType: "application/json",
-//         dataType:"json",
-//         async:false,
-//         data:JSON.stringify({
-//             "action":"add_relation",
-//             "data":{
-//                 "name":relation_name,
-//                 "source_id":source_id,
-//                 "target_id":destination_id
-//             }
-//         }),
-//         success:function (data) {
-//           console.log(data);
-//           if (data.ret != 0) {
-//               alert("提示：" + data.msg);
-//           }
-//         },
-//         error:function (data) {
-//           console.log(data);
-//         }
-//     })
-//     location.reload();
-//   }
-//   function getUserInfo() {
-//     $.ajax({
-//       type:"GET",
-//       url:"/user/other",
-//       contentType: "application/json",
-//       async:false,
-//       success: function (data) {
-//         if (data.ret == 0) {
-//           console.log(data);
-//           $('#mytitle').html(data.user_name);
-//         } else {
-//           console.log(data);
-//         }
-//       },
-//     })
-//   }
+    // html页面内调试用
+    // $("#show2").html(JSON.stringify(jsonRelation));
+    $.ajax({
+        type:"POST",
+        url:"/api/project/relations",
+        contentType: "application/json",
+        dataType:"json",
+        async:false,
+        data:JSON.stringify({
+            "action":"add_relation",
+            "data":{
+                "name":relation_name,
+                "source_id":source_id,
+                "target_id":destination_id
+            }
+        }),
+        success:function (data) {
+          console.log(data);
+          if (data.ret != 0) {
+              alert("提示：" + data.msg);
+          }
+        },
+        error:function (data) {
+          console.log(data);
+        }
+    })
+    location.reload();
+  }
+  function getUserInfo() {
+    $.ajax({
+      type:"GET",
+      url:"/user/other",
+      contentType: "application/json",
+      async:false,
+      success: function (data) {
+        if (data.ret == 0) {
+          console.log(data);
+          $('#mytitle').html(data.user_name);
+        } else {
+          console.log(data);
+        }
+      },
+    })
+  }
 
 //以上为alpha阶段添加方式，测试阶段暂时保留，以便判断正确性
 //以下为beta阶段添加方式
 
-var rg = window.getSelection();
-var e1, e2, e;
+var rg = window.getSelection(); //获取鼠标选中的区域
+var e1, e2, e;//e1,添加关系的实体1;e2,添加关系的实体2;e,添加的实体
 $(function(){
     $.contextMenu({
         selector: '.context-menu-one',
@@ -341,6 +353,7 @@ $(function(){
             "添加实体": {name: "添加实体", callback: function(key, options){
                 document.getElementById("div7").innerText=rg.toString();
                 e = rg.toString();
+                sendEntityBeta();
             }}
         }
     });
@@ -348,5 +361,160 @@ $(function(){
         console.log('clicked', this);
     })
 });
+function sendEntityBeta() {//添加实体
+  $.ajax({
+          type:"POST",
+          url:"/api/project/entities",
+          contentType: "application/json",
+          async:false,
+          dataType:"json",
+          data:JSON.stringify({
+              "action":"add_entity",
+              "data":{
+                  "name":e
+              }
+          }),
+          success:function (data) {
+            if (data.ret != 0) {
+              alert("提示：" + data.msg);
+            }
+        },
+      })
+}
+function sendNewRelationBeta() {//添加自定义关系类型
+  var name = $("#new_relation_type").val();
+      $.ajax({
+          type:"POST",
+          url:"/api/project/relations",
+          contentType: "application/json",
+          async:false,
+          dataType:"json",
+          data:JSON.stringify({
+              "action":"add_type",
+              "data":{
+                  "name":name
+              }
+          }),
+          success:function (data) {
+            if (data.ret != 0) {
+              alert("提示：" + data.msg);
+            }
+        },
+      })
+}
+
+function sendRelationBeta() {//添加关系
+  var src_id, dst_id;
+  var relation = $("#relation_type").val();
+  $.ajax({
+          type:"POST",
+          url:"/api/project/entities",
+          contentType: "application/json",
+          async:false,
+          dataType:"json",
+          data:JSON.stringify({
+              "action":"add_entity",
+              "data":{
+                  "name":e1
+              }
+          }),
+          success:function (data) {
+            if (data.ret == 0) {
+              src_id = data.id;
+            } else {
+              $.ajax({
+                type:"GET",
+                url:"/api/project/entities",
+                contentType: "application/json",
+                async:false,
+                dataType:"json",
+                data:JSON.stringify({
+                    "action":"list_entity",
+                    "name":e1
+                }),
+                success:function (data) {
+                  if (data.ret == 0) {
+                    src_id = data.retlist[0].id;
+                  }
+                }
+              })
+            }
+          }
+      })
+
+      $.ajax({
+          type:"POST",
+          url:"/api/project/entities",
+          contentType: "application/json",
+          async:false,
+          dataType:"json",
+          data:JSON.stringify({
+              "action":"add_entity",
+              "data":{
+                  "name":e2
+              }
+          }),
+          success:function (data) {
+            if (data.ret == 0) {
+              dst_id = data.id;
+            } else {
+              $.ajax({
+                type:"GET",
+                url:"/api/project/entities",
+                contentType: "application/json",
+                async:false,
+                dataType:"json",
+                data:JSON.stringify({
+                    "action":"list_entity",
+                    "name":e2
+                }),
+                success:function (data) {
+                  if (data.ret == 0) {
+                    dst_id = data.retlist[0].id;
+                  }
+                }
+              })
+            }
+          }
+      })
+
+      $.ajax({
+          type:"POST",
+          url:"/api/project/relations",
+          contentType: "application/json",
+          async:false,
+          dataType:"json",
+          data:JSON.stringify({
+              "action":"add_relation",
+              "data":{
+                  "name":relation,
+                  "source_id":src_id,
+                  "target_id":dst_id
+              }
+          }),
+          success:function (data) {
+            if (data.ret != 0) {
+              alert("提示：" + data.msg);
+            }
+        },
+      })
+}
+
+function getRelationsBeta() {
+  $.ajax({
+        type:"GET",
+        url:"/api/project/relations?action=list_relation",
+        async:false,
+        success: function (data) {
+          var relationtypes = document.getElementById("relation_type");
+          for (var i = 0; i <= data.retlist.length - 1; i ++) {
+            var opt = new Option(data.retlist[i].name, data.retlist[i].id);
+            if (!isItemExist(relationtypes, opt)) {
+              relationtypes.add(opt);
+            }
+          }
+        }
+      })
+}
 </script>
 </html>
