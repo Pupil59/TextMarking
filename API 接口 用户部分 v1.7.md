@@ -651,7 +651,6 @@ Content-Type: application/json
 {
 	"action":"project_invite",
 	"friend_id": "zhangsan"
-	"project_id":"1234"
 }
 ```
 

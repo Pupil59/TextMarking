@@ -211,7 +211,7 @@ def invite(request):
     user = request.user
     to_id = request.POST.get('friend_id')
     to_user = big_user.objects.get(username=to_id)
-    project_id = request.POST.get('friend_id')
+    project_id = request.session.get('project_id')
     inv_prject = Project.objects.get(id=project_id)
     if to_id not in user.friends:
         return JsonResponse({
