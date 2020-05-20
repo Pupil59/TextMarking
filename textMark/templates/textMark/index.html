@@ -176,9 +176,6 @@
     <div id="div5">
       <button type="button" onclick="sendRelationBeta()">添加关系</button>
     </div>
-    
-    <div id="div6">添加的实体：（已经添加进去了）</div>
-    <div id="div7">E</div>
 
     <div id="div9">
       <input type="text" id="new_relation_type" name="new_relation_type">
@@ -234,12 +231,8 @@
       //更新添加关系的两个实体下拉栏
       $.ajax({
         type:"GET",
-        url:"/api/project/entities",
+        url:"/api/project/entities?action=list_entity",
         async:false,
-        dataType:"json",
-        data:JSON.stringify({
-          "action":"list_entity"
-        }),
         success: function (data) {
           var srcEntity = document.getElementById("source_id");
           var dstEntity = document.getElementById("destination_id");
@@ -321,6 +314,7 @@
           $('#mytitle').html(data.user_name);
         } else {
           console.log(data);
+
         }
       },
     })
@@ -350,9 +344,9 @@ $(function(){
             }},
             "sep1": "---------",
             "添加实体": {name: "添加实体", callback: function(key, options){
-                document.getElementById("div7").innerText=rg.toString();
                 e = rg.toString();
                 sendEntityBeta();
+                location.reload();
             }}
         }
     });
@@ -374,12 +368,12 @@ function sendEntityBeta() {//添加实体
               }
           }),
           success:function (data) {
-            if (data.ret != 0) {
-              alert("提示：" + data.msg);
-            }
-        },
+              alert("添加实体成功");
+          }
       })
+  location.reload();
 }
+
 function sendNewRelationBeta() {//添加自定义关系类型
   var name = $("#new_relation_type").val();
       $.ajax({
@@ -395,11 +389,13 @@ function sendNewRelationBeta() {//添加自定义关系类型
               }
           }),
           success:function (data) {
-            if (data.ret != 0) {
-              alert("提示：" + data.msg);
-            }
-        },
+              alert("添加自定义关系成功");
+          },
+          error:function (data) {
+              console.log(data);
+          }
       })
+      location.reload();
 }
 
 function sendRelationBeta() {//添加关系
@@ -423,14 +419,9 @@ function sendRelationBeta() {//添加关系
             } else {
               $.ajax({
                 type:"GET",
-                url:"/api/project/entities",
+                url:"/api/project/entities?action=list_entity&name="+e1,
                 contentType: "application/json",
                 async:false,
-                dataType:"json",
-                data:JSON.stringify({
-                    "action":"list_entity",
-                    "name":e1
-                }),
                 success:function (data) {
                   if (data.ret == 0) {
                     src_id = data.retlist[0].id;
@@ -459,14 +450,9 @@ function sendRelationBeta() {//添加关系
             } else {
               $.ajax({
                 type:"GET",
-                url:"/api/project/entities",
+                url:"/api/project/entities?action=list_entity&name="+e2,
                 contentType: "application/json",
                 async:false,
-                dataType:"json",
-                data:JSON.stringify({
-                    "action":"list_entity",
-                    "name":e2
-                }),
                 success:function (data) {
                   if (data.ret == 0) {
                     dst_id = data.retlist[0].id;
@@ -502,7 +488,7 @@ function sendRelationBeta() {//添加关系
 function getRelationsBeta() {
   $.ajax({
         type:"GET",
-        url:"/api/project/relations?action=list_relation",
+        url:"/api/project/relations?action=list_type",
         async:false,
         success: function (data) {
           var relationtypes = document.getElementById("relation_type");
