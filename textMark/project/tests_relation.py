@@ -1,17 +1,17 @@
-from rest_framework.test import APIClient, APITestCase 
-from common.models import Entity, Relation, Project
+from rest_framework.test import APIClient, APITestCase
+from common.models import Entity, Relation, Project, RelType
 from register.models import big_user
 from django.db.models import Count
 import json
 
-class relationTests(APITestCase):
 
+class relationTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.assertEqual(big_user.objects.count(), 0)
         # 注册
         response = self.client.post(
-            path= '/user/register/',
+            path='/user/register/',
             data=
             {
                 'user_id': '3100',
@@ -21,90 +21,89 @@ class relationTests(APITestCase):
         )
         response_content = json.loads(response.content)
         self.assertEqual(response_content['msg'], '创建成功')
-        
-        data= {
-            'action':'add_project',
+
+        data = {
+            'action': 'add_project',
             'data': {
-                'name':'project1'
+                'name': 'project1'
             }
         }
-        
+
         response = self.client.post(
             path='/user/projects',
             data=json.dumps(data),
-            content_type= 'application/json'
+            content_type='application/json'
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Project.objects.count(), 1)
         project_id = (json.loads(response.content))['id']
-        
-        
-        data={
+
+        data = {
             'project_id': project_id
         }
         response = self.client.post(
-            path= '/api/project/pro_session',
+            path='/api/project/pro_session',
             data=json.dumps(data),
-            content_type= 'application/json'
+            content_type='application/json'
         )
-        
+
         # 添加实体1
         self.assertEqual(Entity.objects.count(), 0)
-        data= {
-            'action':'add_entity',
+        data = {
+            'action': 'add_entity',
             'data': {
-                'name':'entity1'
+                'name': 'entity1'
             }
         }
         response = self.client.post(
             path='/api/project/entities',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Entity.objects.count(), 1)
         self.entity_id_1 = (json.loads(response.content))['id']
 
         # 添加实体2
-        data= {
-            'action':'add_entity',
+        data = {
+            'action': 'add_entity',
             'data': {
-                'name':'entity2'
+                'name': 'entity2'
             }
         }
         response = self.client.post(
             path='/api/project/entities',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Entity.objects.count(), 2)
         self.entity_id_2 = (json.loads(response.content))['id']
 
         # 添加实体3
-        data= {
-            'action':'add_entity',
+        data = {
+            'action': 'add_entity',
             'data': {
-                'name':'entity3'
+                'name': 'entity3'
             }
         }
         response = self.client.post(
             path='/api/project/entities',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Entity.objects.count(), 3)
         self.entity_id_3 = (json.loads(response.content))['id']
 
         # 添加实体4
-        data= {
-            'action':'add_entity',
+        data = {
+            'action': 'add_entity',
             'data': {
-                'name':'entity4'
+                'name': 'entity4'
             }
         }
         response = self.client.post(
             path='/api/project/entities',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Entity.objects.count(), 4)
         self.entity_id_4 = (json.loads(response.content))['id']
@@ -121,9 +120,9 @@ class relationTests(APITestCase):
             }
         }
         response = self.client.post(
-            path= '/api/project/relations',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Relation.objects.count(), 1)
 
@@ -137,16 +136,16 @@ class relationTests(APITestCase):
             }
         }
         response = self.client.post(
-            path= '/api/project/relations',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Relation.objects.count(), 2)
 
         # 请求关系列表
         response = self.client.get(
-            path= '/api/project/relations',
-            data= {
+            path='/api/project/relations',
+            data={
                 'action': 'list_relation'
             }
         )
@@ -165,9 +164,9 @@ class relationTests(APITestCase):
             }
         }
         response = self.client.post(
-            path= '/api/project/relations',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Relation.objects.count(), 1)
 
@@ -181,9 +180,9 @@ class relationTests(APITestCase):
             }
         }
         response = self.client.post(
-            path= '/api/project/relations',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Relation.objects.count(), 1)
 
@@ -197,9 +196,9 @@ class relationTests(APITestCase):
             }
         }
         response = self.client.post(
-            path= '/api/project/relations',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Relation.objects.count(), 1)
 
@@ -216,9 +215,9 @@ class relationTests(APITestCase):
             }
         }
         response = self.client.post(
-            path= '/api/project/relations',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Relation.objects.count(), 1)
         response_content = json.loads(response.content)
@@ -234,9 +233,9 @@ class relationTests(APITestCase):
             }
         }
         response = self.client.post(
-            path= '/api/project/relations',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Relation.objects.count(), 2)
         response_content = json.loads(response.content)
@@ -252,9 +251,9 @@ class relationTests(APITestCase):
             }
         }
         response = self.client.post(
-            path= '/api/project/relations',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Relation.objects.count(), 3)
         response_content = json.loads(response.content)
@@ -266,34 +265,84 @@ class relationTests(APITestCase):
             'id': relation_id_1
         }
         response = self.client.post(
-            path= '/api/project/relations',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Relation.objects.count(), 2)
 
         # 删除实体1---->对应自动删除关系2
-        data= {
+        data = {
             'action': 'del_entity',
             'id': self.entity_id_1
         }
         self.client.post(
             path='/api/project/entities',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Entity.objects.count(), 3)
         self.assertEqual(Relation.objects.count(), 1)
 
         # 删除实体4---->对应自动删除关系3
-        data= {
+        data = {
             'action': 'del_entity',
             'id': self.entity_id_4
         }
         self.client.post(
             path='/api/project/entities',
-            data= json.dumps(data),
-            content_type= 'application/json'
+            data=json.dumps(data),
+            content_type='application/json'
         )
         self.assertEqual(Entity.objects.count(), 2)
         self.assertEqual(Relation.objects.count(), 0)
+
+    def test_add_type(self):
+        self.assertEqual(RelType.objects.count(), 0)
+        # 添加关系类型1
+        data = {
+            'action': 'add_type',
+            'data': {
+                'name': '属于'
+            }
+        }
+        response = self.client.post(
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
+        )
+        self.assertEqual(RelType.objects.count(), 1)
+        response_content = json.loads(response.content)
+        relation_id_1 = response_content['id']
+
+    def test_list_type(self):
+        self.assertEqual(RelType.objects.count(), 0)
+        #添加关系类型1
+        data = {
+            'action': 'add_type',
+            'data': {
+                'name': '属于'
+            }
+        }
+        response = self.client.post(
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
+        )
+        self.assertEqual(RelType.objects.count(), 1)
+        response_content = json.loads(response.content)
+        relation_id_1 = response_content['id']
+
+        data = {
+            'action': 'list_type',
+        }
+
+        response = self.client.post(
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
+        )
+
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['ret'], 0)
+        self.assertEqual(len(response_content['retlist']), 1)

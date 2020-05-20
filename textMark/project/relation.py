@@ -208,15 +208,14 @@ def addtype(request):
         })
 
     for reltype in types:
-
-        if info['name'] == reltype.name:
-            username = big_user.objects.get(id=uid)
+        if info['name'] == reltype['name']:
+            username = big_user.objects.get(id=uid).name
             return JsonResponse({
                 'ret': 1,
                 'msg': f'关系名在项目中已经存在，添加者为{username}'
             })
 
-    record = Entity.objects.create(name=info['name'],
+    record = RelType.objects.create(name=info['name'],
                                    project_id=pid,
                                    user_id=uid)
 
