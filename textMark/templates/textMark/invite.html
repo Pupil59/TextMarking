@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>MarkTexting</title>
+  <script src='../../static/js/jquery.js'></script>
+  <script src='../../static/js/cb_entitylist.js'></script>
+  <link rel="stylesheet" href="../../static/css/style.css" media="screen" type="text/css" />
+
+</head>
+
+<body>
+
+  <span class='bckg'></span>
+<header>
+  <h1>
+    Dashboard
+  </h1>
+  <nav id="mymenu">
+    <ul>
+      <li>
+        <a target="_top" href="/index" data-title='Text'>Text</a>
+      </li>
+      <li>
+        <a target="_top" href="/graph" data-title='Graph'>Graph</a>
+      </li>
+      <li>
+        <a data-title='Entity'>Entity</a>
+      </li>
+      <li>
+        <a data-title='Import'>Import</a>
+      </li>
+      <li>
+        <a data-title='Export'>Export</a>
+      </li>
+      <li>
+        <a data-title='Invite'>Invite</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <div class='title'>
+    <h2>Projects</h2>
+    <a href='/user/info' title='UserCenter' id='mytitle'></a>
+  </div>
+  <article class='larg'>
+    <div>
+      <label>添加好友：</label>
+      <input id="friendName" type="" name=""></input>
+      <input type="button" value="添加" onclick="addFriend()"/>
+    </div>
+    <div style="text-align:center" id="fris"></div>
+    
+	<div style="text-align:center;clear:both;">
+
+</div>
+  </article>
+</main>
+
+<script type="text/javascript">
+  function addFriend() {
+    $.ajax({
+      type: "PUT",
+      url: "/user/other",
+      contentType: "application/json",
+      dataType: "json",
+      data:JSON.stringify({
+        "action":"friend_apply",
+        "id":"zhangsan"
+      }),
+      success: function (data) {
+        if(data.ret == 0) {
+            alert("成功发送请求");
+        } else {
+            alert(data.msg);
+        }
+      },
+      error : function() {
+          alert("异常！");
+      }
+    })
+  }
+
+  $(document).ready(function()
+    {
+      $.get("/user/other", {"action":"get_friends"}, function(data){
+        console.log(data);
+        for (var i = 0; i < data.friends.length/2; i++) {
+          $("#fris").append($("<a class=\"button1\">" + (data.friends[i*2+1]) + "</a>"));
+          $("#fris").append($("<button class=\"button2\" id = \"" + data.friends[i*2] + "\">" + "邀请" + "</button><br>"));
+        }
+      });
+
+    });
+  $(document).on("click",".button2",function(){
+    var status = confirm("确定要邀请好友加入当前项目?");
+    if (!status) {return false;}
+    console.log($(this)[0].id);
+    $.ajax({
+    type:"PUT",
+    url:"/user/other",
+    contentType: "application/json",
+    dataType:"json",
+    async:false,
+    data:JSON.stringify({
+      "action":"project_invite",
+      "friend_id": $(this)[0].id
+    }),
+    success:function (data) {
+        //console.log((data));
+    },
+    error:function (data) {
+        console.log(data);
+    },
+    });
+  });
+</script>
+<style type="text/css">
+  .button1 {
+    background-color: #0; color: black;
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 80%;
+    height: 80;
+  }
+</style>
+</body>
+
+</html>
