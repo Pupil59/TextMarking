@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate, login
 import json
 from django.contrib.auth.hashers import check_password
 from common.models import Project
-
+from project.entity import export_entities
+from project.relation import export_relations,export_triads
 
 def dispatch(request):
     if request.method in ['POST', 'PUT']:
@@ -13,10 +14,33 @@ def dispatch(request):
         action = request.params['action']
         if action == 'logout':
             return sign_out(request)
-        else:
+        elif action == 'change_name':
             return modify_name(request)
+        elif action == 'friend_apply':
+            return apply_friends(request)
+        elif action == 'friend_apply_accept' or action == 'friend_apply_deny':
+            return friend_confirm(request)
+        elif action == 'project_invite':
+            return invite(request)
+        elif action == 'project_invite_accept' or action == 'project_invite_deny':
+            return invite_confirm(request)
+        elif action == 'remove_fri_project':
+            return remove_fri_project(request)
+        elif action == 'get_entities_json':
+            return export_entities(request)
+        elif action == 'get_relations_json':
+            return export_relations(request)
+        elif action == 'get_triads_json':
+            return export_triads(request)
     elif request.method == 'GET':
-        return get_user_info(request)
+        request.params = json.loads(request.body)
+        action = request.params['action']
+        if action == 'get_user_info':
+            return get_user_info(request)
+        elif action == 'get_friends':
+            return get_friends(request)
+        elif action == 'get_friends_appli':
+            return get_fri_appli(request)
 
 
 def modify_name(request):
@@ -200,3 +224,60 @@ def invite(request):
         "msg": "邀请已发送"
     })
 
+
+def invite_confirm(request):
+    user = request.user
+    action = request.POST.get('action')
+    if action == 'project_apply_accept':
+        p_id = request.POST.get('project_id')
+        proj = Project.objects.get(id=p_id)
+        user.fri_project.add(proj)
+
+
+def get_pro_inv(request):
+    user = request.user
+    js = {
+        'sum': len(user.project_invite),
+        'invites': []
+            }
+    for pro in user.project_invite:
+        js['invites'].append({
+            'user_id': pro.user.username,
+            'user_name': pro.user.name,
+            'project_id': pro.id,
+            'project_name': pro.name
+        })
+    return JsonResponse(json.dumps(js))
+
+
+def get_fri_project(request):
+    user = request.user
+    js = {
+        'sum': len(user.fri_project),
+        'invites': []
+            }
+    for pro in user.fri_project:
+        js['invites'].append({
+            'user_id': pro.user.username,
+            'user_name': pro.user.name,
+            'project_id': pro.id,
+            'project_name': pro.name
+        })
+    return JsonResponse(json.dumps(js))
+
+
+def remove_fri_project(request):
+    p_id = request.POST.get('project_id')
+    try:
+        pro = Project.objects.get(id=p_id)
+        user = request.user
+        user.fri_project.remove(pro)
+        return JsonResponse({
+            'ret': 1,
+            'msg': "移除成功"
+        })
+    except Project.DoesNotExist:
+        return JsonResponse({
+            'ret': -1,
+            'msg': "项目id不存在"
+        })

@@ -8,7 +8,7 @@ class big_user(AbstractUser):
     friends = set()
     friend_apply = set()
     project_invite = set()
-    fri_pro = set()
+    fri_project = set()
 
 
 

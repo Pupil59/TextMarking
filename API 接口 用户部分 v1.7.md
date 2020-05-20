@@ -1,6 +1,8 @@
-# API 接口 用户部分及导出 1.6
+# API 接口 用户部分及导出 1.7
 
 修改：
+
+​	V1.7 增加拉取好友的项目的API和移除好友项目的API，修改拉取好友邀请的API
 
 ​	V1.62 修改拉取好友，拉取好友请求的返回信息的组织方式,修改邀请好友接口，现在前端需要发送被邀请的用户的id。修改拉取项目邀请的返回内容
 
@@ -325,8 +327,6 @@ Content-Type: application/json
 
 http 响应消息 body 中， 数据以json格式存储，
 
-如果修改昵称成功，返回如下
-
 ```
 {
 	"action":"change_name",
@@ -370,6 +370,14 @@ Content-Type: application/json
 ### 请求参数
 
 服务器收到请求后发送用户的昵称和id(好友功能开发中)
+
+```
+{
+	"action":"get_user_info"
+}
+```
+
+
 
 ### 响应消息
 
@@ -585,7 +593,7 @@ Content-Type: application/json
 
 ```
 {
-	"action":"get_friends_applications"
+	"action":"get_friends_appli"
 }
 ```
 
@@ -772,15 +780,123 @@ http 响应消息 body 中， 数据以json格式存储，
 	'sum':1,
     'invites': [
     {
+        "user_id": "zhangsan"，
     	"user_name": "法外狂徒张三",
-    	"user_id": "zhangsan"，
-    	"project_id":"1234"
+    	"project_id":"1234",
+    	"project_name": "project_1"
     	}
     	]
 }
 ```
 
 其中sum为好友人数，user_name为申请者的昵称，user_id为申请者的id
+
+## 拉取用户可参与编辑的好友的项目
+
+### 请求消息
+
+```
+GET  /user/other  HTTP/1.1
+Content-Type: application/json
+```
+
+### 请求参数
+
+#### 请求参数
+
+消息体的格式是json，如下示例：
+
+```
+{
+	"action":"get_fri_projects"
+}
+```
+
+服务端接受到该请求后，返回用户的好友申请列表
+
+
+
+### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果修改成功，返回如下
+
+```
+{
+	'sum':1,
+    'invites': [
+    {
+        "user_id": "zhangsan"，
+    	"user_name": "法外狂徒张三",
+    	"project_id":"1234",
+    	"project_name": "project_1"
+    	}
+    	]
+}
+```
+
+其中sum为好友人数，user_name为申请者的昵称，user_id为申请者的id,project_id为邀请的项目id，project_name 为邀请的项目的名称
+
+## 移除好友的项目
+
+### 请求消息
+
+```
+POST  /user/other  HTTP/1.1
+Content-Type: application/json
+```
+
+### 请求参数
+
+#### 请求参数
+
+消息体的格式是json，如下示例：
+
+```
+{
+	"action":"remove_fri_project",
+	"project_id": "123"
+}
+```
+
+服务端接受到该请求后，返回用户的好友申请列表
+
+
+
+### 响应消息
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果修改成功，返回如下
+
+```
+{
+	'ret': 1,
+	'msg': "移除成功"
+}
+```
+
+```
+{
+	'ret': -1,
+	'msg': "项目id不存在"
+}
+```
 
 
 
