@@ -317,7 +317,7 @@ class relationTests(APITestCase):
 
     def test_list_type(self):
         self.assertEqual(RelType.objects.count(), 0)
-        #添加关系类型1
+        # 添加关系类型1
         data = {
             'action': 'add_type',
             'data': {
@@ -345,4 +345,4 @@ class relationTests(APITestCase):
 
         response_content = json.loads(response.content)
         self.assertEqual(response_content['ret'], 0)
-        self.assertEqual(len(response_content['retlist']), 1)
+        self.assertEqual(len(response_content['retlist']), 4)

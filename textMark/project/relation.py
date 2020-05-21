@@ -189,6 +189,13 @@ def listtype(request):
     )
 
     retlist = list(qs)
+    cs = {'id': 0, 'name': '从属', 'user_name': '系统自带，不可修改'}
+    bl = {'id': 0, 'name': '并列', 'user_name': '系统自带，不可修改'}
+    js = {'id': 0, 'name': '解释', 'user_name': '系统自带，不可修改'}
+
+    retlist.insert(0, js)
+    retlist.insert(0, bl)
+    retlist.insert(0, cs)
 
     return JsonResponse({'ret': 0, 'retlist': retlist})
 
@@ -216,8 +223,8 @@ def addtype(request):
             })
 
     record = RelType.objects.create(name=info['name'],
-                                   project_id=pid,
-                                   user_id=uid)
+                                    project_id=pid,
+                                    user_id=uid)
 
     return JsonResponse({'ret': 0, 'id': record.id})
 
