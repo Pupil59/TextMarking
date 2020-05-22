@@ -9,16 +9,49 @@
 
   <style>
     .mybutton {
-      background-color: #4CAF50; /* Green */
+      background-color: #008CBA; /* Blue */
       border: none;
       color: white;
-      padding: 10px 20px;
+      padding: 8px 20px;
       text-align: center;
       text-decoration: none;
       display: inline-block;
       font-size: 16px;
+      border-radius: 8px;
       cursor: pointer;
+      top: 30px;
+      margin: 6px;
     }
+
+    .mybutton:hover {
+      box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+    }
+
+    .mytext::-webkit-scrollbar {/*滚动条整体样式*/
+        width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+        height: 1px;
+    }
+    .mytext::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+        border-radius: 10px;
+         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: #008CBA;
+    }
+    .mytext::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 10px;
+        background: #EDEDED;
+    }
+  </style>
+
+
+<style type="text/css">
+  .divofEntity{
+    width: 100px;
+    height: 25px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 2px solid #008CBA;
+  }
   </style>
 
   <link rel="stylesheet" href="../../static/css/style.css" media="screen" type="text/css"/>
@@ -77,7 +110,7 @@
       <!-- Import页面开发中 -->
     </div>
     <div>
-      <span style="float: left;">
+      <span style="float: left; width: 650px;" >
         <!-- 上传文本的表单 -->
         <!-- <form action="" method="GET" style="float: left;" id="addText">
           <h3>
@@ -86,28 +119,135 @@
           <textarea name="user_text" cols="40" rows="60"></textarea><br>
           <button type="button" class="mybutton" value="上传文本" id="submitText">上传文本</button> 
         </form> -->
-        <div class="context-menu-one">
+        <div class="context-menu-one mytext" style="float: left; width: 650px; height: 450px; overFlow-y:scroll; border-radius: 8px; border: 2px solid #008CBA;">
 
-        测试阶段暂时使用内嵌在html内的文字</br>
-        因为最后也得从后端获取文本</br>
-        左边的alpha阶段的东西先留着，方便测试用</br>
-        美化的话，我看官方没给几个阳间特效，</br>
-        我在网上找找吧。</br>
-        使用方法：</br>
-        鼠标拖拽划词后右击，</br>
-        “添加实体”就是添加实体...</br>
-        “作为实体1”和“作为实体2”就是作为添加关系的实体1和2...</br>
-        选完应该会在下面有显示</br>
-        关系类型自己在下面选</br>
-        也可以通过下面的“添加关系”自定义关系类型</br>
-        选词的时候尽量不要跨行（指带"\n"或"br"标签的非自动换行）</br>
-        这段文本就是用"br"标签换行的</br>
-        还没弄明白怎么去换行符或标签</br>
+        
+          测试阶段暂时使用内嵌在html内的文字
+        因为最后也得从后端获取文本
+        左边的alpha阶段的东西先留着，方便测试用
+        美化的话，我看官方没给几个阳间特效，
+        我在网上找找吧。
+        使用方法：
+        鼠标拖拽划词后右击，
+        “添加实体”就是添加实体...
+        “作为实体1”和“作为实体2”就是作为添加关系的实体1和2...
+        选完应该会在下面有显示
+        关系类型自己在下面选
+        也可以通过下面的“添加关系”自定义关系类型
+        选词的时候尽量不要跨行（指带"\n"或"br"标签的非自动换行）
+        测试阶段暂时使用内嵌在html内的文字
+        因为最后也得从后端获取文本
+        左边的alpha阶段的东西先留着，方便测试用
+        美化的话，我看官方没给几个阳间特效，
+        我在网上找找吧。
+        使用方法：
+        鼠标拖拽划词后右击，
+        “添加实体”就是添加实体...
+        “作为实体1”和“作为实体2”就是作为添加关系的实体1和2...
+        选完应该会在下面有显示
+        关系类型自己在下面选
+        也可以通过下面的“添加关系”自定义关系类型
+        选词的时候尽量不要跨行（指带"\n"或"br"标签的非自动换行）
+        测试阶段暂时使用内嵌在html内的文字
+        因为最后也得从后端获取文本
+        左边的alpha阶段的东西先留着，方便测试用
+        美化的话，我看官方没给几个阳间特效，
+        我在网上找找吧。
+        使用方法：
+        鼠标拖拽划词后右击，
+        “添加实体”就是添加实体...
+        “作为实体1”和“作为实体2”就是作为添加关系的实体1和2...
+        选完应该会在下面有显示
+        关系类型自己在下面选
+        也可以通过下面的“添加关系”自定义关系类型
+        选词的时候尽量不要跨行（指带"\n"或"br"标签的非自动换行）
+      
+        还没弄明白怎么去换行符或标签
+        测试阶段暂时使用内嵌在html内的文字
+        因为最后也得从后端获取文本
+        左边的alpha阶段的东西先留着，方便测试用
+        美化的话，我看官方没给几个阳间特效，
+        我在网上找找吧。
+        使用方法：
+        鼠标拖拽划词后右击，
+        “添加实体”就是添加实体...
+        “作为实体1”和“作为实体2”就是作为添加关系的实体1和2...
+        选完应该会在下面有显示
+        关系类型自己在下面选
+        也可以通过下面的“添加关系”自定义关系类型
+        选词的时候尽量不要跨行（指带"\n"或"br"标签的非自动换行）
+        测试阶段暂时使用内嵌在html内的文字
+        因为最后也得从后端获取文本
+        左边的alpha阶段的东西先留着，方便测试用
+        美化的话，我看官方没给几个阳间特效，
+        我在网上找找吧。
+        使用方法：
+        鼠标拖拽划词后右击，
+        “添加实体”就是添加实体...
+        “作为实体1”和“作为实体2”就是作为添加关系的实体1和2...
+        选完应该会在下面有显示
+        关系类型自己在下面选
+        也可以通过下面的“添加关系”自定义关系类型
+        选词的时候尽量不要跨行（指带"\n"或"br"标签的非自动换行）
+        测试阶段暂时使用内嵌在html内的文字
+        因为最后也得从后端获取文本
+        左边的alpha阶段的东西先留着，方便测试用
+        美化的话，我看官方没给几个阳间特效，
+        我在网上找找吧。
+        使用方法：
+        鼠标拖拽划词后右击，
+        “添加实体”就是添加实体...
+        “作为实体1”和“作为实体2”就是作为添加关系的实体1和2...
+        选完应该会在下面有显示
+        关系类型自己在下面选
+        也可以通过下面的“添加关系”自定义关系类型
+        选词的时候尽量不要跨行（指带"\n"或"br"标签的非自动换行）
+      
+        还没弄明白怎么去换行符或标签测试阶段暂时使用内嵌在html内的文字
+        因为最后也得从后端获取文本
+        左边的alpha阶段的东西先留着，方便测试用
+        美化的话，我看官方没给几个阳间特效，
+        我在网上找找吧。
+        使用方法：
+        鼠标拖拽划词后右击，
+        “添加实体”就是添加实体...
+        “作为实体1”和“作为实体2”就是作为添加关系的实体1和2...
+        选完应该会在下面有显示
+        关系类型自己在下面选
+        也可以通过下面的“添加关系”自定义关系类型
+        选词的时候尽量不要跨行（指带"\n"或"br"标签的非自动换行）
+        测试阶段暂时使用内嵌在html内的文字
+        因为最后也得从后端获取文本
+        左边的alpha阶段的东西先留着，方便测试用
+        美化的话，我看官方没给几个阳间特效，
+        我在网上找找吧。
+        使用方法：
+        鼠标拖拽划词后右击，
+        “添加实体”就是添加实体...
+        “作为实体1”和“作为实体2”就是作为添加关系的实体1和2...
+        选完应该会在下面有显示
+        关系类型自己在下面选
+        也可以通过下面的“添加关系”自定义关系类型
+        选词的时候尽量不要跨行（指带"\n"或"br"标签的非自动换行）
+        测试阶段暂时使用内嵌在html内的文字
+        因为最后也得从后端获取文本
+        左边的alpha阶段的东西先留着，方便测试用
+        美化的话，我看官方没给几个阳间特效，
+        我在网上找找吧。
+        使用方法：
+        鼠标拖拽划词后右击，
+        “添加实体”就是添加实体...
+        “作为实体1”和“作为实体2”就是作为添加关系的实体1和2...
+        选完应该会在下面有显示
+        关系类型自己在下面选
+        也可以通过下面的“添加关系”自定义关系类型
+        选词的时候尽量不要跨行（指带"\n"或"br"标签的非自动换行）
+        还没弄明白怎么去换行符或标签
       </div>
       </span>
-      <span>
+      <span style="float: right; width: 220px">
         <!-- 添加实体的表单 -->
-        <form action="" method="GET" style="float: right;" id="addEntity">
+        <!-- <form action="" method="GET" style="float: right;" id="addEntity">
           <h3>
             添加实体
           </h3>
@@ -122,10 +262,10 @@
             </tr>
           </table>
           <button type="button" class="mybutton" value="添加实体" id="submitEntity" onclick="entitySubmit()">添加实体</button>
-        </form>
+        </form> -->
           
         <!-- 添加关系的表单 -->
-        <form action="" method="GET" style="float: right;" id="addRelation">
+        <!-- <form action="" method="GET" style="float: right;" id="addRelation">
           <h3>
             添加关系
           </h3>
@@ -158,14 +298,35 @@
             </tr>
           </table>
           <button type="button" class="mybutton" value="添加关系" id="submitRelation" onclick="sendRelation()">添加关系</button>
-        </form>
+        </form> -->
+        <table style="float: right; width: 200px;">
+          <tr>
+            <div id="div2" style="width: 100px; height: 25px; font-size: 16px; border-radius: 8px; border: 2px solid #008CBA;">实体1</div>
+          </tr>
+          <tr>
+            <div id="div4" style="width: 100px; height: 25px; font-size: 16px; border-radius: 8px; border: 2px solid #008CBA;">实体2</div>
+          </tr>
+          <tr>
+            <select id="relation_type" name="relation_type" style="width: 150px; height: 35px; border-radius: 8px;">
+              <option value="---" disabled="disabled" selected>选择关系类型</option>
+            </select>
+          </tr>
+          <tr>
+            <button type="button" class="mybutton" style="float: center;" onclick="sendRelationBeta()">添加关系</button>
+          </tr>
+        </table>
       </span>
     </div>
 
-    
-    <div style="text-align:center;clear:both;"></div>
+    <div id="div9" style=" float: left; background-color:rgba(0,0,0,0); border: 0px;">
+      <input type="text" id="new_relation_type" name="new_relation_type" style=" float: left; width: 250px; height: 35px; border-radius: 8px; border: 2px solid #008CBA;">
+      &emsp;
+      <button type="button" class="mybutton" onclick="sendNewRelationBeta()">添加关系类型</button>
+      &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+      <button type="button" class="mybutton" onclick="">保存文本</button>
+    </div>
 
-    <div id="div1">实体1：</div>
+    <!-- <div id="div1">实体1：</div>
     <div id="div2">E1</div>
     <div id="div3">实体2：</div>
     <div id="div4">E2</div>
@@ -182,7 +343,7 @@
     </div>
     <div id="div10">
       <button type="button" onclick="sendNewRelationBeta()">添加自定义关系类型</button>
-    </div>
+    </div> -->
 
     <!-- <div id="myDiv"><h2>使用 AJAX 修改该文本内容</h2></div>
     <button type="button" onclick="loadXMLDoc()">修改内容</button> -->
@@ -195,130 +356,130 @@
 
 <script type="text/javascript">
   window.onload = function() {
-    getEntities();
+    //getEntities();
     getRelationsBeta();
     getUserInfo();
   }
   // p.s.需要用户上传文档的接口...
   //function sendText() {}
-  function entitySubmit() {
-    sendEntity();
-    location.reload();
-    //getEntities();
-  }
-  function sendEntity() {
-      var name = $("#entity_name").val();
-      $.ajax({
-          type:"POST",
-          url:"/api/project/entities",
-          contentType: "application/json",
-          async:false,
-          dataType:"json",
-          data:JSON.stringify({
-              "action":"add_entity",
-              "data":{
-                  "name":name
-              }
-          }),
-          success:function (data) {
-            if (data.ret != 0) {
-              alert("提示：" + data.msg);
-            }
-        },
-      })
-  }
-  function getEntities() {
-      //更新添加关系的两个实体下拉栏
-      $.ajax({
-        type:"GET",
-        url:"/api/project/entities?action=list_entity",
-        async:false,
-        success: function (data) {
-          var srcEntity = document.getElementById("source_id");
-          var dstEntity = document.getElementById("destination_id");
-          for (var i = 0; i <= data.retlist.length - 1; i ++) {
-            var opt1 = new Option(data.retlist[i].name, data.retlist[i].id);
-            var opt2 = new Option(data.retlist[i].name, data.retlist[i].id);
-            if (!isItemExist(srcEntity, opt1)) {
-              srcEntity.add(opt1);
-            }
-            if (!isItemExist(dstEntity, opt2)) {
-              dstEntity.add(opt2);
-            }
-          }
-        },
-        //由于该函数是在页面加载时就被调用，所以用来判断是否登录，如果未登录，把用户送走
-        error: function(data) {
-          var json = JSON.parse(data.responseText);
-          alert(json.msg);
-          if (json.ret == 302) {
-            window.location.href = json.redirect;
-          }
-        }
-      })
-  }
-  function isItemExist(objSelect,objItemValue) {
-    var isExit = false;
-    for(var i=0;i<objSelect.length;i++)
-    {
-      if ((objSelect.options[i].text == objItemValue.text) && (objSelect.options[i].value == objItemValue.value))
-      {
-        isExit = true;
-          break;
-      }
-    }     
-    return isExit;
-  }
-  function sendRelation() {
-    var source_id = $("#source_id").val();
-    var destination_id = $("#destination_id").val();
-    var relation_name = $("#relation_name").val();
-    // 上述将添加关系的form信息转化为json字符串jsonRelation
+//   function entitySubmit() {
+//     sendEntity();
+//     location.reload();
+//     //getEntities();
+//   }
+//   function sendEntity() {
+//       var name = $("#entity_name").val();
+//       $.ajax({
+//           type:"POST",
+//           url:"/api/project/entities",
+//           contentType: "application/json",
+//           async:false,
+//           dataType:"json",
+//           data:JSON.stringify({
+//               "action":"add_entity",
+//               "data":{
+//                   "name":name
+//               }
+//           }),
+//           success:function (data) {
+//             if (data.ret != 0) {
+//               alert("提示：" + data.msg);
+//             }
+//         },
+//       })
+//   }
+//   function getEntities() {
+//       //更新添加关系的两个实体下拉栏
+//       $.ajax({
+//         type:"GET",
+//         url:"/api/project/entities?action=list_entity",
+//         async:false,
+//         success: function (data) {
+//           var srcEntity = document.getElementById("source_id");
+//           var dstEntity = document.getElementById("destination_id");
+//           for (var i = 0; i <= data.retlist.length - 1; i ++) {
+//             var opt1 = new Option(data.retlist[i].name, data.retlist[i].id);
+//             var opt2 = new Option(data.retlist[i].name, data.retlist[i].id);
+//             if (!isItemExist(srcEntity, opt1)) {
+//               srcEntity.add(opt1);
+//             }
+//             if (!isItemExist(dstEntity, opt2)) {
+//               dstEntity.add(opt2);
+//             }
+//           }
+//         },
+//         //由于该函数是在页面加载时就被调用，所以用来判断是否登录，如果未登录，把用户送走
+//         error: function(data) {
+//           var json = JSON.parse(data.responseText);
+//           alert(json.msg);
+//           if (json.ret == 302) {
+//             window.location.href = json.redirect;
+//           }
+//         }
+//       })
+//   }
+//   function isItemExist(objSelect,objItemValue) {
+//     var isExit = false;
+//     for(var i=0;i<objSelect.length;i++)
+//     {
+//       if ((objSelect.options[i].text == objItemValue.text) && (objSelect.options[i].value == objItemValue.value))
+//       {
+//         isExit = true;
+//           break;
+//       }
+//     }     
+//     return isExit;
+//   }
+//   function sendRelation() {
+//     var source_id = $("#source_id").val();
+//     var destination_id = $("#destination_id").val();
+//     var relation_name = $("#relation_name").val();
+//     // 上述将添加关系的form信息转化为json字符串jsonRelation
 
-    // html页面内调试用
-    // $("#show2").html(JSON.stringify(jsonRelation));
-    $.ajax({
-        type:"POST",
-        url:"/api/project/relations",
-        contentType: "application/json",
-        dataType:"json",
-        async:false,
-        data:JSON.stringify({
-            "action":"add_relation",
-            "data":{
-                "name":relation_name,
-                "source_id":source_id,
-                "target_id":destination_id
-            }
-        }),
-        success:function (data) {
-          console.log(data);
-          if (data.ret != 0) {
-              alert("提示：" + data.msg);
-          }
-        },
-        error:function (data) {
-          console.log(data);
-        }
-    })
-    location.reload();
-  }
-  function getUserInfo() {
-    $.ajax({
-      type:"GET",
-      url:"/user/other",
-      contentType: "application/json",
-      success: function (data) {
-        if (data.ret == 0) {
-          console.log(data);
-          $('#mytitle').html(data.user_name);
-        } else {
-          console.log(data);
+//     // html页面内调试用
+//     // $("#show2").html(JSON.stringify(jsonRelation));
+//     $.ajax({
+//         type:"POST",
+//         url:"/api/project/relations",
+//         contentType: "application/json",
+//         dataType:"json",
+//         async:false,
+//         data:JSON.stringify({
+//             "action":"add_relation",
+//             "data":{
+//                 "name":relation_name,
+//                 "source_id":source_id,
+//                 "target_id":destination_id
+//             }
+//         }),
+//         success:function (data) {
+//           console.log(data);
+//           if (data.ret != 0) {
+//               alert("提示：" + data.msg);
+//           }
+//         },
+//         error:function (data) {
+//           console.log(data);
+//         }
+//     })
+//     location.reload();
+//   }
+//   function getUserInfo() {
+//     $.ajax({
+//       type:"GET",
+//       url:"/user/other",
+//       contentType: "application/json",
+//       success: function (data) {
+//         if (data.ret == 0) {
+//           console.log(data);
+//           $('#mytitle').html(data.user_name);
+//         } else {
+//           console.log(data);
 
-        }
-      },
-    })
-  }
+//         }
+//       },
+//     })
+//   }
 
 //以上为alpha阶段添加方式，测试阶段暂时保留，以便判断正确性
 //以下为beta阶段添加方式
