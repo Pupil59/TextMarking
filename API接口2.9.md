@@ -4,7 +4,7 @@
 
 ## 修改内容
 
-- 增加了自定义关系的增删查
+- 增加了文本的增删查
 
 
 
@@ -331,6 +331,143 @@ ret 为 0 表示成功。
 ```
 
 ret 不为 0 表示失败， msg字段描述添加失败的原因
+
+
+
+
+
+## 文本
+
+### 列出文本
+
+#### 请求消息
+
+```py
+GET  /user/texts?list_project  HTTP/1.1
+```
+
+#### 请求参数
+
+http 请求消息 url 中 需要携带如下参数，
+
+- action
+
+  填写值为 list_text
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果获取信息成功，返回如下
+
+```json
+{
+    "ret": 0,
+    "retlist": [
+        {
+            "id": 1,
+            "name": "文本1",
+            "text": "blablablablablablablablablablabla"
+        }
+    ]              
+}
+```
+
+### 添加文本
+
+#### 请求消息
+
+```py
+POST  /user/texts  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带添加项目的信息
+
+消息体的格式是json，如下示例：
+
+```json
+{
+    "action":"add_text",
+    "data":{
+        "name":"文本1",
+        "text":"blablablablabla"
+    }
+}
+```
+
+其中
+
+`action` 字段固定填写 `add_text` 表示添加文本
+
+`data` 字段中存储了要添加的文本的信息
+
+服务端接受到该请求后，应该在系统中增加一个这样的文本。
+
+#### 响应消息
+
+```py
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+
+http 响应消息 body 中， 数据以json格式存储，
+
+如果添加成功，返回如下
+
+```json
+{
+    "ret": 0,
+    "id" : 677
+}
+```
+
+ret 为 0 表示成功。
+
+id 为 添加文本的id号。
+
+### 删除项目信息
+
+#### 请求消息
+
+```py
+DELETE  /user/texts  HTTP/1.1
+Content-Type:   application/json
+```
+
+#### 请求参数
+
+http 请求消息 body 携带要删除文本的id
+
+消息体的格式是json，如下示例：
+
+```json
+{
+    "action":"del_texts",
+    "id": 6
+}
+```
+
+其中
+
+`action` 字段固定填写 `del_text` 表示删除一个文本
+
+`id` 字段为要删除的文本的id号
+
+服务端接受到该请求后，应该在系统中尝试删除该id对应的文本。
+
+
 
 
 
