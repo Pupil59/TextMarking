@@ -1,5 +1,5 @@
 from django.urls import path
-from project import graph, entity, relation, project
+from project import graph, entity, relation, project, text
 
 urlpatterns = [
     path('entities', entity.dispatcher),
