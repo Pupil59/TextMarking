@@ -1,7 +1,7 @@
 from django.urls import path
 from register.user import *
 from project import project
-from index.views import showReg,showUserInfo
+from index.views import *
 
 urlpatterns = [
     path('index/',showReg),
@@ -11,5 +11,7 @@ urlpatterns = [
     path('other/', dispatch),
     path('projects/', project.dispatcher),
     path('info/', showUserInfo),
+    path('message/', showMsgList),
+
     # path('projects', project.dispatcher),
 ]

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from index.views import showGraph, showIndex, showMain, showReg
+from index.views import *
 from SE_Team_demo1 import settings
 from django.conf.urls.static import static
 
@@ -26,4 +26,5 @@ urlpatterns = [
                   path('index/', showIndex),
                   path('main/', showMain),
                   path('mgraph/', showGraph),
+                  path('invite/', showInvite)
               ] + static(settings.TEXT_URL, document_root=settings.TEXT_ROOT)
