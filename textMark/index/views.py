@@ -20,3 +20,15 @@ def showReg(request):
 
 def showUserInfo(request):
     return render(request, template_name='textMark/user-info.html')
+
+
+def showMsgList(request):
+    return render(request, template_name='textMark/msglist.html')
+
+
+def showMsgList(request):
+    return render(request, template_name='textMark/msglist.html')
+
+
+def showInvite(request):
+    return render(request, template_name='textMark/invite.html')
