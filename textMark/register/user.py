@@ -4,9 +4,9 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 import json
 from django.contrib.auth.hashers import check_password
-from common.models import Project
-from project.entity import export_entities
-from project.relation import export_relations,export_triads
+from common.models import Project, Entity, Relation
+from django.db.models import F
+
 
 def dispatch(request):
     if request.method in ['POST', 'PUT']:
@@ -281,3 +281,45 @@ def remove_fri_project(request):
             'ret': -1,
             'msg': "项目id不存在"
         })
+
+#export
+
+
+def export_triads(request):
+    pid = request.session['project_id']
+
+    qs = Relation.objects.filter(project_id=pid) \
+        .annotate(
+        source_name=F('entity1__name'),
+        destination_name=F('entity2__name'),
+        source_id=F('entity1__id'),
+        target_id=F('entity2__id')
+    ) \
+        .values(
+        'id', 'name', 'source_id', 'source_name', 'target_id', 'destination_name'
+    )
+    en_list = list(qs)
+
+    js = json.dumps(en_list, sort_keys=False, indent=4, separators=(',', ': '))
+
+    return JsonResponse(js)
+
+
+def export_relations(request):
+    pid = request.session['project_id']
+    qs = Relation.objects.filter(project_id=pid).values('id', 'name')
+
+    en_list = list(qs)
+
+    js = json.dumps(en_list, sort_keys=False, indent=4, separators=(',', ': '))
+    return JsonResponse(js)
+
+
+def export_entities(request):
+    pid = request.session['project_id']
+    qs = Entity.objects.filter(project_id=pid).values('id', 'name')
+
+    en_list = list(qs)
+
+    js = json.dumps(en_list, sort_keys=False, indent=4, separators=(',', ': '))
+    return JsonResponse(js)
