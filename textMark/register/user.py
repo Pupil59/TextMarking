@@ -163,7 +163,7 @@ def get_friends(request):
 
 
 def apply_friends(request):
-    to_id = request.POST.get('user_id')
+    to_id = request.params['id']
     from_user = request.user
     try:
         to_user = big_user.objects.get(username=to_id)
@@ -209,7 +209,7 @@ def get_fri_appli(request):
 
 def invite(request):
     user = request.user
-    to_id = request.POST.get('friend_id')
+    to_id = request.params['friend_id']
     to_user = big_user.objects.get(username=to_id)
     project_id = request.session.get('project_id')
     inv_prject = Project.objects.get(id=project_id)
@@ -267,7 +267,7 @@ def get_fri_project(request):
 
 
 def remove_fri_project(request):
-    p_id = request.POST.get('project_id')
+    p_id = request.params['project_id']
     try:
         pro = Project.objects.get(id=p_id)
         user = request.user
