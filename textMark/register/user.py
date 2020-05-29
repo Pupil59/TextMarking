@@ -43,6 +43,11 @@ def dispatch(request):
             return get_fri_appli(request)
         elif action == 'get_project_invites':
             return get_pro_inv(request)
+<<<<<<< HEAD
+=======
+        elif action == 'get_fri_projects':
+            return get_fri_project(request)
+>>>>>>> c3254227171ed8dd177940d079f2a1c0d9bf04a9
 
 
 def modify_name(request):
