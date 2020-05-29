@@ -203,10 +203,10 @@ def get_fri_appli(request):
     fri_list = user.friend_apply.all()
     js = {
         'sum': len(fri_list),
-        'friend': []
+        'friends': []
     }
     for app_user in fri_list:
-        js['friend'].append({
+        js['friends'].append({
                 'user_id': app_user.username,
                 'user_name': app_user.name
              })
