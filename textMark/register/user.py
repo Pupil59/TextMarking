@@ -223,7 +223,7 @@ def invite(request):
     to_user = big_user.objects.get(username=to_id)
     project_id = request.session.get('project_id')
     inv_prject = Project.objects.get(id=project_id)
-    if to_id not in user.friends:
+    if to_id not in user.friends.all():
         return JsonResponse({
             "ret": -1,
             "msg": "未与该用户成为好友"
@@ -237,8 +237,8 @@ def invite(request):
 
 def invite_confirm(request):
     user = request.user
-    action = request.POST.get('action')
-    p_id = request.POST.get('project_id')
+    action = request.params['action']
+    p_id = request.params['project_id']
     proj = Project.objects.get(id=p_id)
     if action == 'project_apply_accept':
         user.fri_project.add(proj)
