@@ -193,9 +193,9 @@ def apply_friends(request):
 
 
 def friend_confirm(request):
-    action = request.POST.get('action')
+    action = request.params['action']
     user = request.user
-    fri_id = request.POST.get('id')
+    fri_id = request.params['id']
     fri = big_user.objects.get(username=fri_id)
     if action == 'friend_apply_accept':
         user.friends.add(fri)
