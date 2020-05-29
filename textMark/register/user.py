@@ -41,6 +41,10 @@ def dispatch(request):
             return get_friends(request)
         elif action == 'get_friends_appli':
             return get_fri_appli(request)
+        elif action == 'get_project_invites':
+            return get_pro_inv(request)
+        elif action == 'get_fri_projects':
+            return get_fri_project(request)
 
 
 def modify_name(request):
