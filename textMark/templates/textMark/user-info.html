@@ -62,27 +62,27 @@
     <img style="float:left;" src="../../static/images/user_head.png" class="img_avatar" height="200" width="200"><br>
     <h3 id="Mytitle">    </h3>
     <div>
-    	<button class="button2" onclick="sendLogout()" style="width: 200px;">
-    		登出
-    	</button>
-    	<button class="button2 disabled" onclick="sendChangepasword()" style="width: 200px;">
-    		修改密码
-    	</button>
-    	<button class="button2 disabled" onclick="sendChangename()" style="width: 200px;">
-    		修改昵称
-    	</button>
+      <button class="button2" onclick="sendLogout()" style="width: 200px;">
+        登出
+      </button>
+      <button class="button2 disabled" onclick="sendChangepasword()" style="width: 200px;">
+        修改密码
+      </button>
+      <button class="button2 disabled" onclick="sendChangename()" style="width: 200px;">
+        修改昵称
+      </button>
+      <button class="button2" onclick="createProject()" style="width: 200px;">
+        新建项目
+      </button>
+      <button class="button2" onclick="window.location.href = '/invite/';" style="width: 200px;">
+        添加好友
+      </button>
+      <button class="button2" onclick="window.location.href = '/user/message/'" style="width: 200px;">
+        查看消息
+      </button>
     </div></br></br></br></br></br>
-    <div style="text-align:center">
-      <button class="button1" onclick="">
-        项目1
-      </button>
-      <button class="button1" onclick="">
-        项目2
-      </button>
-      <button class="button1" onclick="">
-        项目3
-      </button>
-      </div>
+    <div style="text-align:center" id="pros">
+    </div>
    
   <div style="text-align:center;clear:both;">
 
@@ -95,6 +95,7 @@
   <script type="text/javascript">
   window.onload = function() {
     getUserInfo();
+    getProInfo();
     Reload();
   }
   function sendLogout() {
@@ -118,9 +119,9 @@
             alert("异常！");
         }
     });
-	}
-	function sendChangename() {
-		alert("这个功能还没完成！");
+  }
+  function sendChangename() {
+    alert("这个功能还没完成！");
 
     var newID = $("#?").val();
     $.ajax({
@@ -146,8 +147,8 @@
     })
   }
   function sendChangepasword() {
-		alert("这个功能还没完成！");
-		
+    alert("这个功能还没完成！");
+    
     var newPassword = $("#?").val();
     $.ajax({
         type: "POST",
@@ -168,6 +169,77 @@
         }
     })
   }
+  function createProject() {
+    var name=prompt("请输入任务名称","新建项目1");
+    if (name!=null && name!=""){
+      console.log(name);
+      $.ajax({
+        type: "POST",
+        url: "/user/projects/",
+        dataType: "json",
+        data: JSON.stringify({
+          "action":"add_project",
+          "data": {"name": name}
+        }),
+        success: function (data) {
+            console.log(data);
+            if(data.ret == 0) {
+                alert("项目创建成功");
+                location.reload();
+            } else {
+                alert(data.msg);
+            }
+        },
+        error : function() {
+            alert("异常！");
+        }
+      })
+      
+    }
+  }
+    function getProInfo() {
+    $.ajax({
+      type:"POST",
+      url:"/api/project/pro_session",
+      contentType: "application/json",
+      data: JSON.stringify({
+        "project_id": 1
+      }),
+      success: function (data) {
+        if (data.ret == 0) {
+          console.log(data);
+
+        } else {
+          console.log(data);
+        }
+      },
+    })
+  }
+  $(document).on("click",".button1",function(){
+    var status = confirm("打开项目?");
+    if (!status) {return false;}
+    console.log($(this)[0].id);
+    $.ajax({
+    type:"POST",
+    url:"/api/project/pro_session",
+    contentType: "application/json",
+    dataType:"json",
+    async:false,
+    data:JSON.stringify({
+      "project_id": $(this)[0].id
+    }),
+    success:function (data) {
+        //console.log((data));
+    },
+    error:function (data) {
+        console.log("error");
+    },
+    complete: function (data) {
+        console.log("complete");
+    },
+    });
+    window.location.href = "/index";
+  });
   function getUserInfo() {
     $.ajax({
       type:"GET",
@@ -184,6 +256,7 @@
       },
     })
   }
+
   function Reload() {
     $.ajax({
         type:"GET",
@@ -199,12 +272,34 @@
       })
   }
   </script>
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      var name = $("#entity_name").val();
+      $.ajax({
+        type:"GET",
+        url:"/user/projects?action=list_project",
+        success:function (data) {
+            console.log((data));
+            for (var i = data.retlist.length - 1; i >= 0; i--) {
+              $("#pros").append($("<button class=\"button1\" id = \"" + data.retlist[i].id + "\">" + (data.retlist[i].name) + "</button>"));
+            }
+        },
+        error:function (data) {
+            //console.log("error");
+        },
+        complete: function (data) {
+            //console.log("complete");
+        },
+      });
 
+    });
+  </script>
   <style type="text/css">
-	.h1{
-		width: 100%;
-	}
-	.button1 {
+  .h1{
+    width: 100%;
+  }
+  .button1 {
     background-color: #555555; color: black;
     border: none;
     color: white;
@@ -217,11 +312,11 @@
     cursor: pointer;
     width: 100%;
     height: 200px;
-	}
-	.button1:hover {
+  }
+  .button1:hover {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-	}
-	.button2 {
+  }
+  .button2 {
     background-color: #555555; color: black;
     border: none;
     color: white;
@@ -234,21 +329,21 @@
     cursor: pointer;
     width: 32%;
     border-radius: 12px;
-	}
-	.button2 {
+  }
+  .button2 {
     float: left;
-	}
-	.disabled {
+  }
+  .disabled {
     opacity: 0.6;
     cursor: not-allowed;
-	}
-	.button2:hover {
+  }
+  .button2:hover {
     background-color: #3e8e41;
   }
   .h1
-	{
+  {
     clear:both;
-	}
+  }
   </style>
 </body>
 

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>MarkTexting</title>
+
+  <style>
+    .larg a {
+      color: #000000;
+      width: fit-content;
+      height: fit-content;
+      margin: 10px 80px;
+      display: inline;
+      line-height: fit-content;
+      text-decoration: none;
+      formansition: all .5s;}
+  </style>
+  <link rel="stylesheet" href="../../static/css/style.css" media="screen" type="text/css" />
+
+</head>
+
+<body>
+
+  <span class='bckg'></span>
+<header>
+  <h1>
+    Dashboard
+  </h1>
+  <nav>
+    <ul>
+      <li>
+        <a target="_top" href="/index" data-title='Text'>Text</a>
+      </li>
+      <li>
+        <a target="_top" href="/mgraph" data-title='Graph'>Graph</a>
+      </li>
+      <li>
+        <a data-title='Entity'>Entity</a>
+      </li>
+      <li>
+        <a data-title='Import'>Import</a>
+      </li>
+      <li>
+        <a data-title='Export'>Export</a>
+      </li>
+      <li>
+        <a data-title='Invite'>Invite</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <div class='title'>
+    <h2>User Center</h2>
+    <a href='/user/info' title='UserCenter' id='mytitle'></a>
+  </div>
+  <article class='larg'>
+    
+    <img style="float:left;" src="../../static/images/user_head.png" class="img_avatar" height="200" width="200"><br>
+    <h3 id="Mytitle">    </h3>
+    <div>
+      <button class="button2" onclick="sendLogout()" style="width: 200px;">
+        登出
+      </button>
+      <button class="button2" onclick="back()" style="width: 400px;">
+        返回个人中心
+      </button>
+    </div></br></br></br></br></br></br></br></br></br>
+    <div id="msgs">
+    </div>
+   
+  <div style="text-align:center;clear:both;">
+
+  </div>
+  </article>
+</main>
+
+  <script src='../../static/js/jquery.js'></script>
+  <script src="../../static/js/index.js"></script>
+  <script type="text/javascript">
+  function sendLogout() {
+    $.ajax({
+        type: "PUT",
+        url: "/user/other/",
+        contentType: "application/json",
+        dataType: "json",
+        data:JSON.stringify({
+          "action":"logout",
+        }),
+        success: function (data) {
+            if(data.ret == 0) {
+                alert("注销成功");
+                window.location.href = "/user/index";
+            } else {
+                alert(data.msg);
+            }
+        },
+        error : function() {
+            alert("异常！");
+        }
+    });
+  }
+
+  function back() {
+    window.location.href = "/user/info";
+  }
+  
+  $(document).on("click",".button3",function(){
+    console.log($(this)[0].id);
+    $.ajax({
+    type:"PUT",
+    url:"/user/other",
+    contentType: "application/json",
+    dataType:"json",
+    async:false,
+    data:JSON.stringify({
+      "action":"friend_apply_accept",
+      "project_id": $(this)[0].id
+    }),
+    success:function (data) {
+        //console.log((data));
+    },
+    error:function (data) {
+        console.log("error");
+    },
+    complete: function (data) {
+        console.log("complete");
+    },
+    });
+    location.reload();
+  });
+  $(document).on("click",".button4",function(){
+    console.log($(this)[0].id);
+    $.ajax({
+    type:"PUT",
+    url:"/user/other",
+    contentType: "application/json",
+    dataType:"json",
+    async:false,
+    data:JSON.stringify({
+      "action":"friend_apply_deny",
+      "project_id": $(this)[0].id
+    }),
+    success:function (data) {
+        //console.log((data));
+    },
+    error:function (data) {
+        console.log("error");
+    },
+    complete: function (data) {
+        console.log("complete");
+    },
+    });
+    location.reload();
+  });
+  $(document).on("click",".button5",function(){
+    console.log($(this)[0].id);
+    $.ajax({
+    type:"PUT",
+    url:"/user/other",
+    contentType: "application/json",
+    dataType:"json",
+    async:false,
+    data:JSON.stringify({
+      "action":"project_invite_accept",
+      "project_id": $(this)[0].id
+    }),
+    success:function (data) {
+        //console.log((data));
+    },
+    error:function (data) {
+        console.log("error");
+    },
+    complete: function (data) {
+        console.log("complete");
+    },
+    });
+    location.reload();
+  });
+  $(document).on("click",".button6",function(){
+    console.log($(this)[0].id);
+    $.ajax({
+    type:"PUT",
+    url:"/user/other",
+    contentType: "application/json",
+    dataType:"json",
+    async:false,
+    data:JSON.stringify({
+      "action":"project_invite_deny",
+      "project_id": $(this)[0].id
+    }),
+    success:function (data) {
+        //console.log((data));
+    },
+    error:function (data) {
+        console.log("error");
+    },
+    complete: function (data) {
+        console.log("complete");
+    },
+    });
+    location.reload();
+  });
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      $.get("/user/other?action=get_fri_projects", function(data){
+        console.log(data);
+        for (var i = 0; i < data.friends.length; i++) {
+          $("#msgs").append($("<div>" + (data.friends[i].user_name) + " 申请成为您的好友</div>"));
+          $("#msgs").append($("<button class=\"button3\" id = \"" + data.friends[i].user_i + "\">" + "接受</button>"));
+          $("#msgs").append($("<button class=\"button4\" id = \"" + data.friends[i].user_i + "\">" + "拒绝</button>"));
+        }
+      });
+      $.get("/user/other?action=get_friends_appli", function(data){
+        console.log(data);
+        for (var i = 0; i < data.invites.length; i++) {
+          $("#msgs").append($("<div>" + (data.invites[i].user_name) + " 邀请您加入项目 " + (data.invites[i].project_id) + "</div>"));
+          $("#msgs").append($("<button class=\"button3\" id = \"" + data.invites[i].project_name + "\">" + "接受</button>"));
+          $("#msgs").append($("<button class=\"button4\" id = \"" + data.invites[i].project_name + "\">" + "拒绝</button>"));
+        }
+      });
+    });
+  </script>
+  <style type="text/css">
+  .h1{
+    width: 100%;
+  }
+  .button1 {
+    background-color: #555555; color: black;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 100%;
+    height: 40px;
+  }
+  .button1:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  }
+  .button2 {
+    background-color: #555555; color: black;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 32%;
+    border-radius: 12px;
+  }
+  .button2 {
+    float: left;
+  }
+  .disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .button2:hover {
+    background-color: #3e8e41;
+  }
+  .h1
+  {
+    clear:both;
+  }
+  </style>
+</body>
+
+</html>

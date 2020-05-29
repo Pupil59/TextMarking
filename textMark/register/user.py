@@ -33,7 +33,7 @@ def dispatch(request):
         elif action == 'get_triads_json':
             return export_triads(request)
     elif request.method == 'GET':
-        request.params = json.loads(request.body)
+        request.params = request.GET
         action = request.params['action']
         if action == 'get_user_info':
             return get_user_info(request)
@@ -152,14 +152,16 @@ def get_user_info(request):
 
 def get_friends(request):
     user = request.user
+    fri_list = user.friends.all()
     js = {
-        'sum': len(user.friends),
+        'sum': len(fri_list),
         'friend': []
     }
-    for friend in user.friends:
+    # print(user.friends)
+    for friend in fri_list:
         js['friend'].append(friend.username)
         js['friend'].append(friend.name)
-    return JsonResponse(json.dumps(js))
+    return JsonResponse(json.dumps(js), safe=False)
 
 
 def apply_friends(request):
@@ -167,13 +169,14 @@ def apply_friends(request):
     from_user = request.user
     try:
         to_user = big_user.objects.get(username=to_id)
-        if from_user in to_user.friends:
+        fri_list = to_user.friends.all()
+        if from_user in fri_list:
             return JsonResponse({
                 'ret': -2,
                 'msg': "已与该用户成为好友"
             })
         else:
-            to_user.friend_apply.append(from_user)
+            to_user.friend_apply.add(from_user)
             return JsonResponse({
                 "ret": 0,
                 "msg": "邀请已发送"
@@ -187,23 +190,26 @@ def apply_friends(request):
 
 def friend_confirm(request):
     action = request.POST.get('action')
+    user = request.user
+    fri_id = request.POST.get('id')
+    fri = big_user.objects.get(username=fri_id)
     if action == 'friend_apply_accept':
-        user = request.user
-        fri_id = request.POST.get('id')
-        fri = big_user.objects.get(username=fri_id)
         user.friends.add(fri)
-        user.friend_apply.remove(fri)
+    user.friend_apply.remove(fri)
 
 
 def get_fri_appli(request):
     user = request.user
+    fri_list = user.friend_apply.all()
     js = {
-        'sum': len(user.friends),
+        'sum': len(fri_list),
         'friend': []
     }
-    for app_user in user.friends:
-        js['friend'].append(app_user.username)
-        js['friend'].append(app_user.name)
+    for app_user in fri_list:
+        js['friend'].append({
+                'user_id': app_user.username,
+                'user_name': app_user.name
+             })
     return JsonResponse(json.dumps(js))
 
 
@@ -218,7 +224,7 @@ def invite(request):
             "ret": -1,
             "msg": "未与该用户成为好友"
         })
-    to_user.project_invite.add((user, inv_prject))
+    to_user.project_invite.add(inv_prject)
     return JsonResponse({
         "ret": 0,
         "msg": "邀请已发送"
@@ -228,19 +234,21 @@ def invite(request):
 def invite_confirm(request):
     user = request.user
     action = request.POST.get('action')
+    p_id = request.POST.get('project_id')
+    proj = Project.objects.get(id=p_id)
     if action == 'project_apply_accept':
-        p_id = request.POST.get('project_id')
-        proj = Project.objects.get(id=p_id)
         user.fri_project.add(proj)
+    user.project_invite.remove(proj)
 
 
 def get_pro_inv(request):
     user = request.user
+    pro_list = user.project_invite.all()
     js = {
-        'sum': len(user.project_invite),
+        'sum': len(pro_list),
         'invites': []
             }
-    for pro in user.project_invite:
+    for pro in pro_list:
         js['invites'].append({
             'user_id': pro.user.username,
             'user_name': pro.user.name,
@@ -252,11 +260,12 @@ def get_pro_inv(request):
 
 def get_fri_project(request):
     user = request.user
+    pro_list = user.fri_project.all()
     js = {
-        'sum': len(user.fri_project),
+        'sum': len(pro_list),
         'invites': []
             }
-    for pro in user.fri_project:
+    for pro in pro_list:
         js['invites'].append({
             'user_id': pro.user.username,
             'user_name': pro.user.name,

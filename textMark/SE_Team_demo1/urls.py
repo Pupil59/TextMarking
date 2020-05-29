@@ -27,4 +27,4 @@ urlpatterns = [
                   path('main/', showMain),
                   path('mgraph/', showGraph),
                   path('invite/', showInvite)
-              ] + static(settings.TEXT_URL, document_root=settings.TEXT_ROOT)
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

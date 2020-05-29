@@ -9,14 +9,15 @@ def dispatcher(request):
     if not request.user.is_authenticated:
         return JsonResponse({
             'ret': 302,
-            'msg': '未登录'},
+            'msg': '未登录',
+            'redirect': '/user/index/'},
             status=302)
 
     if 'project_id' not in request.session:
         return JsonResponse({
             'ret': 302,
             'msg': '未进入项目',
-            'redirect': '/user/index/'},
+            'redirect': '/user/info/'},
             status=302)
 
     # GET请求 参数在url中，同过request 对象的 GET属性获取
@@ -43,7 +44,7 @@ def dispatcher(request):
 
 def listtexts(request):
     # 返回一个 QuerySet 对象 ，包含所有的表记录
-    pid = request.params['project_id']
+    pid = request.session['project_id']
     qs = Text.objects.filter(project_id=pid).values('id', 'name', 'text')
 
     # 将 QuerySet 对象 转化为 list 类型
@@ -55,9 +56,10 @@ def listtexts(request):
 def addtext(request):
     info = request.params['data']
 
+    pid = request.session['project_id']
     record = Text.objects.create(name=info['name'],
                                  text=info['text'],
-                                 project_id=info['project_id'])
+                                 project_id=pid)
 
     return JsonResponse({'ret': 0, 'id': record.id})
 
@@ -66,9 +68,9 @@ def deltext(request):
     textid = request.params['id']
 
     try:
-        # 根据 id 从数据库中找到相应的客户记录
+        # 根据 id 从数据库中找到相应的文本记录
         text = Text.objects.get(id=textid)
-    except text.DoesNotExist:
+    except Text.DoesNotExist:
         return {
             'ret': 1,
             'msg': f'id 为`{textid}`的文本不存在'
