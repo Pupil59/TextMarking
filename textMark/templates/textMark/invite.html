@@ -88,9 +88,10 @@
 
   $(document).ready(function()
     {
-      $.get("/user/other/", {"action":"get_friends"}, function(data){
+      $.get("/user/other/", {"action":"get_friends"}, function(datas){
+        var data = JSON.parse(datas);
         console.log(data);
-        for (var i = 0; i < data.friends.length/2; i++) {
+        for (var i = 0; i < data.sum/2; i++) {
           $("#fris").append($("<a class=\"button1\">" + (data.friends[i*2+1]) + "</a>"));
           $("#fris").append($("<button class=\"button2\" id = \"" + data.friends[i*2] + "\">" + "邀请" + "</button><br>"));
         }

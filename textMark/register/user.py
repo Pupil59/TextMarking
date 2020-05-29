@@ -159,12 +159,12 @@ def get_friends(request):
     fri_list = user.friends.all()
     js = {
         'sum': len(fri_list),
-        'friend': []
+        'friends': []
     }
     # print(user.friends)
     for friend in fri_list:
-        js['friend'].append(friend.username)
-        js['friend'].append(friend.name)
+        js['friends'].append(friend.username)
+        js['friends'].append(friend.name)
     return JsonResponse(json.dumps(js), safe=False)
 
 
