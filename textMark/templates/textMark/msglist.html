@@ -112,7 +112,7 @@
     console.log($(this)[0].id);
     $.ajax({
     type:"PUT",
-    url:"/user/other",
+    url:"/user/other/",
     contentType: "application/json",
     dataType:"json",
     async:false,
@@ -130,7 +130,7 @@
         console.log("complete");
     },
     });
-    location.reload();
+    //location.reload();
   });
   $(document).on("click",".button4",function(){
     console.log($(this)[0].id);
@@ -208,20 +208,22 @@
   <script type="text/javascript">
     $(document).ready(function()
     {
-      $.get("/user/other?action=get_fri_projects", function(data){
-        console.log(data);
-        for (var i = 0; i < data.friends.length; i++) {
+      $.get("/user/other?action=get_friends_appli", function(datas){
+        var data = JSON.parse(datas);
+        console.log(data.friends);
+        for (var i = 0; i < data.sum; i++) {
           $("#msgs").append($("<div>" + (data.friends[i].user_name) + " 申请成为您的好友</div>"));
-          $("#msgs").append($("<button class=\"button3\" id = \"" + data.friends[i].user_i + "\">" + "接受</button>"));
-          $("#msgs").append($("<button class=\"button4\" id = \"" + data.friends[i].user_i + "\">" + "拒绝</button>"));
+          $("#msgs").append($("<button class=\"button3\" id = \"" + data.friends[i].user_id + "\">" + "接受</button>"));
+          $("#msgs").append($("<button class=\"button4\" id = \"" + data.friends[i].user_id + "\">" + "拒绝</button>"));
         }
       });
-      $.get("/user/other?action=get_friends_appli", function(data){
+      $.get("/user/other?action=get_project_invites", function(datas){
+        var data = JSON.parse(datas);
         console.log(data);
-        for (var i = 0; i < data.invites.length; i++) {
-          $("#msgs").append($("<div>" + (data.invites[i].user_name) + " 邀请您加入项目 " + (data.invites[i].project_id) + "</div>"));
-          $("#msgs").append($("<button class=\"button3\" id = \"" + data.invites[i].project_name + "\">" + "接受</button>"));
-          $("#msgs").append($("<button class=\"button4\" id = \"" + data.invites[i].project_name + "\">" + "拒绝</button>"));
+        for (var i = 0; i < data.sum; i++) {
+          $("#msgs").append($("<div>" + (data.friends[i].user_name) + " 邀请您加入项目 " + (data.friends[i].project_id) + "</div>"));
+          $("#msgs").append($("<button class=\"button5\" id = \"" + data.invites[i].project_name + "\">" + "接受</button>"));
+          $("#msgs").append($("<button class=\"button6\" id = \"" + data.invites[i].project_name + "\">" + "拒绝</button>"));
         }
       });
     });

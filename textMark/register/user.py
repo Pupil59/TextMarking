@@ -41,6 +41,8 @@ def dispatch(request):
             return get_friends(request)
         elif action == 'get_friends_appli':
             return get_fri_appli(request)
+        elif action == 'get_project_invites':
+            return get_pro_inv(request)
 
 
 def modify_name(request):
@@ -203,14 +205,14 @@ def get_fri_appli(request):
     fri_list = user.friend_apply.all()
     js = {
         'sum': len(fri_list),
-        'friend': []
+        'friends': []
     }
     for app_user in fri_list:
-        js['friend'].append({
+        js['friends'].append({
                 'user_id': app_user.username,
                 'user_name': app_user.name
              })
-    return JsonResponse(json.dumps(js))
+    return JsonResponse(json.dumps(js), safe=False)
 
 
 def invite(request):
@@ -255,7 +257,7 @@ def get_pro_inv(request):
             'project_id': pro.id,
             'project_name': pro.name
         })
-    return JsonResponse(json.dumps(js))
+    return JsonResponse(json.dumps(js), safe=False)
 
 
 def get_fri_project(request):

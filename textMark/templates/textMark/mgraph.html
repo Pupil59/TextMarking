@@ -180,11 +180,13 @@
             console.log(JSON.stringify(params.data));
         }
         if (params.dataType == 'edge') {
-        alert(params.dataType + ' ' + params.data.name);
+        //alert(params.dataType + ' ' + params.data.name);
         console.log(JSON.stringify(params.data));
         }
     });
     myChart.on('contextmenu', function (params) {
+      console.log(params);
+      if (params.dataType=="node") {
       showMenu(params,[
         {
             "name": "删除",
@@ -248,7 +250,7 @@
                 }
             }
         }
-        ]);
+        ]);}
     });
 
     var style_ul = "padding:0px;margin:0px;border: 1px solid #ccc;background-color: #fff;position: absolute;left: 0px;top: 0px;z-index: 2;display: none;";
