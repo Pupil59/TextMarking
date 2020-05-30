@@ -118,7 +118,7 @@
     async:false,
     data:JSON.stringify({
       "action":"friend_apply_accept",
-      "project_id": $(this)[0].id
+      "id": $(this)[0].id
     }),
     success:function (data) {
         //console.log((data));
@@ -142,7 +142,7 @@
     async:false,
     data:JSON.stringify({
       "action":"friend_apply_deny",
-      "project_id": $(this)[0].id
+      "id": $(this)[0].id
     }),
     success:function (data) {
         //console.log((data));
