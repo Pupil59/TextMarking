@@ -209,6 +209,11 @@ def friend_confirm(request):
         fri.friends.add(user)
         fri.save()
     user.friend_apply.remove(fri)
+    return JsonResponse({
+            "ret": 0,
+            "msg": "操作成功"
+        })
+    
 
 
 def get_fri_appli(request):
@@ -253,6 +258,10 @@ def invite_confirm(request):
         user.fri_project.add(proj)
         user.save()
     user.project_invite.remove(proj)
+     return JsonResponse({
+            "ret": 0,
+            "msg": "操作成功"
+        })
 
 
 def get_pro_inv(request):
