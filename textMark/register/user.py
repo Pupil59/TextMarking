@@ -276,7 +276,7 @@ def get_fri_project(request):
             'project_id': pro.id,
             'project_name': pro.name
         })
-    return JsonResponse(json.dumps(js))
+    return JsonResponse(json.dumps(js), safe=False)
 
 
 def remove_fri_project(request):
