@@ -32,3 +32,6 @@ def showMsgList(request):
 
 def showInvite(request):
     return render(request, template_name='textMark/invite.html')
+
+def showExport(requst):
+    return render(request, template_name='textMark/export.html')
