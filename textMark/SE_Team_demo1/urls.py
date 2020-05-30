@@ -26,5 +26,6 @@ urlpatterns = [
                   path('index/', showIndex),
                   path('main/', showMain),
                   path('mgraph/', showGraph),
-                  path('invite/', showInvite)
+                  path('invite/', showInvite),
+                  path('export/', showExport)
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
