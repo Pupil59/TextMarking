@@ -136,7 +136,7 @@
     console.log($(this)[0].id);
     $.ajax({
     type:"PUT",
-    url:"/user/other",
+    url:"/user/other/",
     contentType: "application/json",
     dataType:"json",
     async:false,
@@ -160,7 +160,7 @@
     console.log($(this)[0].id);
     $.ajax({
     type:"PUT",
-    url:"/user/other",
+    url:"/user/other/",
     contentType: "application/json",
     dataType:"json",
     async:false,
@@ -184,7 +184,7 @@
     console.log($(this)[0].id);
     $.ajax({
     type:"PUT",
-    url:"/user/other",
+    url:"/user/other/",
     contentType: "application/json",
     dataType:"json",
     async:false,
@@ -221,9 +221,9 @@
         var data = JSON.parse(datas);
         console.log(data);
         for (var i = 0; i < data.sum; i++) {
-          $("#msgs").append($("<div>" + (data.friends[i].user_name) + " 邀请您加入项目 " + (data.friends[i].project_id) + "</div>"));
-          $("#msgs").append($("<button class=\"button5\" id = \"" + data.invites[i].project_name + "\">" + "接受</button>"));
-          $("#msgs").append($("<button class=\"button6\" id = \"" + data.invites[i].project_name + "\">" + "拒绝</button>"));
+          $("#msgs").append($("<div>" + (data.invites[i].user_name) + " 邀请您加入项目 " + (data.invites[i].project_name) + "</div>"));
+          $("#msgs").append($("<button class=\"button5\" id = \"" + data.invites[i].project_id + "\">" + "接受</button>"));
+          $("#msgs").append($("<button class=\"button6\" id = \"" + data.invites[i].project_id + "\">" + "拒绝</button>"));
         }
       });
     });

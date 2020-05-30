@@ -45,6 +45,12 @@ def dispatch(request):
             return get_pro_inv(request)
         elif action == 'get_fri_projects':
             return get_fri_project(request)
+        elif action == 'get_triads_json':
+            return export_triads(request)
+        elif action == 'get_relations_json':
+            return export_entities(request)
+        elif action == 'get_entities_json':
+            return export_relations(request)
 
 
 def modify_name(request):
@@ -199,6 +205,9 @@ def friend_confirm(request):
     fri = big_user.objects.get(username=fri_id)
     if action == 'friend_apply_accept':
         user.friends.add(fri)
+        user.save()
+        fri.friends.add(user)
+        fri.save()
     user.friend_apply.remove(fri)
 
 
@@ -223,7 +232,7 @@ def invite(request):
     to_user = big_user.objects.get(username=to_id)
     project_id = request.session.get('project_id')
     inv_prject = Project.objects.get(id=project_id)
-    if to_id not in user.friends.all():
+    if to_user not in user.friends.all():
         return JsonResponse({
             "ret": -1,
             "msg": "未与该用户成为好友"
@@ -242,6 +251,7 @@ def invite_confirm(request):
     proj = Project.objects.get(id=p_id)
     if action == 'project_apply_accept':
         user.fri_project.add(proj)
+        user.save()
     user.project_invite.remove(proj)
 
 
@@ -285,6 +295,7 @@ def remove_fri_project(request):
         pro = Project.objects.get(id=p_id)
         user = request.user
         user.fri_project.remove(pro)
+        user.save()
         return JsonResponse({
             'ret': 1,
             'msg': "移除成功"
