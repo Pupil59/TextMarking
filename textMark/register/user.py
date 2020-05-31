@@ -32,6 +32,8 @@ def dispatch(request):
             return export_relations(request)
         elif action == 'get_triads_json':
             return export_triads(request)
+        elif action == 'del_fri':
+            return frr_del(request)
     elif request.method == 'GET':
         request.params = request.GET
         action = request.params['action']
@@ -347,3 +349,29 @@ def export_entities(request):
 
     js = json.dumps(en_list, sort_keys=False, indent=4, separators=(',', ': '))
     return JsonResponse(js)
+
+
+def frr_del(request):
+    user = request.user
+    friend_id = request.params['friend_id']
+    try:
+        fri = big_user.objects.get(username=friend_id)
+        user.friends.remove(fri)
+        fri.friends.remove(user)
+        for pro in user.fri_project.all():
+            if pro.user == fri:
+                user.fri_project.remove(pro)
+        for pro in fri.fri_project.all():
+            if pro.user == user:
+                fri.fri_project.remove(pro)
+        user.save()
+        fri.save()
+        return JsonResponse({
+            'ret': 1,
+            'msg': '删除成功'
+        })
+    except big_user.DoesNotExist:
+        return JsonResponse({
+            "ret": -1,
+            "msg": "用户ID不存在"
+        })
