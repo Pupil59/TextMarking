@@ -30,11 +30,12 @@ class relationTests(APITestCase):
         }
 
         response = self.client.post(
-            path='/user/projects',
+            path='/user/projects/',
             data=json.dumps(data),
             content_type='application/json'
         )
-        self.assertEqual(response.status_code, 200)
+        #self.assertEqual(response.status_code, 200)
+        self.assertEqual((json.loads(response.content))['ret'], 0)
         self.assertEqual(Project.objects.count(), 1)
         project_id = (json.loads(response.content))['id']
 
@@ -151,6 +152,7 @@ class relationTests(APITestCase):
         )
         response_content = json.loads(response.content)
         self.assertEqual(len(response_content['retlist']), 2)
+        self.assertEqual((json.loads(response.content))['ret'], 0)
 
     def test_add_relation_duplicate(self):
         self.assertEqual(Relation.objects.count(), 0)
@@ -185,6 +187,9 @@ class relationTests(APITestCase):
             content_type='application/json'
         )
         self.assertEqual(Relation.objects.count(), 1)
+        self.assertEqual((json.loads(response.content))['ret'], 1)
+        self.assertEqual((json.loads(response.content))['msg'], '两者之间已存在其他关系')
+        
 
         # 添加关系2---实体与自身之间不应存在关系
         data = {
@@ -297,7 +302,7 @@ class relationTests(APITestCase):
         self.assertEqual(Entity.objects.count(), 2)
         self.assertEqual(Relation.objects.count(), 0)
 
-    def test_add_type(self):
+    def test_add_del_type(self):
         self.assertEqual(RelType.objects.count(), 0)
         # 添加关系类型1
         data = {
@@ -314,7 +319,20 @@ class relationTests(APITestCase):
         self.assertEqual(RelType.objects.count(), 1)
         response_content = json.loads(response.content)
         relation_id_1 = response_content['id']
-
+        
+        # 删除刚添加的关系类型
+        data = {
+            'action': 'del_type',
+            'id': relation_id_1
+        }
+        response = self.client.post(
+            path='/api/project/relations',
+            data=json.dumps(data),
+            content_type='application/json'
+        )
+        self.assertEqual(RelType.objects.count(), 0)
+        
+        
     def test_list_type(self):
         self.assertEqual(RelType.objects.count(), 0)
         # 添加关系类型1

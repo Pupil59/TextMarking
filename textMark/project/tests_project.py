@@ -4,7 +4,7 @@ from register.models import big_user
 from django.db.models import Count
 import json
 
-class entityTests(APITestCase):
+class projectTests(APITestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -36,10 +36,12 @@ class entityTests(APITestCase):
             }
         }
         response = self.client.post(
-            path='/user/projects',
+            path='/user/projects/',
             data= json.dumps(data),
             content_type= 'application/json'
         )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual((json.loads(response.content))['ret'], 0)
         self.assertEqual(Project.objects.count(), 1)
 
         # 添加项目2
@@ -50,15 +52,16 @@ class entityTests(APITestCase):
             }
         }
         response = self.client.post(
-            path='/user/projects',
+            path='/user/projects/',
             data= json.dumps(data),
             content_type= 'application/json'
         )
+        self.assertEqual((json.loads(response.content))['ret'], 0)
         self.assertEqual(Project.objects.count(), 2)
 
         # 请求项目列表
         response = self.client.get(
-            path='/user/projects',
+            path='/user/projects/',
             data=
             {
                 'action':'list_project'
@@ -69,7 +72,7 @@ class entityTests(APITestCase):
         self.assertEqual(len(response_content['retlist']), 2)        
 
 
-    def test_del_entity(self):
+    def test_del_project(self):
         # 添加项目1
         self.assertEqual(Project.objects.count(), 0)
         data= {
@@ -79,7 +82,7 @@ class entityTests(APITestCase):
             }
         }
         response = self.client.post(
-            path='/user/projects',
+            path='/user/projects/',
             data= json.dumps(data),
             content_type= 'application/json'
         )
@@ -94,7 +97,7 @@ class entityTests(APITestCase):
             }
         }
         response = self.client.post(
-            path='/user/projects',
+            path='/user/projects/',
             data= json.dumps(data),
             content_type= 'application/json'
         )
@@ -107,7 +110,7 @@ class entityTests(APITestCase):
             'id': project_id_1
         }
         self.client.post(
-            path='/user/projects',
+            path='/user/projects/',
             data= json.dumps(data),
             content_type= 'application/json'
         )
@@ -120,9 +123,43 @@ class entityTests(APITestCase):
             'id': project_id_2
         }
         self.client.post(
-            path='/user/projects',
+            path='/user/projects/',
             data= json.dumps(data),
             content_type= 'application/json'
         )
         self.assertEqual(Project.objects.count(), 0)
+        self.assertEqual((json.loads(response.content))['ret'], 0)
+    
+    def test_modify_project(self):
+        self.assertEqual(Project.objects.count(), 0)
+        # 添加项目1
+        data = {
+            'action': 'add_project',
+            'data': {
+                'name': 'project1'
+            }
+        }
+        response = self.client.post(
+            path='/user/projects/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        self.assertEqual(Project.objects.count(), 1)
+        project_id_1 = (json.loads(response.content))['id']
+
+        # 修改项目1
+        data = {
+            'action': 'modify_project',
+            'id': project_id_1,
+            'newdata': {
+                'name': '项目2'
+            }
+        }
+        self.client.post(
+            path='/user/projects/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        self.assertEqual(Project.objects.count(), 1)
+        self.assertEqual(Project.objects.get(id=project_id_1).name, '项目2')
         self.assertEqual((json.loads(response.content))['ret'], 0)

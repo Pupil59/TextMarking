@@ -34,7 +34,7 @@ class entityTests(APITestCase):
         }
 
         response = self.client.post(
-            path='/user/projects',
+            path='/user/projects/',
             data=json.dumps(data),
             content_type='application/json'
         )

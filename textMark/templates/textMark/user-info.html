@@ -295,7 +295,7 @@
         var data = JSON.parse(datas);
         console.log(data);
         for (var i = 0; i < data.sum; i++) {
-          $("#pros").append($("<button class=\"button1\" id = \"" + data.invites[i].project_id + "\">" + (data.retlist[i].project_name) + "创建者：" + data.invites[i].user_name + "</button>"));
+          $("#pros").append($("<button class=\"button1\" id = \"" + data.invites[i].project_id + "\">" + (data.invites[i].project_name) + "  创建者：" + data.invites[i].user_name + "</button>"));
         }
       });
     });
