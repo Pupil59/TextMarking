@@ -9,7 +9,7 @@
 
   <style>
     .mybutton {
-      background-color: #008CBA; /* Blue */
+      background-color: #4CAF50; /* Green */
       border: none;
       color: white;
       padding: 8px 20px;
@@ -80,11 +80,11 @@
         <a target="_top" href="/mgraph" data-title='Graph'>Graph</a>
       </li>
       <li>
-        <a data-title='Entity' id="entity">Entity</a>
+        <a data-title='Relation' id="entity">Relation</a>
       </li>
         <ul id = "submene"></ul>
       <li>
-        <a data-title='Import'>Import</a>
+        <a data-title='Import' href="/import">Import</a>
       </li>
       <li>
         <a data-title='Export' href="#" onclick="exportJson()">Export</a>
@@ -163,15 +163,7 @@
       &emsp;
       <button type="button" class="mybutton" onclick="sendNewRelationBeta()">添加关系类型</button>
     </div>
-
-      <div>
-          <textarea id="user_text" name="user_text" cols="40" rows="60"></textarea><br>
-          <button type="button" class="mybutton" onclick="uploadText()">上传文本</button>
-      </div>
-
-      <div>
-        <input type="file" onchange="uploadTextFile(this)" accept="text/plain"></input><br>
-      </div>
+  </div>
   </article>
 </main>
 
@@ -224,10 +216,6 @@ function Reload() {
         if (data.ret == 0) {
           console.log(data);
           $('#mytitle').html(data.user_name);
-        } else {
-          console.log(data);
-          alert(data.msg);
-          window.location.href = './user/index';
         }
       },
     })
@@ -406,7 +394,7 @@ function getRelationsBeta() {
           console.log(data.retlist);
           var relationtypes = document.getElementById("relation_type");
           for (var i = 0; i <= data.retlist.length - 1; i ++) {
-            var opt = new Option(data.retlist[i].name, data.retlist[i].id);
+            var opt = new Option(data.retlist[i].name, data.retlist[i].name);
             if (!isItemExist(relationtypes, opt)) {
               relationtypes.add(opt);
             }
@@ -461,7 +449,7 @@ function uploadTextFile(input) {
       }
     }),
     success(data) {
-      loadText();
+       loadText();
     },
     error(data) {
       console.log(data);
@@ -469,28 +457,6 @@ function uploadTextFile(input) {
   })
   }  
   reader.readAsText(file);
-  // var usertext =document.getElementById("user_text").value;
-  // // console.log(usertext);
-  // $.ajax({
-  //   type:"POST",
-  //   url:"/api/project/texts",
-  //   async:false,
-  //   contentType: "application/json",
-  //   dataType: "json",
-  //   data:JSON.stringify({
-  //     "action":"add_text",
-  //     "data":{
-  //       "name":"文本1",
-  //       "text":usertext
-  //     }
-  //   }),
-  //   success(data) {
-  //     loadText();
-  //   },
-  //   error(data) {
-  //     console.log(data);
-  //   }
-  // })
 }
 
 function loadText() {
@@ -500,7 +466,7 @@ function loadText() {
     async:false,
     success(data) {
       // console.log(data.retlist[data.retlist.length - 1]);
-      document.getElementById("thetext").innerText=data.retlist[data.retlist.length - 1].text;
+      document.getElementById("thetext").innerText=data.retlist[data.retlist.length-1].text;
     }
   })
 }
@@ -508,8 +474,14 @@ function loadText() {
 function exportJson() {
   $.ajax({
     type:'GET',
-    url:'/user/other?action=get_triads_json',
+    url:'/user/other',
     async:false,
+    contentType: "application/json",
+    dataType: "json",
+    data: JSON.stringify({
+      "action":"get_triads_json",
+      "id":"1"
+    }),
     success(data, responseText) {
       console.log(data);
       var blob = new Blob([JSON.stringify(data)], { type: "text/json" });
