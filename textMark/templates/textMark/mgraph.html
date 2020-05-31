@@ -251,6 +251,72 @@
             }
         }
         ]);}
+        else{
+        showMenu(params,[
+        {
+            "name": "删除",
+            "fn": function() {
+                var status = confirm("del?");
+                if (!status) {return false;}
+                console.log($(this)[0].id);
+                $.ajax({
+                type:"DELETE",
+                url:"/api/project/relations",
+                contentType: "application/json",
+                dataType:"json",
+                async:false,
+                data:JSON.stringify({
+                  "action":"del_relation",
+                  "id": params.data.id
+                }),
+                success:function (data) {
+                    console.log("del"+(data.id));
+                },
+                error:function (data) {
+                    console.log("error");
+                },
+                complete: function (data) {
+                    console.log("complete");
+                },
+                });
+                location.reload();
+            }
+        }, {
+            "name": "修改",
+            "fn": function() {
+                console.log((params));
+                var newname=prompt("请输入新的名称",params.data.name);
+                if (newname!=null && newname!=""){
+                    console.log(newname);
+                    $.ajax({
+                    type:"PUT",
+                    url:"/api/project/relations",
+                    contentType: "application/json",
+                    dataType:"json",
+                    async:false,
+                    data:JSON.stringify({
+                      "action":"modify_relation",
+                      "id": params.data.id,
+                      "newdata":{
+                          "name":newname
+                      }
+                    }),
+                    success:function (data) {
+                        console.log("name:"+(data.id));
+                    },
+                    error:function (data) {
+                        console.log("error");
+                    },
+                    complete: function (data) {
+                        console.log("complete");
+                    },
+                    });
+                    location.reload();
+                }
+            }
+        }
+        ]);
+      }
     });
 
     var style_ul = "padding:0px;margin:0px;border: 1px solid #ccc;background-color: #fff;position: absolute;left: 0px;top: 0px;z-index: 2;display: none;";
