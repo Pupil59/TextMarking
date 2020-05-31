@@ -205,15 +205,10 @@ def friend_confirm(request):
     fri = big_user.objects.get(username=fri_id)
     if action == 'friend_apply_accept':
         user.friends.add(fri)
-        user.save()
         fri.friends.add(user)
         fri.save()
     user.friend_apply.remove(fri)
-    return JsonResponse({
-            "ret": 0,
-            "msg": "操作成功"
-        })
-    
+    user.save()
 
 
 def get_fri_appli(request):
@@ -254,14 +249,10 @@ def invite_confirm(request):
     action = request.params['action']
     p_id = request.params['project_id']
     proj = Project.objects.get(id=p_id)
-    if action == 'project_apply_accept':
+    if action == 'project_invite_accept':
         user.fri_project.add(proj)
-        user.save()
     user.project_invite.remove(proj)
-     return JsonResponse({
-            "ret": 0,
-            "msg": "操作成功"
-        })
+    user.save()
 
 
 def get_pro_inv(request):
