@@ -1,10 +1,10 @@
-# api/project接口2.8
+# api/project接口2.9
 
 
 
 ## 修改内容
 
-- 增加了文本的增删查
+- 增加了图里用户名的显示
 
 
 
@@ -1212,10 +1212,10 @@ http 响应消息 body 中， 数据以json格式存储，
 
 ```
 {
-	'links': [{'id': 1, 'name': '从属', 'source': 2, 'target': 1}],
+	'links': [{'id': 1, 'name': '从属', 'source': 2, 'target': 1, 'user_name':'user_1'}],
  	'nodes': [
- 				{'id': 1, 'name': '树', 'symbolSize': 40.0, 'selected': Flase},
- 				{'id': 2, 'name': '二叉树', 'symbolSize': 40.0, 'selected': True}
+ 				{'id': 1, 'name': '树', 'symbolSize': 40.0, 'user_name': 'user1', selected': Flase},
+ 				{'id': 2, 'name': '二叉树', 'symbolSize': 40.0, 'user_name: 'user2',selected': True}
  			],
  	'ret': 0
 }
@@ -1234,7 +1234,8 @@ links 里面包含了所有节点间联系的信息列表。
         id: 2, 
         name: "并列", 
         symbolSize: 40.0,
-        selected: False
+        selected: False,
+        user_name: 用户1
     }
 ```
 
@@ -1245,6 +1246,7 @@ links 里面包含了所有节点间联系的信息列表。
         id: 2, 
         name: "并列", 
         source: 1,
-        target: 2
+        target: 2,
+        user_name: 用户1
     }
 ```

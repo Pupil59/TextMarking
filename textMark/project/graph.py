@@ -20,15 +20,22 @@ def listgraph(request):
             status=302)
 
     pid = request.session['project_id']
-    qs_entity = Entity.objects.filter(project_id=pid).values()
+    qs_entity = Entity.objects.filter(project_id=pid) \
+        .annotate(
+        user_name=F('user__name')
+    ) \
+        .values(
+        'id', 'name', 'symbolSize', 'user_name'
+    )
 
     qs_relation = Relation.objects.filter(project_id=pid) \
         .annotate(
-        source=F('entity1__id'),
-        target=F('entity2__id')
+        source=F('entity1_id'),
+        target=F('entity2_id'),
+        user_name=F('user__name')
     ) \
         .values(
-        'id', 'name', 'source', 'target'
+        'id', 'name', 'source', 'target', 'user_name'
     )
 
     nodes = list(qs_entity)
