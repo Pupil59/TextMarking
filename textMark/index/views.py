@@ -34,5 +34,9 @@ def showInvite(request):
     return render(request, template_name='textMark/invite.html')
 
 
+def showExport(request):
+ return render(request, template_name='textMark/export.html')
+ 
+
 def showProList(request):
     return render(request, template_name='textMark/prolist.html')
