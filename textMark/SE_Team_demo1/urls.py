@@ -18,6 +18,7 @@ from django.urls import path, include
 from index.views import *
 from SE_Team_demo1 import settings
 from django.conf.urls.static import static
+from project.text import import_text
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
@@ -27,5 +28,6 @@ urlpatterns = [
                   path('main/', showMain),
                   path('mgraph/', showGraph),
                   path('invite/', showInvite),
-                  path('export/', showExport)
+                  path('export/', showExport),
+                  path('import', import_text)
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

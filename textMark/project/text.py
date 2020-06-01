@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 import json
+from django.shortcuts import render
 
 from common.models import Text
 
@@ -80,3 +81,7 @@ def deltext(request):
     text.delete()
 
     return JsonResponse({'ret': 0})
+
+
+def import_text(request):
+    return render(request, template_name='textMark/import.html')
