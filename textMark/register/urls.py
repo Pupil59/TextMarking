@@ -12,6 +12,6 @@ urlpatterns = [
     path('projects/', project.dispatcher),
     path('info/', showUserInfo),
     path('message/', showMsgList),
-    path('projects/', showProList),
+    path('prolist/', showProList),
     # path('projects', project.dispatcher),
 ]
