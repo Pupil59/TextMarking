@@ -92,7 +92,7 @@
       $.get("/user/other/", {"action":"get_friends"}, function(datas){
         var data = JSON.parse(datas);
         console.log(data);
-        for (var i = 0; i < data.sum/2; i++) {
+        for (var i = 0; i < data.sum; i++) {
           $("#fris").append($("<a class=\"button1\">" + (data.friends[i*2+1]) + "</a>"));
           $("#fris").append($("<button class=\"button2\" id = \"" + data.friends[i*2] + "\">" + "邀请" + "</button>"));
           $("#fris").append($("<button class=\"button4\" id = \"" + data.friends[i*2] + "\">" + "删除" + "</button><br>"));
@@ -122,7 +122,7 @@
     },
     });
   });
-  $(document).on("click",".button2",function(){
+  $(document).on("click",".button4",function(){
     var status = confirm("确定删除好友?");
     if (!status) {return false;}
     console.log($(this)[0].id);
@@ -143,6 +143,7 @@
         console.log(data);
     },
     });
+    location.reload();
   });
 </script>
 <style type="text/css">
