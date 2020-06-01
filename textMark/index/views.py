@@ -16,7 +16,7 @@ def showGraph(request):
 
 
 def showReg(request):
-    if request.user is not None:
+    if request.user.id is not None:
         return render(request, template_name='textMark/user-info.html')
     return render(request, template_name='textMark/loginRegister.html')
 
