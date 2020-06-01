@@ -121,6 +121,28 @@
     },
     });
   });
+  $(document).on("click",".button2",function(){
+    var status = confirm("确定删除好友?");
+    if (!status) {return false;}
+    console.log($(this)[0].id);
+    $.ajax({
+    type:"PUT",
+    url:"/user/other/",
+    contentType: "application/json",
+    dataType:"json",
+    async:false,
+    data:JSON.stringify({
+      "action":"del_fri",
+      "friend_id": $(this)[0].id
+    }),
+    success:function (data) {
+        //console.log((data));
+    },
+    error:function (data) {
+        console.log(data);
+    },
+    });
+  });
 </script>
 <style type="text/css">
   .button1 {
