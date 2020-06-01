@@ -38,8 +38,9 @@
         <a target="_top" href="/mgraph" data-title='Graph'>Graph</a>
       </li>
       <li>
-        <a data-title='Entity'>Entity</a>
+        <a data-title='Relation' id="entity">Relation</a>
       </li>
+        <ul id = "submene"></ul>
       <li>
         <a data-title='Import'>Import</a>
       </li>
@@ -246,7 +247,7 @@
   function getUserInfo() {
     $.ajax({
       type:"GET",
-      url:"/user/other",
+      url:"/user/other?action=get_user_info",
       contentType: "application/json",
       success: function (data) {
         if (data.ret == 0) {
