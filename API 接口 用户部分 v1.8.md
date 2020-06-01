@@ -919,8 +919,7 @@ Content-Type: application/json
 
 ```
 {
-	"action":"get_entities_json",
-	"id":"1234"
+	"action":"get_entities_json"
 }
 ```
 
@@ -959,8 +958,7 @@ Content-Type: application/json
 
 ```
 {
-	"action":"get_relations_json",
-	"id":"1234"
+	"action":"get_relations_json"
 }
 ```
 
@@ -1001,8 +999,7 @@ Content-Type: application/json
 
 ```
 {
-	"action":"get_triads_json",
-	"id":"1234"
+	"action":"get_triads_json"
 }
 ```
 
@@ -1085,7 +1082,7 @@ retlist 里面包含了所有的项目信息列表。
 }
 ```
 
-## 申请好友
+## 删除好友
 
 ### 请求消息
 
