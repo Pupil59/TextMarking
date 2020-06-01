@@ -224,7 +224,7 @@
     console.log($(this)[0].id);
     $.ajax({
     type:"POST",
-    url:"/user/other",
+    url:"/user/other/",
     contentType: "application/json",
     dataType:"json",
     async:false,
@@ -250,7 +250,7 @@
     console.log($(this)[0].id);
     $.ajax({
     type:"DELETE",
-    url:"/user/other/",
+    url:"/user/projects/",
     contentType: "application/json",
     dataType:"json",
     async:false,
@@ -336,6 +336,7 @@
   }
   .button1 {
     background-color: #BEBEBE; color: black;
+    opacity: 0.6;
     border: none;
     color: white;
     padding: 15px 32px;
