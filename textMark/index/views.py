@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 # Create your views here.
 def showIndex(request):
+
     return render(request, template_name='textMark/index.html')
 
 
@@ -15,6 +16,8 @@ def showGraph(request):
 
 
 def showReg(request):
+    if request.user is not None:
+        return render(request, template_name='textMark/user-info.html')
     return render(request, template_name='textMark/loginRegister.html')
 
 
@@ -35,7 +38,7 @@ def showInvite(request):
 
 
 def showExport(request):
- return render(request, template_name='textMark/export.html')
+    return render(request, template_name='textMark/export.html')
  
 
 def showProList(request):

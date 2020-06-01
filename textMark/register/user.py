@@ -59,6 +59,7 @@ def modify_name(request):
     user = request.user
     if user is not None:
         user.name = request.params["user_name"]
+        user.save()
         return JsonResponse({
             "ret": 0,
             "msg": "修改成功"
@@ -136,6 +137,7 @@ def modify_password(request):
             })
         else:
             user.set_password(new_password)
+            user.save()
             return JsonResponse({
                 "ret": 0,
                 "msg": "密码修改成功"
@@ -356,6 +358,11 @@ def frr_del(request):
     friend_id = request.params['friend_id']
     try:
         fri = big_user.objects.get(username=friend_id)
+        if fri not in user.friends.all():
+            return JsonResponse({
+                "ret": -1,
+                "msg": "未与该用户成为好友"
+            })
         user.friends.remove(fri)
         fri.friends.remove(user)
         for pro in user.fri_project.all():
