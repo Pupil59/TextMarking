@@ -39,12 +39,12 @@
                             <form  action="/user/sigin/" id="signinform" autocomplete="off" method="POST" enctype="application/x-www-form-urlencoded"> 
                                 <h1>Log in</h1> 
                                 <p> 
-                                    <label for="userid" class="uname" data-icon="u" > Your id, such as email</label>
-                                    <input id="userid" name="user_id" required="required" type="text" placeholder="mymail@mail.com"/>
+                                    <label for="userid" class="uname" data-icon="u" > 登录用户名 </label>
+                                    <input id="userid" name="user_id" required="required" type="text"/>
                                 </p>
                                 <p> 
-                                    <label for="password" class="youpasswd" data-icon="p"> Your password </label>
-                                    <input id="password" name="password" required="required" type="password" placeholder="eg. X8df!90EO" /> 
+                                    <label for="password" class="youpasswd" data-icon="p"> 密码 </label>
+                                    <input id="password" name="password" required="required" type="password" /> 
                                 </p>
                                 <p class="login button"> 
                                     <input type="button" value="Login" onclick="sendLogin()" /> 
@@ -60,20 +60,20 @@
                             <form  action="/user/register/" id="registerform" autocomplete="off" method="POST" enctype="application/x-www-form-urlencoded"> 
                                 <h1> Sign up </h1> 
                                 <p> 
-                                    <label for="emailsignup" class="youmail" data-icon="e" > Your id, such as email</label>
-                                    <input id="emailsignup" name="user_id" required="required" type="text" placeholder="mysupermail@mail.com"/> 
+                                    <label for="emailsignup" class="youmail" data-icon="e" > 登录用户名</label>
+                                    <input id="emailsignup" name="user_id" required="required" type="text" placeholder="至少4位，由字母和数字组成"/> 
                                 </p>
                                 <p> 
-                                    <label for="usernamesignup" class="uname" data-icon="u">Your username</label>
-                                    <input id="usernamesignup" name="user_name" required="required" type="text" placeholder="mysuperusername690" />
+                                    <label for="usernamesignup" class="uname" data-icon="u"> 显示昵称 </label>
+                                    <input id="usernamesignup" name="user_name" required="required" type="text" placeholder="2~8位，由汉字、数字或者字母组成" />
                                 </p>
                                 <p> 
-                                    <label for="passwordsignup" class="youpasswd" data-icon="p">Your password </label>
-                                    <input id="passwordsignup" name="password" required="required" type="password" placeholder="eg. X8df!90EO"/>
+                                    <label for="passwordsignup" class="youpasswd" data-icon="p"> 密码 </label>
+                                    <input id="passwordsignup" name="password" required="required" type="password" placeholder="至少8位，并包含字母、数字的两种字符"/>
                                 </p>
                                 <p> 
-                                    <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">Please confirm your password </label>
-                                    <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" placeholder="eg. X8df!90EO"/>
+                                    <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">确认密码 </label>
+                                    <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" placeholder="请输入确认密码"/>
                                 </p>
                                 <p class="signin button"> 
 									<input type="button" value="Sign up" onclick="sendRegister()"/> 
@@ -114,35 +114,54 @@
                 })
             }
 
-            function sendRegister() {
+             function sendRegister() {
                 var userid = $("#emailsignup").val();
                 var username = $("#usernamesignup").val();
                 var pwd1 = $("#passwordsignup").val();
                 var pwd2 = $("#passwordsignup_confirm").val();
                 var info = "user_id="+userid+"&"+"user_name="+username+"&"+"password="+pwd1;
-                if (pwd1 == pwd2) {
-                    $.ajax({
-                        type:"POST",
-                        url:"/user/register/",
-                        contentType:"application/x-www-form-urlencoded",
-                        dataType:"json",
-                        data: info,
-                        success: function (result) {
-                            console.log(result);
-                            if(result.ret == 0) {
-                                alert("登陆成功");
-                                window.location.href = "/index";
-                            } else {
-                                alert(result.msg);
+                var idPattern = new RegExp("^([A-Za-z]|[0-9]){4,}$");
+                var namePattern = new RegExp("^([\u4E00-\u9FA5]|[A-Za-z]|[0-9]){2,8}$");
+                var passwordPattern = new RegExp("^([A-Za-z]|[0-9]){8,}$");
+
+                if  (idPattern.test(userid)) {
+                    if (namePattern.test(username)) {
+                        if (passwordPattern.test(pwd1)) {
+                            if (pwd1 == pwd2) {
+                                $.ajax({
+                                type:"POST",
+                                url:"/user/register/",
+                                contentType:"application/x-www-form-urlencoded",
+                                dataType:"json",
+                                data: info,
+                                success: function (result) {
+                                    console.log(result);
+                                    if(result.ret == 0) {
+                                        alert("登陆成功");
+                                        window.location.href = "/index";
+                                    } else {
+                                        alert(result.msg);
+                                    }
+                                },
+                                error : function() {
+                                    alert("异常！");
+                                }
+                                })
                             }
-                        },
-                        error : function() {
-                            alert("异常！");
+                            else {
+                                alert("两次输入密码不一致");
+                            }
                         }
-                    })
+                        else {
+                            alert("密码至少8位，并包含字母、数字的两种");
+                        }
+                    } 
+                    else {
+                        alert("显示昵称为2~8个字！");
+                    }
                 }
                 else {
-                    alert("两次输入密码不一致");
+                    alert("登录用户名由至少四个字母或数字组成，不包含特殊符号")
                 }
             }
         </script> 

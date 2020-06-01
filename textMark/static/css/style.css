@@ -94,7 +94,7 @@ header {
 header nav ul li {
   color: #fff;
   border-bottom: 1px solid #42454D;
-  padding-left: 48px;
+  padding-left: 20px;
   transition: all 0.6s;
   border-top: 1px solid #2E3036;
 }
@@ -120,24 +120,7 @@ header nav ul li a:before {
   position: absolute;
   left: -32px;
 }
-header nav ul li:first-child a:before {
-  content: "\1F4D6";
-}
-header nav ul li:nth-child(2) a:before {
-  content: "\26FC";
-}
-header nav ul li:nth-child(3) a:before {
-  content: "\1F4DD";
-}
-header nav ul li:nth-child(4) a:before {
-  content: "\21D2";
-}
-header nav ul li:nth-child(5) a:before {
-  content: "\21D0";
-}
-header nav ul li:nth-child(6) a:before {
-  content: "\1F465";
-}
+
 main {
   flex: 1;
   -webkit-flex: 1;
