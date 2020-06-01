@@ -185,7 +185,7 @@
         }
     });
     myChart.on('contextmenu', function (params) {
-      console.log(params);
+      //console.log(params);
       if (params.dataType=="node") {
       showMenu(params,[
         {
@@ -219,7 +219,7 @@
         }, {
             "name": "修改",
             "fn": function() {
-                console.log((params));
+                //console.log((params));
                 var newname=prompt("请输入新的名称",params.data.name);
                 if (newname!=null && newname!=""){
                     console.log(newname);
@@ -249,6 +249,8 @@
                     location.reload();
                 }
             }
+        }, {
+            "name": "来源："+params.data.user_name,
         }
         ]);}
         else{
@@ -284,7 +286,7 @@
         }, {
             "name": "修改",
             "fn": function() {
-                console.log((params));
+                //console.log((params));
                 var newname=prompt("请输入新的名称",params.data.name);
                 if (newname!=null && newname!=""){
                     console.log(newname);
@@ -314,6 +316,8 @@
                     location.reload();
                 }
             }
+        }, {
+            "name": "来源："+params.data.user_name,
         }
         ]);
       }
