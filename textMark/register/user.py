@@ -330,7 +330,7 @@ def export_triads(request):
 
     js = json.dumps(en_list, sort_keys=False, indent=4, separators=(',', ': '))
 
-    return JsonResponse(js)
+    return JsonResponse(js, safe=False)
 
 
 def export_relations(request):
@@ -340,7 +340,7 @@ def export_relations(request):
     en_list = list(qs)
 
     js = json.dumps(en_list, sort_keys=False, indent=4, separators=(',', ': '))
-    return JsonResponse(js)
+    return JsonResponse(js, safe=False)
 
 
 def export_entities(request):
@@ -350,7 +350,7 @@ def export_entities(request):
     en_list = list(qs)
 
     js = json.dumps(en_list, sort_keys=False, indent=4, separators=(',', ': '))
-    return JsonResponse(js)
+    return JsonResponse(js, safe=False)
 
 
 def frr_del(request):
