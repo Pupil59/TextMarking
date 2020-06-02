@@ -34,7 +34,7 @@
     .mytext::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
         border-radius: 10px;
          -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-        background: #008CBA;
+        background: #A0A0A0;
     }
     .mytext::-webkit-scrollbar-track {/*滚动条里面轨道*/
         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
@@ -111,7 +111,7 @@
     </div>
     <div>
       <span style="float: left; width: 650px;" >
-        <div class="context-menu-one mytext" id="thetext" style="float: left; width: 650px; height: 450px; overFlow-y:scroll; border-radius: 8px; border: 2px solid #008CBA;">
+        <div class="context-menu-one mytext" id="thetext" style="float: left; width: 650px; height: 450px; overFlow-y:scroll; border-radius: 8px; border: 2px solid #e7e7e7;">
 
           &emsp;在射频识别系统中,数据的载体是应答器,通过识别附在要识别物体上的应答器来完成对被识别物体的识别.</br>&emsp;
           射频识别技术的分类,一般是指对应答器的分类. 根据应答器的供电形式,射频识别系统可分为有源系统和无源系统.
@@ -141,10 +141,10 @@
         
         <table style="float: right; width: 200px;">
           <tr>
-            <div id="div2" style="width: 100px; height: auto; font-size: 16px; border-radius: 8px; border: 2px solid #008CBA;">实体1</div>
+            <div id="div2" style="width: 100px; height: auto; font-size: 16px; border-radius: 8px; border: 2px solid #e7e7e7;">实体1</div>
           </tr>
           <tr>
-            <div id="div4" style="width: 100px; height: auto; font-size: 16px; border-radius: 8px; border: 2px solid #008CBA;">实体2</div>
+            <div id="div4" style="width: 100px; height: auto; font-size: 16px; border-radius: 8px; border: 2px solid #e7e7e7;">实体2</div>
           </tr>
           <tr>
             <select id="relation_type" name="relation_type" style="width: 150px; height: 35px; border-radius: 8px;">
@@ -244,7 +244,6 @@ $(function(){
             "添加实体": {name: "添加实体", callback: function(key, options){
                 e = rg.toString();
                 sendEntityBeta();
-                location.reload();
             }}
         }
     });
@@ -269,7 +268,6 @@ function sendEntityBeta() {//添加实体
               alert("添加实体成功");
           }
       })
-  location.reload();
 }
 
 function sendNewRelationBeta() {//添加自定义关系类型
