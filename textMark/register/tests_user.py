@@ -9,7 +9,7 @@ import pprint, json
 class registerTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-
+        
     def test_new_user(self):
         self.assertEqual(big_user.objects.count(), 0)
         # 注册
@@ -225,7 +225,7 @@ class registerTests(TestCase):
 
         data= {
             'user_id': '3146',
-            'action': 'modify_name',
+            'action': 'change_name',
             'user_name': 'crapobago'
         }
 
