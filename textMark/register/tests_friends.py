@@ -275,6 +275,18 @@ class registerTests(TestCase):
         )
         response_content = json.loads(response.content)
         self.assertEqual(response_content['msg'], '已拒绝')
+        #向用户4申请好友
+        data = {
+            'action':'friend_apply',
+            'id':'4'
+        }
+        response = self.client.post(
+            path= '/user/other/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '邀请已发送')
         data = {
             'action': 'logout'
         }
@@ -285,7 +297,7 @@ class registerTests(TestCase):
         )
         response_content = json.loads(response.content)
         self.assertEqual(response_content['msg'], '登出成功')
-        #登录用户4
+        #登录用户4(此时有来自用户1和3的两个申请)
         response = self.client.post(
             path= '/user/sigin/',
             data=
@@ -321,6 +333,75 @@ class registerTests(TestCase):
         )
         response_content = json.loads(response.content)
         self.assertEqual(response_content['msg'], '邀请已发送')
+        #接受用户3的申请
+        data = {
+            'action':'friend_apply_accept',
+            'id':'3'
+        }
+        response = self.client.post(
+            path= '/user/other/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '已接受')
+        data = {
+            'action':'get_friends'
+        }
+        response = self.client.post(
+            path= '/user/other/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['sum'], 1)
+        #再删除用户3
+        data = {
+            'action':'fri_del',
+            'id':'3'
+        }
+        response = self.client.post(
+            path= '/user/other/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '已删除')
+        #与用户1尚未成为好友
+        data = {
+            'action':'fri_del',
+            'id':'1'
+        }
+        response = self.client.post(
+            path= '/user/other/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '未该用户成为好友')
+        #用户5不存在
+        data = {
+            'action':'fri_del',
+            'id':'5'
+        }
+        response = self.client.post(
+            path= '/user/other/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['msg'], '用户ID不存在')
+        #删了3之后无好友
+        data = {
+            'action':'get_friends'
+        }
+        response = self.client.post(
+            path= '/user/other/',
+            data= json.dumps(data),
+            content_type= 'application/json'
+        )
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content['sum'], 0)
         data = {
             'action': 'logout'
         }
