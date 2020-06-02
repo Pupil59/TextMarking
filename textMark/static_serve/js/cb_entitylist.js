@@ -4,7 +4,8 @@ $(document).ready(function()
   //location.reload();
   $.ajax({
     type:"GET",
-    url:"/api/project/entities?action=list_entity",
+    url:"/api/project/relations?action=list_type",
+    async:false,
     success:function (data) {
         console.log((data));
         for (var i = data.retlist.length - 1; i >= 0; i--) {
@@ -31,18 +32,23 @@ $(document).ready(function()
 
 // });
 $(document).on("click","#submene li",function(){
-  var status = confirm("del?");
+  var relId = $(this)[0].id.slice(2);
+  var status = confirm("确定删除该关系类型么？");
   if (!status) {return false;}
+  if (relId == 0 || relId == 1 || relId == 2) {
+    alert("初始关系不能删除！");
+    return false;
+  }
   console.log($(this)[0].id);
   $.ajax({
   type:"DELETE",
-  url:"/api/project/entities",
+  url:"/api/project/relations",
   contentType: "application/json",
   dataType:"json",
   async:false,
   data:JSON.stringify({
-    "action":"del_entity",
-    "id": $(this)[0].id.slice(2)
+    "action":"del_type",
+    "id": relId
   }),
   success:function (data) {
       console.log((data));
