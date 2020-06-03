@@ -245,7 +245,7 @@ class registerTests(TestCase):
         data={
                 'action':'get_friends_appli'
         }
-        response = self.client.post(
+        response = self.client.get(
             path= '/user/other/',
             data= json.dumps(data),
             content_type= 'application/json'
@@ -348,7 +348,7 @@ class registerTests(TestCase):
         data = {
             'action':'get_friends'
         }
-        response = self.client.post(
+        response = self.client.get(
             path= '/user/other/',
             data= json.dumps(data),
             content_type= 'application/json'
@@ -366,7 +366,7 @@ class registerTests(TestCase):
             content_type= 'application/json'
         )
         response_content = json.loads(response.content)
-        self.assertEqual(response_content['msg'], '已删除')
+        self.assertEqual(response_content['msg'], '删除成功')
         #与用户1尚未成为好友
         data = {
             'action':'fri_del',
@@ -395,7 +395,7 @@ class registerTests(TestCase):
         data = {
             'action':'get_friends'
         }
-        response = self.client.post(
+        response = self.client.get(
             path= '/user/other/',
             data= json.dumps(data),
             content_type= 'application/json'
@@ -428,7 +428,7 @@ class registerTests(TestCase):
         data = {
             'action':'get_friends'
         }
-        response = self.client.post(
+        response = self.client.get(
             path= '/user/other/',
             data= json.dumps(data),
             content_type= 'application/json'
@@ -439,7 +439,7 @@ class registerTests(TestCase):
         data = {
             'action':'get_friends_appli'
         }
-        response = self.client.post(
+        response = self.client.get(
             path= '/user/other/',
             data= json.dumps(data),
             content_type= 'application/json'
@@ -462,7 +462,7 @@ class registerTests(TestCase):
         data = {
             'action':'get_friends'
         }
-        response = self.client.post(
+        response = self.client.get(
             path= '/user/other/',
             data= json.dumps(data),
             content_type= 'application/json'
@@ -640,7 +640,7 @@ class registerTests(TestCase):
         data = {
             'action':'get_project_invites'
         }
-        response = self.client.post(
+        response = self.client.get(
             path= '/user/other/',
             data= json.dumps(data),
             content_type= 'application/json'
@@ -675,7 +675,7 @@ class registerTests(TestCase):
         data = {
             'action':'get_fri_projects'
         }
-        response = self.client.post(
+        response = self.client.get(
             path= '/user/other/',
             data= json.dumps(data),
             content_type= 'application/json'
@@ -710,7 +710,7 @@ class registerTests(TestCase):
         data = {
             'action':'get_fri_projects'
         }
-        response = self.client.post(
+        response = self.client.get(
             path= '/user/other/',
             data= json.dumps(data),
             content_type= 'application/json'
@@ -732,7 +732,7 @@ class registerTests(TestCase):
         data = {
             'action':'get_fri_projects'
         }
-        response = self.client.post(
+        response = self.client.get(
             path= '/user/other/',
             data= json.dumps(data),
             content_type= 'application/json'

@@ -211,8 +211,19 @@ def friend_confirm(request):
         user.friends.add(fri)
         fri.friends.add(user)
         fri.save()
-    user.friend_apply.remove(fri)
-    user.save()
+        user.friend_apply.remove(fri)
+        user.save()
+        return JsonResponse({
+            "ret": 0,
+            "msg": "已接受"
+        })
+    else:
+        user.friend_apply.remove(fri)
+        user.save()
+        return JsonResponse({
+            "ret": 0,
+            "msg": "已拒绝"
+        })
 
 
 def get_fri_appli(request):
@@ -224,9 +235,9 @@ def get_fri_appli(request):
     }
     for app_user in fri_list:
         js['friends'].append({
-                'user_id': app_user.username,
-                'user_name': app_user.name
-             })
+            'user_id': app_user.username,
+            'user_name': app_user.name
+        })
     return JsonResponse(json.dumps(js), safe=False)
 
 
@@ -255,9 +266,19 @@ def invite_confirm(request):
     proj = Project.objects.get(id=p_id)
     if action == 'project_invite_accept':
         user.fri_project.add(proj)
-    user.project_invite.remove(proj)
-    user.save()
-
+        user.project_invite.remove(proj)
+        user.save()
+        return JsonResponse({
+            "ret": 0,
+            "msg": "已接受"
+        })
+    else:
+        user.project_invite.remove(proj)
+        user.save()
+        return JsonResponse({
+            "ret": 0,
+            "msg": "已拒绝"
+        })
 
 def get_pro_inv(request):
     user = request.user
